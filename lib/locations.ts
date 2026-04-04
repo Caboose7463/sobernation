@@ -33,12 +33,16 @@ export function getLocationSlugs(): string[] {
 
 /**
  * Returns the top N locations by population, sorted descending.
- * Used in generateStaticParams to pre-build only high-traffic pages on Vercel,
- * while dynamicParams=true ensures all 3,835 locations still work via ISR.
- * Default: top 200 (covers all cities with population > ~50,000)
- * Keeps Vercel Hobby build output under disk limits (200 × 65 routes = 13,000 pages)
+ * Used in generateStaticParams to control how many pages are pre-built at deploy time.
+ *
+ * Default: 0 (empty array) — no pages pre-built, all generate on first request via ISR.
+ * This keeps the Vercel deployment payload under the 80MB Hobby tier limit.
+ * All 3,835 locations are still fully accessible (dynamicParams=true).
+ *
+ * Pass a limit to pre-build: e.g. getTopLocationSlugs(50) pre-builds the top 50 cities.
  */
-export function getTopLocationSlugs(limit = 200): string[] {
+export function getTopLocationSlugs(limit = 0): string[] {
+  if (limit === 0) return []
   return [..._data.locations]
     .sort((a: UKLocation, b: UKLocation) => b.population - a.population)
     .slice(0, limit)
