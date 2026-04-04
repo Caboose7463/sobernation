@@ -33,13 +33,11 @@ export function getLocationSlugs(): string[] {
 
 /**
  * Returns the top N locations by population, sorted descending.
- * Used in generateStaticParams to control pre-built pages at deploy time.
- *
- * Default: 500 — covers all major UK cities/towns (pop > ~25k).
- * 500 × 65 routes = 32,500 pre-built pages. Fits comfortably within Vercel Pro disk limits.
- * The remaining ~3,335 smaller locations generate via ISR on first request (fast for SEO).
+ * Default: 100 — London, Birmingham, Manchester + all major UK cities.
+ * 100 × 65 routes = 6,500 pre-built pages. Very safe for first deployment.
+ * All 3,835 locations accessible via ISR.
  */
-export function getTopLocationSlugs(limit = 500): string[] {
+export function getTopLocationSlugs(limit = 100): string[] {
   if (limit === 0) return []
   return [..._data.locations]
     .sort((a: UKLocation, b: UKLocation) => b.population - a.population)
