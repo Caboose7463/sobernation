@@ -6,10 +6,12 @@ import HelplinesSidebar from '../../../components/HelplinesSidebar'
 import FaqBlock from '../../../components/FaqBlock'
 import Breadcrumb from '../../../components/Breadcrumb'
 
-export const dynamicParams = false
+export const dynamicParams = true
+export const revalidate = 604800 // ISR 7 days
 
 export async function generateStaticParams() {
-  return Array.from({ length: 20 }, (_, i) => ({ n: String(i + 1) }))
+  // Pre-build key milestones only — all other years generate via ISR
+  return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 40, 50].map(n => ({ n: String(n) }))
 }
 
 export async function generateMetadata(
