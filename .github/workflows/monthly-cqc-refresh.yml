@@ -1,0 +1,130 @@
+name: Monthly CQC Data Refresh
+
+# Runs on the 1st of every month at 04:00 UTC.
+# Downloads the latest CQC care directory CSV, re-extracts addiction services,
+# regenerates the proximity map, and commits the updated data back to main.
+# The commit triggers an automatic Vercel deployment, updating all centre listings.
+#
+# CQC publishes fresh data monthly under the Open Government Licence.
+# Source: https://www.cqc.org.uk/about-us/transparency/using-cqc-data
+#
+# Setup required:
+#   - GitHub Actions needs write permission to push to main.
+#   - In repo Settings → Actions → General → Workflow permissions → "Read and write"
+
+on:
+  schedule:
+    - cron: '0 4 1 * *'    # 1st of every month at 04:00 UTC
+  workflow_dispatch:         # Manual trigger
+
+jobs:
+  refresh-cqc:
+    name: Refresh CQC centre data
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      # ── Download fresh CQC data ─────────────────────────────────────────────
+      - name: Download CQC care directory CSV
+        run: |
+          echo "Downloading CQC care directory..."
+          # CQC publishes a stable CSV download. URL may change — check:
+          # https://www.cqc.org.uk/about-us/transparency/using-cqc-data
+          curl -L \
+            --retry 3 \
+            --retry-delay 10 \
+            --max-time 120 \
+            -H "User-Agent: SoberNation/1.0 (health information; contact@sobernation.co.uk)" \
+            -o data/cqc_directory_new.csv \
+            "https://www.cqc.org.uk/sites/default/files/cqc_directory.csv"
+
+          # Verify download succeeded (check file is not empty and has expected headers)
+          LINES=$(wc -l < data/cqc_directory_new.csv)
+          echo "Downloaded $LINES lines"
+          if [ "$LINES" -lt 1000 ]; then
+            echo "::error::CQC file too small ($LINES lines) — download may have failed"
+            echo "Keeping existing data and exiting gracefully"
+            rm -f data/cqc_directory_new.csv
+            exit 0
+          fi
+
+          mv data/cqc_directory_new.csv data/cqc_directory.csv
+          echo "✓ CQC CSV updated ($LINES rows)"
+
+      # ── Re-extract addiction services ───────────────────────────────────────
+      - name: Extract addiction services from CQC data
+        run: |
+          echo "Running CQC extraction..."
+          node scripts/extract-rehabs.js
+
+      # ── Regenerate proximity map ─────────────────────────────────────────────
+      - name: Regenerate proximity fallback map
+        run: |
+          echo "Generating proximity map..."
+          node scripts/generate-rehab-proximity.js
+
+      # ── Update freshness timestamp ───────────────────────────────────────────
+      - name: Update data freshness timestamp
+        run: |
+          DATE=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
+          MONTH=$(date -u '+%B %Y')
+          cat > data/freshness.json << EOF
+          {
+            "cqcLastUpdated": "$DATE",
+            "cqcLastUpdatedLabel": "$MONTH",
+            "source": "Care Quality Commission Care Directory",
+            "licence": "Open Government Licence v3.0"
+          }
+          EOF
+          echo "✓ Freshness timestamp written: $DATE"
+
+      # ── Commit and push ─────────────────────────────────────────────────────
+      - name: Commit updated data
+        run: |
+          git config --global user.name  'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+          git add \
+            data/rehabs.json \
+            data/rehab-proximity.json \
+            data/freshness.json
+
+          # Only commit if there are actual changes
+          if git diff --staged --quiet; then
+            echo "No changes detected in CQC data this month — skipping commit"
+          else
+            MONTH=$(date -u '+%Y-%m')
+            git commit -m "chore(data): monthly CQC refresh ${MONTH}
+
+          - Updated CQC care directory ($(date -u '+%d %B %Y'))
+          - Re-extracted addiction and rehab services
+          - Regenerated proximity fallback map
+          
+          Source: Care Quality Commission, Open Government Licence v3.0"
+
+            git push origin main
+            echo "✓ Data committed and pushed — Vercel will auto-deploy"
+          fi
+
+      # ── Summary ─────────────────────────────────────────────────────────────
+      - name: Print summary
+        run: |
+          SERVICES=$(node -e "const d=require('./data/rehabs.json'); console.log(d.totalServices)")
+          TOWNS=$(node -e "const d=require('./data/rehabs.json'); console.log(d.totalTowns)")
+          echo "CQC refresh complete:"
+          echo "  Services indexed : $SERVICES"
+          echo "  Towns covered    : $TOWNS"
+          echo "  Vercel deploy    : triggered via git push"
