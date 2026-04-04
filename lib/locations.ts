@@ -35,9 +35,10 @@ export function getLocationSlugs(): string[] {
  * Returns the top N locations by population, sorted descending.
  * Used in generateStaticParams to pre-build only high-traffic pages on Vercel,
  * while dynamicParams=true ensures all 3,835 locations still work via ISR.
- * Default: top 1,000 (covers all towns with population > ~8,000)
+ * Default: top 200 (covers all cities with population > ~50,000)
+ * Keeps Vercel Hobby build output under disk limits (200 × 65 routes = 13,000 pages)
  */
-export function getTopLocationSlugs(limit = 1000): string[] {
+export function getTopLocationSlugs(limit = 200): string[] {
   return [..._data.locations]
     .sort((a: UKLocation, b: UKLocation) => b.population - a.population)
     .slice(0, limit)
