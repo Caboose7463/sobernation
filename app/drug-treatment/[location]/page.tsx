@@ -11,6 +11,7 @@ import FaqBlock from '../../../components/FaqBlock'
 import Breadcrumb from '../../../components/Breadcrumb'
 
 export const dynamicParams = false
+export const revalidate = 604800
 
 export async function generateStaticParams() {
   return getLocationSlugs().map(location => ({ location }))
@@ -106,7 +107,9 @@ export default async function DrugTreatmentPage(
 ) {
   const { location } = await params
   const loc = getLocation(location)
-  if (!loc) notFound()  const faqs = buildFaqs(loc.name)
+  if (!loc) notFound()
+  const rehabsResult = getRehabsForLocation(location, loc.name)
+  const faqs = buildFaqs(loc.name)
 
   const breadcrumbs = [
     { name: 'Home', href: '/' },
@@ -162,6 +165,9 @@ export default async function DrugTreatmentPage(
         <div className="page-grid">
           <div>
 
+            {/* CQC centres */}
+            <NearestCentres result={rehabsResult} locationName={loc.name} limit={6} />
+
             {/* Treatment types */}
             <div style={{ marginBottom: 40 }}>
               <h2 style={{ fontSize: 17, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>
@@ -192,7 +198,7 @@ export default async function DrugTreatmentPage(
                 You can self-refer for NHS drug treatment in {loc.name}
               </h2>
               <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 14 }}>
-                You do not need a GP referral to access NHS drug treatment. You can contact your local service directly or use Frank's service finder to find and contact the right team in {loc.name}.
+                You do not need a GP referral to access NHS drug treatment. You can contact your local service directly or use Frank&apos;s service finder to find and contact the right team in {loc.name}.
               </p>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 <a href="https://www.nhs.uk/service-search/drug-and-alcohol-support/find-drug-alcohol-addiction-support-services/" target="_blank" rel="noopener noreferrer" style={{ padding: '10px 18px', background: 'var(--accent)', color: '#fff', borderRadius: 'var(--radius-sm)', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
@@ -203,16 +209,6 @@ export default async function DrugTreatmentPage(
                 </a>
               </div>
             </div>
-
-            {/* CQC centres */}
-            {/* CQC centres — direct, borough-aggregated, or nearest-city fallback */}
-            <NearestCentres result={rehabsResult} locationName={loc.name} limit={6} />
-                </div>
-                <p style={{ fontSize: 11, color: 'var(--text-light)', marginTop: 10 }}>
-                  CQC care directory · Open Government Licence · April 2026
-                </p>
-              </div>
-            )}
 
             {/* Substance links */}
             <div style={{ marginBottom: 40 }}>
