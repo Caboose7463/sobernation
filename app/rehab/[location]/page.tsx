@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { getLocationSlugs, getLocation } from '../../../lib/locations'
+import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import { getRehabsForLocation } from '../../../lib/rehabs'
 import { locationMetadata, faqSchema, breadcrumbSchema, medicalWebPageSchema } from '../../../lib/seo'
 import { BUILD_MONTH, CQC_ATTRIBUTION } from '../../../lib/build-info'
@@ -12,11 +12,11 @@ import FaqBlock from '../../../components/FaqBlock'
 import Breadcrumb from '../../../components/Breadcrumb'
 import LastReviewed from '../../../components/LastReviewed'
 
-export const dynamicParams = false
+export const dynamicParams = true
 export const revalidate = 604800 // ISR: regenerate after 7 days
 
 export async function generateStaticParams() {
-  return getLocationSlugs().map(location => ({ location }))
+  return getTopLocationSlugs().map(location => ({ location }))
 }
 
 export async function generateMetadata(

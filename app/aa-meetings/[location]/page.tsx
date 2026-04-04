@@ -1,17 +1,17 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { getLocationSlugs, getLocation } from '../../../lib/locations'
+import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import { locationMetadata, faqSchema, breadcrumbSchema, medicalWebPageSchema } from '../../../lib/seo'
 import LocationHero from '../../../components/LocationHero'
 import HelplinesSidebar from '../../../components/HelplinesSidebar'
 import FaqBlock from '../../../components/FaqBlock'
 import Breadcrumb from '../../../components/Breadcrumb'
 
-export const dynamicParams = false
+export const dynamicParams = true
 
 export async function generateStaticParams() {
-  return getLocationSlugs().map(location => ({ location }))
+  return getTopLocationSlugs().map(location => ({ location }))
 }
 
 export async function generateMetadata(

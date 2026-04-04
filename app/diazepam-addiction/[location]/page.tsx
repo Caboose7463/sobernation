@@ -1,16 +1,16 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { getLocationSlugs, getLocation } from '../../../lib/locations'
+import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import { substanceLocationMetadata } from '../../../lib/seo'
 import { SUBSTANCE_CONFIGS } from '../../../lib/substances'
 import SubstanceLocationPage from '../../../components/SubstanceLocationPage'
 
 const SUBSTANCE = SUBSTANCE_CONFIGS['diazepam-addiction']
 
-export const dynamicParams = false
+export const dynamicParams = true
 
 export async function generateStaticParams() {
-  return getLocationSlugs().map(location => ({ location }))
+  return getTopLocationSlugs().map(location => ({ location }))
 }
 
 export async function generateMetadata(

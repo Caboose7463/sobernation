@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { getLocationSlugs, getLocation } from '../../../lib/locations'
+import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import SupportGroupPage from '../../../components/SupportGroupPage'
 import { ALAON_CONFIG } from '../../../lib/support-groups'
 
-export const dynamicParams = false
+export const dynamicParams = true
 
 export async function generateStaticParams() {
-  return getLocationSlugs().map(location => ({ location }))
+  return getTopLocationSlugs().map(location => ({ location }))
 }
 
 export async function generateMetadata(

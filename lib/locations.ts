@@ -31,6 +31,19 @@ export function getLocationSlugs(): string[] {
   return _data.locations.map((l: UKLocation) => l.slug)
 }
 
+/**
+ * Returns the top N locations by population, sorted descending.
+ * Used in generateStaticParams to pre-build only high-traffic pages on Vercel,
+ * while dynamicParams=true ensures all 3,835 locations still work via ISR.
+ * Default: top 1,000 (covers all towns with population > ~8,000)
+ */
+export function getTopLocationSlugs(limit = 1000): string[] {
+  return [..._data.locations]
+    .sort((a: UKLocation, b: UKLocation) => b.population - a.population)
+    .slice(0, limit)
+    .map((l: UKLocation) => l.slug)
+}
+
 export function getAllLocations(): UKLocation[] {
   return _data.locations
 }
