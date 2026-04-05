@@ -8,6 +8,16 @@ const nextConfig: NextConfig = {
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
 
+  // Map /sitemap.xml to our explicit route handler (avoids dot-in-dirname issues)
+  async rewrites() {
+    return [
+      {
+        source: '/sitemap.xml',
+        destination: '/sitemap-index',
+      },
+    ]
+  },
+
   // Redirect naked domain to www
   async redirects() {
     return [
