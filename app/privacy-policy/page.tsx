@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: 'SoberNation privacy policy — how we handle your data, cookies, and personal information in compliance with UK GDPR.',
 }
 
-const LAST_UPDATED = '4 April 2026'
+const LAST_UPDATED = '5 April 2026'
 
 export default function PrivacyPolicyPage() {
   return (
@@ -35,11 +35,11 @@ export default function PrivacyPolicyPage() {
           },
           {
             title: '3. Cookies',
-            body: 'We use strictly necessary cookies for site functionality, and analytics cookies (Google Analytics) to understand how our content is used. Analytics cookies are only set with your consent. We do not use advertising cookies or third-party tracking pixels. You can manage cookie preferences through your browser settings.',
+            body: 'We use the following types of cookies: (a) Strictly necessary cookies, required for the website to function; (b) Analytics cookies (Google Analytics) to understand how our content is used — these are set with your consent; (c) Advertising cookies — we display ads through Google AdSense. Google uses cookies (including the DoubleClick cookie) to serve ads based on your prior visits to this and other websites. You can opt out of personalised advertising at any time by visiting Google\'s Ads Settings (myaccount.google.com/data-and-privacy) or by clicking "Essential only" on our cookie banner. When you decline personalised advertising, Google may still serve non-personalised ads.',
           },
           {
-            title: '4. How we use data',
-            body: 'Analytics data is used solely to improve the quality and relevance of our content. We do not sell, share, or transfer any data to third parties for marketing purposes. We do not serve targeted advertising on this site.',
+            title: '4. How we use data and advertising',
+            body: 'Analytics data is used solely to improve the quality and relevance of our content. We display advertisements through Google AdSense to help fund the free resources we provide. Google AdSense may use your data to show relevant ads. We do not sell your data to third parties. You can manage cookie preferences at any time using our cookie banner or through your browser settings. For more information on how Google uses data, see: policies.google.com/technologies/ads',
           },
           {
             title: '5. Your rights under UK GDPR',

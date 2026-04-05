@@ -3,6 +3,7 @@ import './globals.css'
 import StoriesCTA from '../components/StoriesCTA'
 import CommunityCard from '../components/CommunityCard'
 import Nav from '../components/Nav'
+import CookieConsent from '../components/CookieConsent'
 import { headers } from 'next/headers'
 
 export const metadata: Metadata = {
@@ -61,6 +62,26 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <head>
+        {/* Google Consent Mode v2 — default DENY before user chooses */}
+        <script
+          dangerouslySetInnerHTML={{ __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', {
+              ad_storage: 'denied',
+              ad_user_data: 'denied',
+              ad_personalization: 'denied',
+              analytics_storage: 'granted',
+              wait_for_update: 500
+            });
+          `}}
+        />
+        {/* Google AdSense — replace pub-REPLACE_WITH_YOUR_PUBLISHER_ID */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-REPLACE_WITH_YOUR_PUBLISHER_ID"
+          crossOrigin="anonymous"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
@@ -75,6 +96,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {children}
         {!hideCommunityCard && <CommunityCard />}
         <StoriesCTA />
+        <CookieConsent />
       </body>
     </html>
   )

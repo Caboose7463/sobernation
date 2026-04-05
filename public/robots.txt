@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Block admin/internal routes
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+
+# Allow Google AdSense crawler
+User-agent: Mediapartners-Google
+Allow: /
+
+Sitemap: https://www.sobernation.co.uk/sitemap.xml
