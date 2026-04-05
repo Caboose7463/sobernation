@@ -184,12 +184,58 @@ export default function CounsellorCard({ counsellor }: Props) {
         }
         .cc__claim {
           font-size: 11px;
+          font-weight: 600;
           color: var(--text-light);
           text-decoration: none;
           margin-left: auto;
+          padding: 5px 10px;
+          border-radius: 6px;
+          border: 1px solid var(--border);
+          background: var(--white);
+          transition: all 0.12s;
         }
         .cc__claim:hover {
+          border-color: var(--accent);
           color: var(--accent);
+          background: var(--accent-pale);
+        }
+        .cc__claim--cta {
+          font-size: 12px;
+          font-weight: 700;
+          color: #fff;
+          background: var(--accent);
+          border: none;
+          text-decoration: none;
+          padding: 7px 14px;
+          border-radius: 6px;
+          transition: opacity 0.12s;
+        }
+        .cc__claim--cta:hover { opacity: 0.88; }
+        .cc__unverified-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 10px;
+          font-weight: 600;
+          color: #6b7280;
+          background: #f3f4f6;
+          border: 1px solid #e5e7eb;
+          border-radius: 20px;
+          padding: 2px 8px;
+          margin-top: 3px;
+        }
+        .cc__verified-label {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 10px;
+          font-weight: 700;
+          color: #166534;
+          background: #dcfce7;
+          border: 1px solid #bbf7d0;
+          border-radius: 20px;
+          padding: 2px 8px;
+          margin-top: 3px;
         }
       `}</style>
 
@@ -210,6 +256,17 @@ export default function CounsellorCard({ counsellor }: Props) {
             </div>
             {counsellor.title && (
               <div className="cc__title">{counsellor.title}</div>
+            )}
+            {/* Verified / unverified status label */}
+            {counsellor.verified ? (
+              <div className="cc__verified-label">
+                <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
+                  <polyline points="2,5 4.2,7.5 8,3" stroke="#166534" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Verified by SoberNation
+              </div>
+            ) : (
+              <div className="cc__unverified-badge">Unverified listing</div>
             )}
           </div>
         </div>
@@ -273,7 +330,10 @@ export default function CounsellorCard({ counsellor }: Props) {
           )}
 
           {!counsellor.verified && (
-            <Link href={`/counsellors/claim?id=${counsellor.id}`} className="cc__claim">
+            <Link
+              href={`/counsellors/claim?id=${counsellor.id}&name=${encodeURIComponent(counsellor.name)}&location=${counsellor.location_slug}`}
+              className="cc__claim--cta"
+            >
               Claim listing →
             </Link>
           )}

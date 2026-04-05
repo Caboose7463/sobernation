@@ -17,6 +17,7 @@ interface FormData {
   specialisms: string[]
   phone: string
   website: string
+  counsellorId: string // prefilled from scraped record
 }
 
 const SPECIALISMS = [
@@ -53,19 +54,28 @@ function ClaimFlowInner() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
-  const [step, setStep] = useState<Step>(1)
+  const prefillName = searchParams.get('name') || ''
+  const prefillLocation = searchParams.get('location') || ''
+  const prefillId = searchParams.get('id') || ''
+  const prefillType = (searchParams.get('type') as ListingType) || ''
+
+  // If name is pre-filled from card, skip type selection straight to step 2
+  const initialStep: Step = (prefillName && prefillType) ? 2 : prefillName ? 2 : 1
+
+  const [step, setStep] = useState<Step>(initialStep)
   const [direction, setDirection] = useState<'forward' | 'back'>('forward')
   const [animating, setAnimating] = useState(false)
 
   const [form, setForm] = useState<FormData>({
-    listingType: '',
-    name: '',
+    listingType: prefillType || 'counsellor',
+    name: prefillName,
     bacpNumber: '',
     email: '',
-    location: searchParams.get('location') || '',
+    location: prefillLocation,
     specialisms: [],
     phone: '',
     website: '',
+    counsellorId: prefillId,
   })
 
   const [bacpChecking, setBacpChecking] = useState(false)
@@ -133,7 +143,7 @@ function ClaimFlowInner() {
       const res = await fetch('/api/counsellors/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, counsellorId: form.counsellorId }),
       })
       const data = await res.json()
       if (data.url) {
@@ -285,6 +295,19 @@ function ClaimFlowInner() {
           .cf-type-grid { grid-template-columns: 1fr; }
         }
       `}</style>
+
+      {/* If pre-filled name, show personalised header */}
+      {prefillName && (
+        <div style={{ background: 'var(--accent-pale)', border: '1px solid #c8e6df', borderRadius: 10, padding: '14px 18px', marginBottom: 16 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--accent)', marginBottom: 2 }}>
+            Is this your listing?
+          </div>
+          <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+            We found a listing for <strong>{prefillName}</strong> on SoberNation.
+            Claim and verify it to take control of your profile.
+          </div>
+        </div>
+      )}
 
       {/* Progress bar */}
       <div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 3, background: 'var(--border)', zIndex: 100 }}>
