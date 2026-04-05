@@ -242,9 +242,11 @@ async function main() {
           listing_type: 'counsellor',
         }))
 
-        const { error } = await supabase
-          .from('counsellors')
-          .upsert(rows, { onConflict: 'name,location_slug', ignoreDuplicates: true })
+        // Delete existing rows for this city first, then insert fresh
+        // (avoids needing a UNIQUE constraint for upsert)
+        await supabase.from('counsellors').delete().eq('location_slug', city.slug).eq('source', 'counselling_directory_scrape')
+
+        const { error } = await supabase.from('counsellors').insert(rows)
 
         if (error) console.error(`  Supabase:`, error.message)
         else { console.log(`  ✅ Inserted ${rows.length}`); total += rows.length }
