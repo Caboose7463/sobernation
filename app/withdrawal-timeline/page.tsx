@@ -409,13 +409,34 @@ export default function WithdrawalTimeline() {
             Find {substance.name} treatment →
           </Link>
         </div>
+
+        {/* See also — cross-link to substance-specific pages */}
+        <div style={{ marginTop: 32 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>See also</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {[
+              { label: 'Alcohol withdrawal symptoms (detailed)', href: '/alcohol-withdrawal-symptoms' },
+              { label: 'Heroin withdrawal symptoms (detailed)', href: '/heroin-withdrawal-symptoms' },
+              { label: 'How to stop drinking', href: '/how-to-stop-drinking' },
+              { label: 'What is methadone?', href: '/what-is-methadone' },
+              { label: 'Alcohol rehab near you', href: '/alcohol-rehab/london' },
+              { label: 'Drug rehab near you', href: '/drug-rehab/london' },
+              { label: 'Find rehab', href: '/rehab/london' },
+              { label: 'Sobriety calculator', href: '/sobriety-counter' },
+            ].map(item => (
+              <Link key={item.href} href={item.href} style={{ padding: '7px 14px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 20, fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
 
       <footer style={{ borderTop: '1px solid var(--border)', padding: '28px 20px', background: 'var(--white)', marginTop: 48 }}>
         <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
           <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation · Medical content reviewed against NHS and NICE guidelines</div>
           <div style={{ display: 'flex', gap: 20 }}>
-            {[['Sobriety calculator', '/sobriety-counter'], ['Cost calculator', '/addiction-cost-calculator'], ['Find help', '/help/london']].map(([label, href]) => (
+            {[['Sobriety calculator', '/sobriety-counter'], ['Find rehab', '/rehab/london'], ['About', '/about'], ['Editorial policy', '/editorial-policy'], ['Privacy', '/privacy-policy']].map(([label, href]) => (
               <Link key={href} href={href} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{label}</Link>
             ))}
           </div>

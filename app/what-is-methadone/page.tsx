@@ -82,7 +82,17 @@ export default function WhatIsMethadonePage() {
           </details>
         ))}
         <div style={{ marginTop: 32, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          {[['Heroin addiction help', '/heroin-addiction/london'], ['Opioid substitution therapy', '/opioid-substitution/london'], ['Opiate addiction', '/opiate-addiction/london'], ['Drug detox', '/drug-detox/london']].map(([l, h]) => (
+          {[
+            ['Heroin addiction help', '/heroin-addiction/london'],
+            ['Opioid substitution therapy', '/opioid-substitution/london'],
+            ['Opiate addiction', '/opiate-addiction/london'],
+            ['Drug detox', '/drug-detox/london'],
+            ['Heroin withdrawal symptoms', '/heroin-withdrawal-symptoms'],
+            ['Heroin detox', '/heroin-detox/london'],
+            ['Drug counselling', '/drug-counselling/london'],
+            ['NA meetings near you', '/na-meetings/london'],
+            ['Naloxone (overdose reversal)', '/naloxone/london'],
+          ].map(([l, h]) => (
             <Link key={h} href={h} style={{ padding: '9px 16px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 20, fontSize: 13, color: 'var(--text)', textDecoration: 'none' }}>{l} →</Link>
           ))}
         </div>
@@ -90,7 +100,9 @@ export default function WhatIsMethadonePage() {
       <footer style={{ borderTop: '1px solid var(--border)', padding: '24px 20px', background: 'var(--white)', marginTop: 24 }}>
         <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation</div>
-          <div style={{ display: 'flex', gap: 16 }}>{[['About', '/about'], ['Editorial policy', '/editorial-policy'], ['Privacy', '/privacy-policy']].map(([l, h]) => <Link key={h} href={h} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{l}</Link>)}</div>
+          <div style={{ display: 'flex', gap: 16 }}>
+            {[['Heroin addiction', '/heroin-addiction/london'], ['Drug treatment', '/drug-treatment/london'], ['About', '/about'], ['Editorial policy', '/editorial-policy'], ['Privacy', '/privacy-policy']].map(([l, h]) => <Link key={h} href={h} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{l}</Link>)}
+          </div>
         </div>
       </footer>
     </div>

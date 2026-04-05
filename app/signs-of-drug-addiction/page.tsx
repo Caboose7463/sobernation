@@ -89,11 +89,39 @@ export default function SignsOfDrugAddictionPage() {
             <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.75, paddingBottom: 16, margin: 0 }}>{faq.answer}</p>
           </details>
         ))}
+
+        {/* See also */}
+        <div style={{ marginTop: 40 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14 }}>See also</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {[
+              { label: 'Heroin addiction help', href: '/heroin-addiction/london' },
+              { label: 'Cocaine addiction help', href: '/cocaine-addiction/london' },
+              { label: 'Cannabis addiction help', href: '/cannabis-addiction/london' },
+              { label: 'Signs of alcoholism', href: '/signs-of-alcoholism' },
+              { label: 'Heroin withdrawal symptoms', href: '/heroin-withdrawal-symptoms' },
+              { label: 'Withdrawal timeline', href: '/withdrawal-timeline' },
+              { label: 'Drug treatment near you', href: '/drug-treatment/london' },
+              { label: 'Drug rehab near you', href: '/drug-rehab/london' },
+              { label: 'NA meetings', href: '/na-meetings/london' },
+              { label: 'Find help near you', href: '/help/london' },
+            ].map(item => (
+              <Link key={item.href} href={item.href} style={{ padding: '8px 16px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 20, fontSize: 13, color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
+                {item.label} →
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
 
       <footer style={{ borderTop: '1px solid var(--border)', padding: '28px 20px', background: 'var(--white)' }}>
         <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
           <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation</div>
+          <div style={{ display: 'flex', gap: 20 }}>
+            {[['Drug rehab', '/drug-rehab/london'], ['NA meetings', '/na-meetings/london'], ['Withdrawal timeline', '/withdrawal-timeline'], ['About', '/about'], ['Editorial policy', '/editorial-policy'], ['Privacy', '/privacy-policy']].map(([l, h]) => (
+              <Link key={h} href={h} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{l}</Link>
+            ))}
+          </div>
         </div>
       </footer>
     </div>

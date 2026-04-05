@@ -73,13 +73,16 @@ export default function AmIAnAlcoholicPage() {
             </div>
 
             <div style={{ padding: 20, background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
-              <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 12 }}>Related tools & resources</h3>
+              <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 12 }}>Related tools &amp; resources</h3>
               {[
                 ['Alcohol units calculator', '/alcohol-units-calculator'],
                 ['Sobriety counter', '/sobriety-counter'],
                 ['Alcohol withdrawal timeline', '/withdrawal-timeline'],
                 ['Signs of alcoholism', '/signs-of-alcoholism'],
+                ['How to stop drinking', '/how-to-stop-drinking'],
+                ['Alcohol withdrawal symptoms', '/alcohol-withdrawal-symptoms'],
                 ['Find alcohol rehab', '/alcohol-rehab/london'],
+                ['AA meetings near you', '/aa-meetings/london'],
               ].map(([label, href]) => (
                 <Link key={href} href={href} style={{ display: 'block', fontSize: 13, color: 'var(--accent)', textDecoration: 'none', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
                   {label} →
@@ -114,7 +117,7 @@ export default function AmIAnAlcoholicPage() {
         <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
           <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation</div>
           <div style={{ display: 'flex', gap: 20 }}>
-            {[['Alcohol help', '/alcohol-addiction/london'], ['Alcohol rehab', '/alcohol-rehab/london'], ['Units calculator', '/alcohol-units-calculator']].map(([l, h]) => (
+            {[['Alcohol help', '/alcohol-addiction/london'], ['Alcohol rehab', '/alcohol-rehab/london'], ['How to stop drinking', '/how-to-stop-drinking'], ['Signs of alcoholism', '/signs-of-alcoholism'], ['About', '/about'], ['Privacy', '/privacy-policy']].map(([l, h]) => (
               <Link key={h} href={h} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{l}</Link>
             ))}
           </div>
