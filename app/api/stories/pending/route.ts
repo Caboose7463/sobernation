@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getPendingStories } from '../../../../../lib/stories'
+import { getPendingStories } from '../../../../lib/stories'
 
 const ADMIN_PIN = process.env.ADMIN_PIN ?? '7463'
 

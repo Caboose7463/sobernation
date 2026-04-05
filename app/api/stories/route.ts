@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getApprovedStories, submitStory } from '../../../../lib/stories'
+import { getApprovedStories, submitStory } from '../../../lib/stories'
 
 export const dynamic = 'force-dynamic'
 
