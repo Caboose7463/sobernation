@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import StoriesCTA from '../components/StoriesCTA'
 
 export const metadata: Metadata = {
   title: {
@@ -62,7 +63,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <StoriesCTA />
+      </body>
     </html>
   )
 }
