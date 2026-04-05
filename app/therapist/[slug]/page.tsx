@@ -9,6 +9,8 @@
 import { createClient } from '@supabase/supabase-js'
 import { notFound } from 'next/navigation'
 import { getLiveViewers } from '../../../lib/profile-slugs'
+import { getNearbyLocations } from '../../../lib/nearby-locations'
+import { getLocationStats, formatStat } from '../../../lib/location-stats'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
@@ -234,6 +236,8 @@ export default async function TherapistPage({ params }: Props) {
   const viewers = getLiveViewers(slug)
   const hasBACP = !!c.bacp_number
   const initials = c.name.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()
+  const nearby = getNearbyLocations(c.location_slug, 6)
+  const stats = getLocationStats(c.location_slug)
 
   const aboutParas = generateAbout(c.name, c.location_name, specs, c.title ?? '')
   const approachParas = generateApproach(c.name, specs)
@@ -244,11 +248,16 @@ export default async function TherapistPage({ params }: Props) {
   const schemas = [
     {
       '@context': 'https://schema.org',
-      '@type': ['Person', 'MedicalBusiness'],
+      '@type': ['Person', 'ProfessionalService'],
       name: c.name,
       jobTitle: c.title ?? 'Addiction Counsellor',
       description: `${c.name} is an addiction counsellor based in ${c.location_name}, specialising in ${specs.map(s => SPEC_LABELS[s] ?? s).join(', ')}.`,
       address: { '@type': 'PostalAddress', addressLocality: c.location_name, addressCountry: 'GB' },
+      areaServed: [
+        { '@type': 'City', name: c.location_name },
+        ...nearby.slice(0, 4).map(n => ({ '@type': 'City', name: n.name })),
+      ],
+      priceRange: '££',
       url: `https://www.sobernation.co.uk/therapist/${slug}`,
       ...(c.photo_url ? { image: c.photo_url } : {}),
       ...(c.website ? { sameAs: [c.website] } : {}),
@@ -443,6 +452,22 @@ export default async function TherapistPage({ params }: Props) {
         </div>
       </div>
 
+      {/* ── Crisis box ── */}
+      <div style={{ background: '#fef2f2', borderTop: '1px solid #fecaca', borderBottom: '1px solid #fecaca', padding: '12px 20px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontWeight: 700, fontSize: 13, color: '#b91c1c' }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Need help right now?
+          </div>
+          <div style={{ fontSize: 13, color: '#7f1d1d', lineHeight: 1.5 }}>
+            <strong>Frank:</strong> 0300 123 6600 (free, 24/7) ·{' '}
+            <strong>Samaritans:</strong> 116 123 ·{' '}
+            <strong>NHS:</strong> 111 ·{' '}
+            <a href="https://www.talktofrank.com/get-help/find-support-near-you" target="_blank" rel="noopener noreferrer" style={{ color: '#b91c1c', fontWeight: 600 }}>Find local support →</a>
+          </div>
+        </div>
+      </div>
+
       {/* ── Body ── */}
       <div className="tp-body-wrap tp">
 
@@ -455,7 +480,32 @@ export default async function TherapistPage({ params }: Props) {
             <div className="tp-body-text">
               {aboutParas.map((p, i) => <p key={i}>{p}</p>)}
             </div>
+            {/* Local addiction stats */}
+            {stats && (
+              <div style={{ marginTop: 20, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '14px 16px' }}>
+                <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: '#166534', marginBottom: 10 }}>Addiction in {c.location_name} — At a Glance</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 12 }}>
+                  {[{
+                    value: formatStat(stats.inDrugTreatment),
+                    label: 'adults in drug treatment',
+                  }, {
+                    value: formatStat(stats.withAlcoholProblems),
+                    label: 'with alcohol problems',
+                  }, {
+                    value: `${stats.relapseRate}%`,
+                    label: 'relapse in year 1 without support',
+                  }].map(stat => (
+                    <div key={stat.label}>
+                      <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--accent)', letterSpacing: '-0.02em' }}>{stat.value}</div>
+                      <div style={{ fontSize: 11, color: '#166534', lineHeight: 1.4, marginTop: 2 }}>{stat.label}</div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ fontSize: 10, color: '#6b7280', marginTop: 8 }}>Source: {stats.source}, {stats.year}</div>
+              </div>
+            )}
           </section>
+
 
           {/* Therapeutic approach */}
           <section id="approach" className="tp-section">
@@ -565,7 +615,23 @@ export default async function TherapistPage({ params }: Props) {
               <p>If you are based outside {c.location_name} and are looking for a specialist addiction counsellor, SoberNation lists qualified professionals across the UK. You can also <Link href={`/counsellors/${c.location_slug}`} style={{ color: 'var(--accent)' }}>browse all counsellors in {c.location_name}</Link>.</p>
             </div>
             <iframe className="tp-map" src={mapSrc} allowFullScreen loading="lazy" title={`Map of ${c.location_name}`} referrerPolicy="no-referrer-when-downgrade" />
-            <div style={{ marginTop: 12, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+
+            {/* Nearby areas */}
+            {nearby.length > 0 && (
+              <div style={{ marginTop: 16 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-light)', marginBottom: 8 }}>Also serving nearby areas</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
+                  {nearby.map(n => (
+                    <Link key={n.slug} href={`/counsellors/${n.slug}`}
+                      style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', background: 'var(--accent-pale)', padding: '4px 12px', borderRadius: 20, textDecoration: 'none' }}>
+                      {n.name} ({Math.round(n.distanceKm)} mi away)
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div style={{ marginTop: 14, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
               <Link href={`/counsellors/${c.location_slug}`} style={{ fontSize: 13, color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
                 All counsellors in {c.location_name} →
               </Link>
@@ -633,6 +699,14 @@ export default async function TherapistPage({ params }: Props) {
                 <span className="tp-dot" />
                 {viewers} viewing today
               </div>
+              {/* Real view count */}
+              {(c.view_count ?? 0) > 10 && (
+                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 12, marginTop: -8 }}>
+                  This profile has been viewed{' '}
+                  <strong style={{ color: 'var(--text)' }}>{(c.view_count ?? 0).toLocaleString()}</strong>{' '}
+                  times in total
+                </div>
+              )}
 
               {/* Contact / Claim */}
               {c.verified && (c.phone?.trim() || c.email?.trim() || c.website?.trim()) ? (

@@ -6,6 +6,8 @@
 import { notFound } from 'next/navigation'
 import { getCentreBySlug } from '../../../lib/rehabs'
 import { getLiveViewers } from '../../../lib/profile-slugs'
+import { getNearbyLocations } from '../../../lib/nearby-locations'
+import { getLocationStats, formatStat } from '../../../lib/location-stats'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
@@ -140,6 +142,8 @@ export default async function CentreProfilePage({ params }: Props) {
   const treatments = generateTreatments(specList, centre.name, town)
   const process_ = generateProcess(centre.name, private_)
   const faqs = generateFAQs(centre.name, town, centre.serviceType, private_)
+  const nearby = getNearbyLocations(centre.townSlug, 6)
+  const stats = getLocationStats(centre.townSlug)
 
   const mapSrc = centre.postcode
     ? `https://maps.google.com/maps?q=${encodeURIComponent(centre.postcode + ', UK')}&output=embed&z=14`
@@ -148,11 +152,16 @@ export default async function CentreProfilePage({ params }: Props) {
   const schemas = [
     {
       '@context': 'https://schema.org',
-      '@type': 'LocalBusiness',
+      '@type': ['LocalBusiness', 'MedicalOrganization'],
       name: centre.name,
       description: about[0],
       address: { '@type': 'PostalAddress', streetAddress: centre.address || undefined, postalCode: centre.postcode || undefined, addressLocality: town, addressCountry: 'GB' },
       telephone: centre.phone || undefined,
+      priceRange: private_ ? '£££' : '£',
+      areaServed: [
+        { '@type': 'City', name: town },
+        ...nearby.slice(0, 3).map(n => ({ '@type': 'City', name: n.name })),
+      ],
       url: centre.website || `https://www.sobernation.co.uk/centre/${slug}`,
       ...(centre.cqcUrl ? { sameAs: [centre.cqcUrl] } : {}),
     },
@@ -292,6 +301,22 @@ export default async function CentreProfilePage({ params }: Props) {
         </div>
       </div>
 
+      {/* ── Crisis box ── */}
+      <div style={{ background: '#fef2f2', borderTop: '1px solid #fecaca', borderBottom: '1px solid #fecaca', padding: '12px 20px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontWeight: 700, fontSize: 13, color: '#b91c1c' }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Need urgent help?
+          </div>
+          <div style={{ fontSize: 13, color: '#7f1d1d', lineHeight: 1.5 }}>
+            <strong>Frank:</strong> 0300 123 6600 (free, 24/7) ·{' '}
+            <strong>Samaritans:</strong> 116 123 ·{' '}
+            <strong>NHS:</strong> 111 ·{' '}
+            <a href="https://www.talktofrank.com/get-help/find-support-near-you" target="_blank" rel="noopener noreferrer" style={{ color: '#b91c1c', fontWeight: 600 }}>Find local support →</a>
+          </div>
+        </div>
+      </div>
+
       {/* ── Body ── */}
       <div className="cp-wrap cp">
         <main>
@@ -300,6 +325,27 @@ export default async function CentreProfilePage({ params }: Props) {
           <section id="about" className="cp-section">
             <h2 className="cp-section-title">About {centre.name}</h2>
             <div className="cp-body">{about.map((p, i) => <p key={i}>{p}</p>)}</div>
+            {/* Local stats */}
+            {stats && (
+              <div style={{ marginTop: 20, background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 10, padding: '14px 16px' }}>
+                <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: '#1d4ed8', marginBottom: 10 }}>Addiction in {town} — At a Glance</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 12 }}>
+                  {[{
+                    value: formatStat(stats.inDrugTreatment), label: 'adults in drug treatment',
+                  }, {
+                    value: formatStat(stats.withAlcoholProblems), label: 'with harmful drinking',
+                  }, {
+                    value: `${stats.relapseRate}%`, label: 'relapse in year 1 without support',
+                  }].map(stat => (
+                    <div key={stat.label}>
+                      <div style={{ fontSize: 20, fontWeight: 800, color: '#1d4ed8', letterSpacing: '-0.02em' }}>{stat.value}</div>
+                      <div style={{ fontSize: 11, color: '#1e40af', lineHeight: 1.4, marginTop: 2 }}>{stat.label}</div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ fontSize: 10, color: '#6b7280', marginTop: 8 }}>Source: {stats.source}, {stats.year}</div>
+              </div>
+            )}
           </section>
 
           {/* Treatment */}
@@ -408,6 +454,22 @@ export default async function CentreProfilePage({ params }: Props) {
               <p>{centre.name} is located in {town}. Contact the admissions team for detailed directions and information about parking, transport links and accommodation options for family members travelling from further afield.</p>
             </div>
             <iframe className="cp-map" src={mapSrc} allowFullScreen loading="lazy" title={`Map showing ${centre.name}, ${town}`} referrerPolicy="no-referrer-when-downgrade" />
+
+            {/* Nearby areas */}
+            {nearby.length > 0 && (
+              <div style={{ marginTop: 16 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-light)', marginBottom: 8 }}>Also serving nearby areas</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
+                  {nearby.map(n => (
+                    <Link key={n.slug} href={`/rehab/${n.slug}`}
+                      style={{ fontSize: 12, fontWeight: 600, color: '#1d4ed8', background: '#eff6ff', padding: '4px 12px', borderRadius: 20, textDecoration: 'none' }}>
+                      {n.name} ({Math.round(n.distanceKm)} mi away)
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div style={{ marginTop: 14, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
               <Link href={`/centres/${centre.townSlug}`} style={{ fontSize: 13, color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>All centres in {town} →</Link>
               <Link href={`/rehab/${centre.townSlug}`} style={{ fontSize: 13, color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>Rehab guide for {town} →</Link>
