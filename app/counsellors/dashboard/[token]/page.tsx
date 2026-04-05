@@ -171,7 +171,7 @@ export default async function DashboardPage({ params }: Props) {
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             {isActive && (
               <a
-                href="https://billing.stripe.com/p/login/test_..."
+                href={process.env.NEXT_PUBLIC_STRIPE_BILLING_URL || 'https://billing.stripe.com/p/login/'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="db-action-btn db-action-secondary"

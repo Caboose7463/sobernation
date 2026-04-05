@@ -89,9 +89,19 @@
     "doncaster",
     "chesterfield",
     "chelmsford",
-    "mendip"
+    "mendip",
+    "sutton-coldfield",
+    "wakefield",
+    "walthamstow",
+    "dagenham",
+    "basingstoke",
+    "maidstone",
+    "bedford",
+    "woking",
+    "lincoln",
+    "west-bromwich"
   ],
-  "total": 758,
+  "total": 848,
   "startedAt": "2026-04-05T20:20:31.193Z",
-  "updatedAt": "2026-04-05T21:20:57.924Z"
+  "updatedAt": "2026-04-05T21:27:24.637Z"
 }

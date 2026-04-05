@@ -97,6 +97,22 @@ const SERVICE_SECTIONS = [
     ['Recovery Coaching', '/recovery-coaching/london'], ['Aftercare', '/aftercare/london'],
     ['Chemsex Support', '/chemsex-support/london'], ['Non-12-Step Rehab', '/non-12-step-rehab/london'],
   ]},
+  { heading: 'Find a Counsellor', links: [
+    ['London', '/counsellors/london'], ['Manchester', '/counsellors/manchester'],
+    ['Birmingham', '/counsellors/birmingham'], ['Leeds', '/counsellors/leeds'],
+    ['Bristol', '/counsellors/bristol'], ['Sheffield', '/counsellors/sheffield'],
+    ['Liverpool', '/counsellors/liverpool'], ['Edinburgh', '/counsellors/edinburgh'],
+    ['Glasgow', '/counsellors/glasgow'], ['Cardiff', '/counsellors/cardiff'],
+    ['Newcastle', '/counsellors/newcastle-upon-tyne'], ['Brighton', '/counsellors/brighton'],
+  ]},
+  { heading: 'Rehab Centres', links: [
+    ['London', '/centres/london'], ['Manchester', '/centres/manchester'],
+    ['Birmingham', '/centres/birmingham'], ['Leeds', '/centres/leeds'],
+    ['Bristol', '/centres/bristol'], ['Sheffield', '/centres/sheffield'],
+    ['Liverpool', '/centres/liverpool'], ['Edinburgh', '/centres/edinburgh'],
+    ['Glasgow', '/centres/glasgow'], ['Cardiff', '/centres/cardiff'],
+    ['Newcastle', '/centres/newcastle-upon-tyne'], ['Brighton', '/centres/brighton'],
+  ]},
 ]
 
 export default function HomePage() {
@@ -361,6 +377,17 @@ export default function HomePage() {
               </div>
               <Link href="/sobriety-counter" style={{ display: 'block', textAlign: 'center', padding: '10px', background: 'var(--accent)', color: '#fff', borderRadius: 'var(--radius-sm)', fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
                 Start tracking →
+              </Link>
+            </div>
+
+            {/* List your practice CTA */}
+            <div style={{ marginTop: 16, background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '18px 18px' }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>Are you a counsellor?</div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 12, lineHeight: 1.6 }}>
+                List your practice on SoberNation and reach people actively seeking help in your area.
+              </div>
+              <Link href="/counsellors/claim" style={{ display: 'block', textAlign: 'center', padding: '9px', background: 'var(--accent)', color: '#fff', borderRadius: 'var(--radius-sm)', fontSize: 12, fontWeight: 600, textDecoration: 'none' }}>
+                List your practice →
               </Link>
             </div>
           </div>
