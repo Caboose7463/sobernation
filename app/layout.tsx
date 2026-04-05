@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import StoriesCTA from '../components/StoriesCTA'
+import CommunityCard from '../components/CommunityCard'
+import { headers } from 'next/headers'
 
 export const metadata: Metadata = {
   title: {
@@ -50,7 +52,11 @@ const webSiteSchema = {
   },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const headersList = await headers()
+  const pathname = headersList.get('x-invoke-path') || headersList.get('x-pathname') || ''
+  const hideCommunityCard = pathname.startsWith('/community') || pathname.startsWith('/admin')
+
   return (
     <html lang="en">
       <head>
@@ -65,6 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         {children}
+        {!hideCommunityCard && <CommunityCard />}
         <StoriesCTA />
       </body>
     </html>
