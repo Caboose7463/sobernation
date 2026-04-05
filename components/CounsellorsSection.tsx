@@ -28,7 +28,7 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
     const supabase = getSupabase()
     const { data } = await supabase
       .from('counsellors')
-      .select('id, name, title, location_name, location_slug, specialisms, phone, email, website, verified, listing_type')
+      .select('id, name, title, location_name, location_slug, specialisms, phone, email, website, photo_url, verified, listing_type')
       .eq('location_slug', locationSlug)
       .order('verified', { ascending: false })
       .order('name', { ascending: true })

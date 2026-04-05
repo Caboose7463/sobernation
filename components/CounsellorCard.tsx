@@ -12,6 +12,7 @@ export interface Counsellor {
   phone?: string | null
   email?: string | null
   website?: string | null
+  photo_url?: string | null
   verified: boolean
   listing_type: string
 }
@@ -63,6 +64,30 @@ export default function CounsellorCard({ counsellor }: Props) {
           align-items: flex-start;
           gap: 12px;
         }
+        .cc__avatar {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          object-fit: cover;
+          flex-shrink: 0;
+          border: 2px solid var(--border);
+          background: var(--bg-subtle);
+        }
+        .cc__avatar-initials {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          background: var(--accent);
+          color: #fff;
+          font-size: 15px;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          letter-spacing: 0.02em;
+        }
+        .cc__info { flex: 1; min-width: 0; }
         .cc__name {
           font-size: 15px;
           font-weight: 700;
@@ -149,7 +174,16 @@ export default function CounsellorCard({ counsellor }: Props) {
 
       <div className="cc">
         <div className="cc__top">
-          <div>
+          {/* Avatar */}
+          {counsellor.photo_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={counsellor.photo_url} alt={counsellor.name} className="cc__avatar" />
+          ) : (
+            <div className="cc__avatar-initials" aria-hidden="true">
+              {counsellor.name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()}
+            </div>
+          )}
+          <div className="cc__info">
             <div className="cc__name">
               {counsellor.name}
               {counsellor.verified && (
