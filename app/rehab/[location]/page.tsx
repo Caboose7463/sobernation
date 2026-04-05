@@ -142,11 +142,13 @@ export default async function RehabLocationPage(
             {/* Freshness badge — updates every deploy */}
             <LastReviewed dataDate={BUILD_MONTH} />
 
-            {/* Counsellors — shown above centres */}
-            <CounsellorsSection locationSlug={location} locationName={loc.name} />
+            {/* Counsellors — shown below centres, comment updated */}
 
             {/* CQC centres — direct, borough-aggregated, or nearest-city fallback */}
             <NearestCentres result={rehabsResult} locationName={loc.name} limit={6} />
+
+            {/* Counsellors below treatment centres */}
+            <CounsellorsSection locationSlug={location} locationName={loc.name} />
 
             {/* Cost comparison table */}
             <div style={{ marginBottom: 40 }}>

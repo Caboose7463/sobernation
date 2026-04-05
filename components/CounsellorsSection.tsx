@@ -1,8 +1,9 @@
 /**
- * CounsellorsSection — shown on location pages above rehab centres.
+ * CounsellorsSection — shown on location pages BELOW rehab centres.
  * 
- * Displays up to 5 addiction counsellors for a given location,
- * then a styled CTA for counsellors to add their listing (paid verification).
+ * Shows up to 3 addiction counsellors for a given location.
+ * Falls back to nearest city with counsellors if none found locally.
+ * Paid CTA for counsellors to add their listing.
  */
 
 import { createClient } from '@supabase/supabase-js'
@@ -21,24 +22,80 @@ function getSupabase() {
   )
 }
 
+const SELECT = 'id, name, title, location_name, location_slug, specialisms, phone, email, website, photo_url, verified, listing_type'
+
 export default async function CounsellorsSection({ locationSlug, locationName }: Props) {
   let counsellors: Counsellor[] = []
+  let nearbyCity: string | null = null
 
   try {
     const supabase = getSupabase()
-    const { data } = await supabase
+
+    // 1. Try exact location match
+    const { data: exact } = await supabase
       .from('counsellors')
-      .select('id, name, title, location_name, location_slug, specialisms, phone, email, website, photo_url, verified, listing_type')
+      .select(SELECT)
       .eq('location_slug', locationSlug)
       .order('verified', { ascending: false })
       .order('name', { ascending: true })
-      .limit(5)
+      .limit(3)
 
-    counsellors = data ?? []
+    if (exact && exact.length > 0) {
+      counsellors = exact
+    } else {
+      // 2. Proximity fallback — find any seeded city and show those
+      // Get all distinct location_slugs that have counsellors
+      const { data: seeded } = await supabase
+        .from('counsellors')
+        .select('location_slug, location_name')
+        .neq('location_slug', locationSlug)
+        .limit(1000)
+
+      if (seeded && seeded.length > 0) {
+        // Use locations.json to find nearest by lat/lng
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
+          const locData = require('../data/locations.json') as { locations: Array<{ slug: string; lat: number; lng: number }> }
+          const current = locData.locations.find(l => l.slug === locationSlug)
+
+          if (current) {
+            // Build set of seeded slugs with their location data
+            const seededSlugs = [...new Set(seeded.map(s => s.location_slug))]
+            const seededWithCoords = locData.locations.filter(l => seededSlugs.includes(l.slug))
+
+            // Find closest
+            let nearest = seededWithCoords[0]
+            let minDist = Infinity
+            for (const loc of seededWithCoords) {
+              const d = Math.sqrt(
+                Math.pow(loc.lat - current.lat, 2) +
+                Math.pow(loc.lng - current.lng, 2)
+              )
+              if (d < minDist) { minDist = d; nearest = loc }
+            }
+
+            if (nearest) {
+              const { data: nearby } = await supabase
+                .from('counsellors')
+                .select(SELECT)
+                .eq('location_slug', nearest.slug)
+                .order('verified', { ascending: false })
+                .limit(3)
+
+              if (nearby && nearby.length > 0) {
+                counsellors = nearby
+                nearbyCity = seeded.find(s => s.location_slug === nearest.slug)?.location_name ?? nearest.slug
+              }
+            }
+          }
+        } catch { /* locations.json unavailable */ }
+      }
+    }
   } catch {
-    // Supabase unreachable — silently skip section
     return null
   }
+
+  const displayName = nearbyCity ? `near ${locationName}` : `in ${locationName}`
 
   return (
     <>
@@ -59,6 +116,12 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
           font-weight: 700;
           color: var(--text);
           letter-spacing: -0.01em;
+        }
+        .cs-nearby-note {
+          font-size: 12px;
+          color: var(--text-muted);
+          margin-bottom: 10px;
+          font-style: italic;
         }
         .cs-view-all {
           font-size: 13px;
@@ -131,10 +194,12 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
         }
       `}</style>
 
+      <hr className="cs-divider" />
+
       <div className="cs-wrap">
         <div className="cs-header">
           <h2 className="cs-title">
-            Addiction counsellors in {locationName}
+            Addiction counsellors {displayName}
           </h2>
           {counsellors.length > 0 && (
             <Link href={`/counsellors/${locationSlug}`} className="cs-view-all">
@@ -142,6 +207,12 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
             </Link>
           )}
         </div>
+
+        {nearbyCity && (
+          <p className="cs-nearby-note">
+            Showing counsellors from {nearbyCity} — the nearest area with listings.
+          </p>
+        )}
 
         {counsellors.length > 0 ? (
           <div className="cs-grid">
@@ -155,7 +226,7 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
           </p>
         )}
 
-        {/* CTA — paid verification only */}
+        {/* CTA — paid verification */}
         <div className="cs-cta">
           <div className="cs-cta-left">
             <div className="cs-cta-icon">
@@ -174,8 +245,6 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
           </Link>
         </div>
       </div>
-
-      <hr className="cs-divider" />
     </>
   )
 }

@@ -250,11 +250,12 @@ export default async function HelpLocationPage(
             {/* Freshness badge */}
             <LastReviewed dataDate={BUILD_MONTH} />
 
-            {/* Counsellors — shown above centres */}
-            <CounsellorsSection locationSlug={location} locationName={loc.name} />
-
             {/* CQC centres — direct, borough-aggregated, or nearest fallback */}
             <NearestCentres result={rehabsResult} locationName={loc.name} limit={8} />
+
+            {/* Counsellors — below treatment centres */}
+            <CounsellorsSection locationSlug={location} locationName={loc.name} />
+
 
             {/* Full service directory — all 65+ route families */}
             {SERVICE_CATEGORIES.map(cat => (

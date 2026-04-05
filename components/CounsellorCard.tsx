@@ -2,6 +2,27 @@
 import Link from 'next/link'
 import { useState } from 'react'
 
+// Renders an external profile photo with automatic initials fallback
+function AvatarWithFallback({ name, photoUrl }: { name: string; photoUrl: string | null }) {
+  const [failed, setFailed] = useState(false)
+  const initials = name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()
+
+  if (photoUrl && !failed) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={photoUrl}
+        alt={name}
+        className="cc__avatar"
+        onError={() => setFailed(true)}
+      />
+    )
+  }
+  return (
+    <div className="cc__avatar-initials" aria-hidden="true">{initials}</div>
+  )
+}
+
 export interface Counsellor {
   id: string
   name: string
@@ -174,15 +195,8 @@ export default function CounsellorCard({ counsellor }: Props) {
 
       <div className="cc">
         <div className="cc__top">
-          {/* Avatar */}
-          {counsellor.photo_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={counsellor.photo_url} alt={counsellor.name} className="cc__avatar" />
-          ) : (
-            <div className="cc__avatar-initials" aria-hidden="true">
-              {counsellor.name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()}
-            </div>
-          )}
+          {/* Avatar — with fallback to initials if external image fails */}
+          <AvatarWithFallback name={counsellor.name} photoUrl={counsellor.photo_url ?? null} />
           <div className="cc__info">
             <div className="cc__name">
               {counsellor.name}
