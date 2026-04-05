@@ -1,7 +1,7 @@
 /**
  * NearestCentres — shows CQC-registered rehab/drug services on every location page.
  *
- * Each card links to /centre/[slug] profile page.
+ * Uses result.sourceTownSlug (the actual data town) to generate correct /centre/[slug] links.
  * Matches the visual style of CounsellorCard.
  */
 
@@ -34,141 +34,78 @@ function isPrivate(name: string, serviceType: string): boolean {
   return !nhsIndicators.some(kw => n.includes(kw) || s.includes(kw))
 }
 
-function CentreCard({ centre, townSlug }: { centre: RehabCentre; townSlug: string }) {
+function CentreCard({ centre, sourceTownSlug }: { centre: RehabCentre; sourceTownSlug: string }) {
   const badge = serviceTypeLabel(centre.serviceType)
   const private_ = isPrivate(centre.name, centre.serviceType)
-  const slug = getCentreSlug(centre, townSlug)
+  // Use the actual stored town slug — NOT the location slug — so the link resolves correctly
+  const slug = getCentreSlug(centre, sourceTownSlug)
   const initials = centre.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()
   const specs = centre.specialism ? centre.specialism.split('|').slice(0, 3).map(s => s.trim()).filter(Boolean) : []
 
   return (
-    <>
-      <style>{`
-        .nc-card {
-          background: var(--white);
-          border: 1px solid var(--border);
-          border-radius: var(--radius-md);
-          padding: 18px 20px;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-          transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
-          text-decoration: none;
-          color: inherit;
-          cursor: pointer;
-        }
-        .nc-card:hover {
-          border-color: #1d4ed8;
-          box-shadow: 0 4px 16px rgba(29,78,216,0.10);
-          transform: translateY(-1px);
-          text-decoration: none;
-          color: inherit;
-        }
-        .nc-card__top {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          gap: 12px;
-        }
-        .nc-card__logo {
-          width: 44px;
-          height: 44px;
-          border-radius: 10px;
-          background: linear-gradient(135deg, #1d4ed8, #2563eb);
-          color: #fff;
-          font-size: 14px;
-          font-weight: 700;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-          letter-spacing: 0.02em;
-        }
-        .nc-card__info { flex: 1; min-width: 0; }
-        .nc-card__name {
-          font-size: 15px;
-          font-weight: 700;
-          color: var(--text);
-          line-height: 1.3;
-        }
-        .nc-card__sub {
-          font-size: 12px;
-          color: var(--text-muted);
-          margin-top: 2px;
-        }
-        .nc-card__tags {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 5px;
-        }
-        .nc-card__tag {
-          font-size: 11px;
-          padding: 3px 8px;
-          border-radius: 20px;
-          font-weight: 500;
-        }
-        .nc-card__footer {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-top: 2px;
-        }
-        .nc-card__cqc-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          font-size: 10px;
-          font-weight: 700;
-          color: #1d4ed8;
-          background: #eff6ff;
-          border: 1px solid #bfdbfe;
-          border-radius: 20px;
-          padding: 2px 8px;
-        }
-        .nc-card__cta {
-          font-size: 12px;
-          font-weight: 600;
-          color: #1d4ed8;
-        }
-      `}</style>
-      <Link href={`/centre/${slug}`} className="nc-card">
-        <div className="nc-card__top">
-          <div className="nc-card__logo">{initials}</div>
-          <div className="nc-card__info">
-            <div className="nc-card__name">{centre.name}</div>
-            {centre.address && (
-              <div className="nc-card__sub">{centre.address}{centre.postcode ? `, ${centre.postcode}` : ''}</div>
-            )}
+    <Link
+      href={`/centre/${slug}`}
+      style={{
+        background: 'var(--white)',
+        border: '1px solid var(--border)',
+        borderRadius: 'var(--radius-md)',
+        padding: '18px 20px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 10,
+        textDecoration: 'none',
+        color: 'inherit',
+        transition: 'border-color 0.15s, box-shadow 0.15s, transform 0.15s',
+        cursor: 'pointer',
+      }}
+    >
+      {/* Top row: logo + name */}
+      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+        <div style={{
+          width: 44, height: 44, borderRadius: 10, flexShrink: 0,
+          background: 'linear-gradient(135deg, #1d4ed8, #2563eb)',
+          color: '#fff', fontSize: 14, fontWeight: 700,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          {initials}
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', lineHeight: 1.3 }}>
+            {centre.name}
           </div>
+          {centre.address && (
+            <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>
+              {centre.address}{centre.postcode ? `, ${centre.postcode}` : ''}
+            </div>
+          )}
         </div>
+      </div>
 
-        {/* Type + funding tags */}
-        <div className="nc-card__tags">
-          <span className="nc-card__tag" style={{ background: badge.bg, color: badge.color }}>
-            {badge.label}
-          </span>
-          <span className="nc-card__tag" style={{ background: private_ ? '#fef3c7' : '#f0fdf4', color: private_ ? '#92400e' : '#166534' }}>
-            {private_ ? 'Private' : 'NHS'}
-          </span>
-          {specs.slice(0, 2).map(s => (
-            <span key={s} className="nc-card__tag" style={{ background: '#f9fafb', color: '#4b5563' }}>
-              {s}
-            </span>
-          ))}
-        </div>
+      {/* Tags */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+        <span style={{ fontSize: 11, padding: '3px 8px', borderRadius: 20, fontWeight: 500, background: badge.bg, color: badge.color }}>
+          {badge.label}
+        </span>
+        <span style={{ fontSize: 11, padding: '3px 8px', borderRadius: 20, fontWeight: 500, background: private_ ? '#fef3c7' : '#f0fdf4', color: private_ ? '#92400e' : '#166534' }}>
+          {private_ ? 'Private' : 'NHS'}
+        </span>
+        {specs.slice(0, 2).map(s => (
+          <span key={s} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 20, fontWeight: 500, background: '#f9fafb', color: '#4b5563' }}>{s}</span>
+        ))}
+      </div>
 
-        <div className="nc-card__footer">
-          <div className="nc-card__cqc-badge">
-            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              <polyline points="9,12 11,14 15,10"/>
-            </svg>
-            CQC Registered
-          </div>
-          <span className="nc-card__cta">View centre →</span>
+      {/* Footer */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#1d4ed8', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 20, padding: '2px 8px' }}>
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <polyline points="9,12 11,14 15,10"/>
+          </svg>
+          CQC Registered
         </div>
-      </Link>
-    </>
+        <span style={{ fontSize: 12, fontWeight: 600, color: '#1d4ed8' }}>View centre →</span>
+      </div>
+    </Link>
   )
 }
 
@@ -179,33 +116,44 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
   return (
     <div style={{ marginTop: 40 }}>
       {/* Section header */}
-      <div style={{ marginBottom: 16 }}>
-        <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 6 }}>
+      <div style={{ marginBottom: 14 }}>
+        <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>
           {result.isFallback
-            ? `Nearest rehab & addiction centres to ${locationName}`
+            ? `Nearest rehab centres to ${locationName}`
             : `Rehab & addiction centres in ${locationName}`}
         </h2>
+
+        {/* Prominent fallback notice — makes it crystal clear these are from a different area */}
         {result.isFallback ? (
-          <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
-            Showing{' '}
-            <strong>{total} CQC-registered services in {result.sourceArea}</strong>
-            {result.distanceKm < 100
-              ? ` — approximately ${result.distanceKm}km from ${locationName}`
-              : ''}.
-            {' '}Many of these services accept referrals and self-referrals from across the region.
-          </p>
+          <div style={{
+            display: 'flex', alignItems: 'flex-start', gap: 10,
+            padding: '10px 14px', marginBottom: 12,
+            background: '#fffbeb', border: '1px solid #fcd34d',
+            borderRadius: 'var(--radius-sm)',
+          }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#92400e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <div style={{ fontSize: 13, color: '#92400e', lineHeight: 1.5 }}>
+              <strong>No CQC-registered centres found in {locationName}.</strong>{' '}
+              Showing {total} services from <strong>{result.sourceArea}</strong>
+              {result.distanceKm < 999 ? ` — the nearest area with registered treatment data (${Math.round(result.distanceKm)} km away)` : ''}.
+              These centres may accept referrals from {locationName}.
+            </div>
+          </div>
         ) : (
           <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
             {total} CQC-registered NHS and private addiction treatment services in {locationName}.
-            All services are regulated by the Care Quality Commission.
           </p>
         )}
       </div>
 
-      {/* Centre cards grid — matches counsellor card layout */}
+      {/* Centre cards grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
         {displayed.map((centre, i) => (
-          <CentreCard key={centre.cqcUrl || i} centre={centre} townSlug={locationSlug} />
+          // Pass sourceTownSlug so slug generation matches how centres are stored
+          <CentreCard key={centre.cqcUrl || i} centre={centre} sourceTownSlug={result.sourceTownSlug} />
         ))}
       </div>
 
@@ -215,7 +163,7 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
           <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>Showing {limit} of {total} services.</span>
         )}
         <Link
-          href={`/centres/${locationSlug}`}
+          href={`/centres/${result.sourceTownSlug}`}
           style={{ fontSize: 13, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}
         >
           View all {total} centres →
@@ -235,7 +183,7 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
             Can&apos;t find what you need?
           </div>
           <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-            Frank&apos;s NHS service finder includes every drug &amp; alcohol service in the UK.
+            Frank&apos;s NHS service finder covers every drug &amp; alcohol service in the UK.
           </div>
         </div>
         <a

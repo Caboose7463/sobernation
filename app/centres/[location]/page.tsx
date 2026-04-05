@@ -209,7 +209,7 @@ export default async function CentresLocationPage({ params }: Props) {
         {centres.length > 0 ? (
           <div className="ct-grid">
             {centres.map((centre, i) => (
-              <CentreCard key={centre.cqcUrl || i} centre={centre} townSlug={location} />
+              <CentreCard key={centre.cqcUrl || i} centre={centre} townSlug={result.sourceTownSlug} />
             ))}
           </div>
         ) : (

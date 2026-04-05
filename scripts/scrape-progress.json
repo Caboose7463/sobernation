@@ -59,9 +59,29 @@
     "york",
     "telford",
     "poole",
-    "burnley"
+    "burnley",
+    "harrow",
+    "huddersfield",
+    "dundee",
+    "blackburn",
+    "cambridge",
+    "blackpool",
+    "basildon",
+    "norwich",
+    "middlesbrough",
+    "bolton",
+    "stockport",
+    "high-wycombe",
+    "gloucester",
+    "exeter",
+    "colchester",
+    "tottenham",
+    "salford",
+    "newcastle-under-lyme",
+    "solihull",
+    "watford"
   ],
-  "total": 509,
+  "total": 666,
   "startedAt": "2026-04-05T20:20:31.193Z",
-  "updatedAt": "2026-04-05T21:00:03.017Z"
+  "updatedAt": "2026-04-05T21:11:00.302Z"
 }

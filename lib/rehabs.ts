@@ -82,8 +82,10 @@ export interface RehabsResult {
   centres: RehabCentre[]
   /** True if showing centres from a nearby area rather than the exact location */
   isFallback: boolean
-  /** The area the centres are actually from */
+  /** The area the centres are actually from (display name) */
   sourceArea: string
+  /** The slug of the actual town the centres are from — used for /centre/[slug] links */
+  sourceTownSlug: string
   /** Distance in km to the source area (0 if direct) */
   distanceKm: number
 }
@@ -99,7 +101,7 @@ export function getRehabsForLocation(slug: string, locationName: string): Rehabs
   // 1. Try direct / borough-aggregated match
   const direct = collectCentres(slug)
   if (direct.length > 0) {
-    return { centres: direct, isFallback: false, sourceArea: locationName, distanceKm: 0 }
+    return { centres: direct, isFallback: false, sourceArea: locationName, sourceTownSlug: slug, distanceKm: 0 }
   }
 
   // 2. Proximity fallback — pre-computed nearest CQC town
@@ -111,6 +113,7 @@ export function getRehabsForLocation(slug: string, locationName: string): Rehabs
         centres: fallbackCentres,
         isFallback: true,
         sourceArea: prox.nearestName,
+        sourceTownSlug: prox.nearestSlug,
         distanceKm: prox.distanceKm,
       }
     }
@@ -122,6 +125,7 @@ export function getRehabsForLocation(slug: string, locationName: string): Rehabs
     centres: london.slice(0, 5),
     isFallback: true,
     sourceArea: 'London',
+    sourceTownSlug: 'london',
     distanceKm: 999,
   }
 }
