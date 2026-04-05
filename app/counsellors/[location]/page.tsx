@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CounsellorsLocationPage({ params }: Props) {
   const { location } = await params
-  const locationName = getLocationName(location)
+  const locationName = getLocation(location)?.name
   if (!locationName) notFound()
 
   const supabase = getSupabase()

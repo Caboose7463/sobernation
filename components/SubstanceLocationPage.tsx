@@ -112,7 +112,7 @@ export default function SubstanceLocationPage({
           <div>
 
             {/* CQC centres — direct or nearest-city fallback */}
-            <NearestCentres result={rehabsResult} locationName={loc.name} limit={6} />
+            <NearestCentres result={rehabsResult} locationName={loc.name} locationSlug={locationSlug} limit={6} />
 
             {/* Signs of addiction */}
             <div style={{ marginBottom: 36 }}>

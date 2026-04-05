@@ -24,8 +24,8 @@ export async function POST(request: NextRequest) {
     await admin.from('votes').delete().eq('id', existing.id)
     if (post_id) await admin.from('posts').update({ upvotes: admin.from('posts') }).eq('id', post_id)
     // Decrement via raw SQL
-    if (post_id) await admin.rpc('decrement_post_votes', { post_id }).catch(() => {})
-    if (comment_id) await admin.rpc('decrement_comment_votes', { comment_id }).catch(() => {})
+    if (post_id) void admin.rpc('decrement_post_votes', { post_id })
+    if (comment_id) void admin.rpc('decrement_comment_votes', { comment_id })
     return NextResponse.json({ voted: false })
   }
 
@@ -35,8 +35,8 @@ export async function POST(request: NextRequest) {
     : { user_id: user.id, comment_id }
 
   await admin.from('votes').insert(voteData)
-  if (post_id) await admin.rpc('increment_post_votes', { post_id }).catch(() => {})
-  if (comment_id) await admin.rpc('increment_comment_votes', { comment_id }).catch(() => {})
+  if (post_id) void admin.rpc('increment_post_votes', { post_id })
+  if (comment_id) void admin.rpc('increment_comment_votes', { comment_id })
 
   return NextResponse.json({ voted: true })
 }

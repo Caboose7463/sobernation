@@ -166,7 +166,7 @@ export default async function DrugTreatmentPage(
           <div>
 
             {/* CQC centres */}
-            <NearestCentres result={rehabsResult} locationName={loc.name} limit={6} />
+            <NearestCentres result={rehabsResult} locationName={loc.name} locationSlug={location} limit={6} />
 
             {/* Treatment types */}
             <div style={{ marginBottom: 40 }}>

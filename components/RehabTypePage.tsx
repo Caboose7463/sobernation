@@ -100,7 +100,7 @@ export default function RehabTypePage({
             <LastReviewed dataDate={BUILD_MONTH} />
 
             {/* CQC-registered centres — direct for this location or nearest fallback */}
-            <NearestCentres result={rehabsResult} locationName={location} limit={6} />
+            <NearestCentres result={rehabsResult} locationName={location} locationSlug={locationSlug} limit={6} />
 
             {/* Key facts */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 12, marginBottom: 32 }}>

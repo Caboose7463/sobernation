@@ -56,7 +56,7 @@ export default async function ThreadPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
-      <ThreadClient post={post} categorySlug={category} />
+      <ThreadClient post={post as unknown as Parameters<typeof ThreadClient>[0]['post']} categorySlug={category} />
     </>
   )
 }

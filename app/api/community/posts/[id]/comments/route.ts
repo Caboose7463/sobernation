@@ -47,7 +47,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   // Update comment count on post
-  await adminSupabase.rpc('increment_comment_count', { post_id: postId }).catch(() => {})
+  void adminSupabase.rpc('increment_comment_count', { post_id: postId })
 
   // Get post details for notification
   const { data: post } = await adminSupabase
@@ -58,13 +58,13 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
   if (post && post.user_id && post.user_id !== user.id) {
     // Send in-app notification
-    await adminSupabase.from('notifications').insert({
+    void adminSupabase.from('notifications').insert({
       user_id: post.user_id,
       type: 'reply_to_post',
       post_id: postId,
       comment_id: comment.id,
       actor_username: profile.username,
-    }).catch(() => {})
+    })
 
     // Send email notification via Resend
     const { data: postOwner } = await adminSupabase.auth.admin.getUserById(post.user_id)

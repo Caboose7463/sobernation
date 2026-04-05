@@ -5,7 +5,7 @@
  */
 import { notFound } from 'next/navigation'
 import { getLocation } from '../../../lib/locations'
-import { getRehabsBySlug } from '../../../lib/rehabs'
+import { getRehabsForLocation } from '../../../lib/rehabs'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import type { RehabCentre } from '../../../lib/rehabs'
@@ -110,7 +110,7 @@ export default async function CentresLocationPage({ params }: Props) {
   const loc = getLocation(location)
   if (!loc) notFound()
 
-  const result = getRehabsBySlug(location)
+  const result = getRehabsForLocation(location, loc.name)
   const centres = result.centres
 
   return (

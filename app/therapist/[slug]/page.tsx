@@ -106,7 +106,7 @@ function generateAbout(name: string, location: string, specs: string[], title: s
   ]
 }
 
-function generateApproach(name: string, specs: string[]): string[] {
+function generateApproach(name: string, location: string, specs: string[]): string[] {
   const usesTrauma = specs.includes('trauma') || specs.includes('dual-diagnosis')
   const usesCBT = true
   const usesMI = specs.includes('alcohol') || specs.includes('drugs') || specs.includes('substances')
@@ -124,7 +124,7 @@ function generateApproach(name: string, specs: string[]): string[] {
   return [
     `${name} works with a person-centred philosophy, meaning that therapy is led by the client's needs, goals and pace of recovery. The therapeutic relationship is built on trust, respect and genuine collaboration.`,
     `Clinical approaches drawn upon may include: ${methods.join(', ')}. The specific methods used will depend on each client's individual needs, goals and the nature of their addiction.`,
-    `Sessions are typically 50 minutes in duration and may be offered weekly or at a frequency agreed between client and counsellor. ${name} may offer sessions in-person in ${' '} or online via video consultation, depending on individual preference and circumstances.`,
+    `Sessions are typically 50 minutes in duration and may be offered weekly or at a frequency agreed between client and counsellor. ${name} may offer sessions in-person in ${location} or online via video consultation, depending on individual preference and circumstances.`,
   ]
 }
 
@@ -221,8 +221,8 @@ export default async function TherapistPage({ params }: Props) {
 
   if (!c) notFound()
 
-  // Increment view count async
-  supabase.from('counsellors').update({ view_count: (c.view_count ?? 0) + 1 }).eq('id', c.id).then(() => {}).catch(() => {})
+  // Increment view count async (fire-and-forget)
+  void supabase.from('counsellors').update({ view_count: (c.view_count ?? 0) + 1 }).eq('id', c.id)
 
   const { data: related } = await supabase
     .from('counsellors')
@@ -240,7 +240,7 @@ export default async function TherapistPage({ params }: Props) {
   const stats = getLocationStats(c.location_slug)
 
   const aboutParas = generateAbout(c.name, c.location_name, specs, c.title ?? '')
-  const approachParas = generateApproach(c.name, specs)
+  const approachParas = generateApproach(c.name, c.location_name, specs)
   const expectParas = generateWhatToExpect(c.name)
   const faqs = generateFAQs(c.name, c.location_name, specs, hasBACP)
 
