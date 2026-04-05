@@ -1,0 +1,47 @@
+1. Aldbourne Nursing Home
+   TYPE: Nursing homes|Rehabilitation (illness/injury)
+   SPEC: Caring for adults under 65 yrs|Dementia|Caring for adults over 65 yrs
+
+2. The Old Vicarage
+   TYPE: Residential homes|Rehabilitation (illness/injury)
+   SPEC: Caring for adults over 65 yrs
+
+3. Clouds House
+   TYPE: Rehabilitation (substance abuse)
+   SPEC: Substance misuse problems
+
+4. Tower House Residential Home
+   TYPE: Residential homes
+   SPEC: Sensory impairments|Dementia|Learning disabilities|Mental health conditions|Caring for adults over 65 yrs|Caring for people whose rights are restricted under the Mental Health Act|Substance misuse problems|Physical disabilities
+
+5. Holmhurst
+   TYPE: Residential homes
+   SPEC: Caring for children (0 - 18yrs)|Caring for adults under 65 yrs|Learning disabilities|Mental health conditions|Caring for adults over 65 yrs|Substance misuse problems
+
+6. Turning Point IMPACT
+   TYPE: Community services - Substance abuse
+   SPEC: Substance misuse problems
+
+7. Warminster Hospital
+   TYPE: Community services - Healthcare|Rehabilitation (illness/injury)
+   SPEC: Services for everyone
+
+8. Chippenham Hospital
+   TYPE: Community services - Healthcare|Rehabilitation (illness/injury)|Urgent care centres
+   SPEC: Services for everyone
+
+9. Savernake Hospital
+   TYPE: Community services - Healthcare|Community services - Learning disabilities|Rehabilitation (illness/injury)
+   SPEC: Caring for adults under 65 yrs|Learning disabilities|Caring for adults over 65 yrs
+
+10. Clinical Partners Head Office
+   TYPE: Doctors/GPs|Community services - Mental Health
+   SPEC: Caring for children (0 - 18yrs)|Caring for adults under 65 yrs|Dementia|Learning disabilities|Mental health conditions|Caring for adults over 65 yrs|Substance misuse problems
+
+11. Dunraven House and Lodge
+   TYPE: Residential homes|Rehabilitation (illness/injury)
+   SPEC: Sensory impairments|Caring for adults under 65 yrs|Dementia|Learning disabilities|Mental health conditions|Caring for adults over 65 yrs|Caring for people whose rights are restricted under the Mental Health Act|Substance misuse problems|Physical disabilities
+
+12. Tower View Residential Home
+   TYPE: Residential homes|Rehabilitation (illness/injury)
+   SPEC: Sensory impairments|Caring for adults under 65 yrs|Dementia|Learning disabilities|Mental health conditions|Caring for people whose rights are restricted under the Mental Health Act|Substance misuse problems|Physical disabilities
