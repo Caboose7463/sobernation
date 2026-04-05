@@ -187,30 +187,34 @@ export default function CounsellorCard({ counsellor }: Props) {
           font-weight: 600;
           color: var(--text-light);
           text-decoration: none;
-          margin-left: auto;
-          padding: 5px 10px;
+          transition: color 0.12s;
+        }
+        .cc__claim:hover { color: var(--accent); }
+        .cc__unclaimed {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 6px 10px;
+          border: 1px dashed #d1d5db;
           border-radius: 6px;
-          border: 1px solid var(--border);
-          background: var(--white);
-          transition: all 0.12s;
-        }
-        .cc__claim:hover {
-          border-color: var(--accent);
-          color: var(--accent);
-          background: var(--accent-pale);
-        }
-        .cc__claim--cta {
-          font-size: 12px;
-          font-weight: 700;
-          color: #fff;
-          background: var(--accent);
-          border: none;
+          cursor: pointer;
           text-decoration: none;
-          padding: 7px 14px;
-          border-radius: 6px;
-          transition: opacity 0.12s;
+          transition: border-color 0.12s;
         }
-        .cc__claim--cta:hover { opacity: 0.88; }
+        .cc__unclaimed:hover { border-color: var(--accent); }
+        .cc__unclaimed-num {
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--text-muted);
+          filter: blur(4px);
+          user-select: none;
+          letter-spacing: 0.05em;
+        }
+        .cc__unclaimed-label {
+          font-size: 11px;
+          color: var(--text-light);
+          white-space: nowrap;
+        }
         .cc__unverified-badge {
           display: inline-flex;
           align-items: center;
@@ -282,8 +286,22 @@ export default function CounsellorCard({ counsellor }: Props) {
         )}
 
         <div className="cc__actions">
-          {/* Only show phone if it's a real non-empty value */}
-          {counsellor.phone?.trim() && (
+          {/* Blurred phone teaser for unverified listings */}
+          {!counsellor.verified && (
+            <Link
+              href={`/counsellors/claim?id=${counsellor.id}&name=${encodeURIComponent(counsellor.name)}&location=${counsellor.location_slug}`}
+              className="cc__unclaimed"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 13, height: 13, color: '#9ca3af', flexShrink: 0 }}>
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.81a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16"/>
+              </svg>
+              <span className="cc__unclaimed-num">07### ######</span>
+              <span className="cc__unclaimed-label">Unclaimed — reveal</span>
+            </Link>
+          )}
+
+          {/* Verified contact actions */}
+          {counsellor.verified && counsellor.phone?.trim() && (
             showPhone ? (
               <a href={`tel:${counsellor.phone.replace(/\s/g, '')}`} className="cc__icon-btn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -302,7 +320,7 @@ export default function CounsellorCard({ counsellor }: Props) {
           )}
 
           {/* Only show email if it's a real non-empty value with @ */}
-          {counsellor.email?.trim() && counsellor.email.includes('@') && (
+          {counsellor.verified && counsellor.email?.trim() && counsellor.email.includes('@') && (
             showEmail ? (
               <a href={`mailto:${counsellor.email}`} className="cc__icon-btn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -320,7 +338,7 @@ export default function CounsellorCard({ counsellor }: Props) {
             )
           )}
 
-          {counsellor.website?.trim() && (
+          {counsellor.verified && counsellor.website?.trim() && (
             <a href={counsellor.website} target="_blank" rel="noopener noreferrer" className="cc__icon-btn">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
@@ -332,7 +350,7 @@ export default function CounsellorCard({ counsellor }: Props) {
           {!counsellor.verified && (
             <Link
               href={`/counsellors/claim?id=${counsellor.id}&name=${encodeURIComponent(counsellor.name)}&location=${counsellor.location_slug}`}
-              className="cc__claim--cta"
+              className="cc__claim"
             >
               Claim listing →
             </Link>
