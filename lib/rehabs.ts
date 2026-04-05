@@ -161,3 +161,49 @@ export function getNearbyRehabTowns(slug: string, limit = 5): string[] {
 
 export const totalRehabServices = rehabData.totalServices
 export const totalRehabTowns = rehabData.totalTowns
+
+// ── Centre slug helpers (for /centre/[slug] profile pages) ──────────────────
+
+function toCentreSlug(name: string, townSlug: string): string {
+  return name
+    .toLowerCase()
+    .replace(/['']/g, '')
+    .replace(/[^a-z0-9\s]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .trim() + '-' + townSlug
+}
+
+export interface CentreWithSlug extends RehabCentre {
+  slug: string
+  townSlug: string
+  townName: string
+}
+
+/** Find a single centre by its slug, searching all towns */
+export function getCentreBySlug(slug: string): CentreWithSlug | null {
+  for (const [townSlug, townData] of Object.entries(rehabData.byTown)) {
+    for (const centre of townData.centres) {
+      if (toCentreSlug(centre.name, townSlug) === slug) {
+        return { ...centre, slug, townSlug, townName: townData.town }
+      }
+    }
+  }
+  return null
+}
+
+/** Returns all centre slugs (for sitemap generation) */
+export function getAllCentreSlugs(): string[] {
+  const slugs: string[] = []
+  for (const [townSlug, townData] of Object.entries(rehabData.byTown)) {
+    for (const centre of townData.centres) {
+      slugs.push(toCentreSlug(centre.name, townSlug))
+    }
+  }
+  return slugs
+}
+
+/** Get the slug for a specific centre (for linking from listing pages) */
+export function getCentreSlug(centre: RehabCentre, townSlug: string): string {
+  return toCentreSlug(centre.name, townSlug)
+}

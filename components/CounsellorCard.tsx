@@ -36,6 +36,7 @@ export interface Counsellor {
   photo_url?: string | null
   verified: boolean
   listing_type: string
+  profile_slug?: string | null
 }
 
 const SPECIALISM_LABELS: Record<string, string> = {
@@ -249,7 +250,11 @@ export default function CounsellorCard({ counsellor }: Props) {
           <AvatarWithFallback name={counsellor.name} photoUrl={counsellor.photo_url ?? null} />
           <div className="cc__info">
             <div className="cc__name">
-              {counsellor.name}
+              {counsellor.profile_slug ? (
+                <Link href={`/therapist/${counsellor.profile_slug}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                  {counsellor.name}
+                </Link>
+              ) : counsellor.name}
               {counsellor.verified && (
                 <span className="cc__tick" title="Verified by SoberNation">
                   <svg viewBox="0 0 10 10" fill="none">

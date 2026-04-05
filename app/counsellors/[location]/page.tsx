@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { notFound } from 'next/navigation'
-import { getLocationName } from '../../../lib/locations'
+import { getLocation } from '../../../lib/locations'
 import CounsellorCard, { type Counsellor } from '../../../components/CounsellorCard'
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -20,7 +20,8 @@ function getSupabase() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { location } = await params
-  const name = getLocationName(location)
+  const loc = getLocation(location)
+  const name = loc?.name
   if (!name) return {}
   return {
     title: `Addiction Counsellors in ${name}`,
@@ -37,7 +38,7 @@ export default async function CounsellorsLocationPage({ params }: Props) {
 
   const { data: counsellors, error } = await supabase
     .from('counsellors')
-    .select('id, name, title, location_name, location_slug, specialisms, phone, email, website, photo_url, verified, listing_type')
+    .select('id, name, title, location_name, location_slug, specialisms, phone, email, website, photo_url, verified, listing_type, profile_slug')
     .eq('location_slug', location)
     .order('verified', { ascending: false })
     .order('name', { ascending: true })
