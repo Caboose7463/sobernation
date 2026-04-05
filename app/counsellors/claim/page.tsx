@@ -2,6 +2,7 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
+import locationsData from '../../../data/locations.json'
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -33,19 +34,14 @@ const SPECIALISMS = [
   { id: 'depression',      label: 'Depression' },
 ]
 
-const LOCATIONS = [
-  'london','manchester','birmingham','leeds','glasgow','sheffield','liverpool',
-  'bristol','edinburgh','cardiff','leicester','nottingham','coventry','bradford',
-  'belfast','southampton','portsmouth','reading','hull','exeter','plymouth',
-  'bournemouth','newcastle-upon-tyne','brighton','oxford','cambridge','york',
-  'bath','chester','worcester','gloucester','ipswich','norwich','sunderland',
-  'middlesbrough','milton-keynes','northampton','swansea','dundee','aberdeen',
-  'inverness','derby','stoke-on-trent','wolverhampton','peterborough',
-  'cheltenham','blackpool','burnley','blackburn','warrington',
-]
+// All 3,835 UK locations loaded from the canonical locations list
+const LOCATIONS = (locationsData as { locations: { slug: string; name: string }[] }).locations
+  .map(l => ({ slug: l.slug, name: l.name }))
+  .sort((a, b) => a.name.localeCompare(b.name))
 
 function toLocationName(slug: string) {
-  return slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+  return LOCATIONS.find(l => l.slug === slug)?.name ||
+    slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
 }
 
 // ── Main component (inner) ─────────────────────────────────────────────────────
@@ -484,7 +480,7 @@ function ClaimFlowInner() {
               >
                 <option value="">Select a city…</option>
                 {LOCATIONS.map(l => (
-                  <option key={l} value={l}>{toLocationName(l)}</option>
+                  <option key={l.slug} value={l.slug}>{l.name}</option>
                 ))}
               </select>
               <button className="cf-btn" disabled={!form.location} onClick={() => goNext(7)}>

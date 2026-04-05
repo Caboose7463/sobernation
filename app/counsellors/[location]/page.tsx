@@ -1,7 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
 import { notFound } from 'next/navigation'
 import { getLocation } from '../../../lib/locations'
+import { getRehabsForLocation } from '../../../lib/rehabs'
 import CounsellorCard, { type Counsellor } from '../../../components/CounsellorCard'
+import NearestCentres from '../../../components/NearestCentres'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
@@ -51,6 +53,9 @@ export default async function CounsellorsLocationPage({ params }: Props) {
   const list: Counsellor[] = counsellors ?? []
   const verified = list.filter(c => c.verified)
   const unverified = list.filter(c => !c.verified)
+
+  // Nearby centres — used in empty state and as supplementary section
+  const centresResult = getRehabsForLocation(location, locationName!)
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--white)' }}>
@@ -137,13 +142,41 @@ export default async function CounsellorsLocationPage({ params }: Props) {
         )}
 
         {list.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
-            <div style={{ fontSize: 16, marginBottom: 8 }}>No counsellors listed yet for {locationName}.</div>
-            <Link href={`/counsellors/claim?location=${location}`} style={{ fontSize: 14, color: 'var(--accent)', fontWeight: 600 }}>
-              Be the first — claim your listing →
-            </Link>
+          <div style={{ textAlign: 'center', padding: '48px 20px 32px', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', marginBottom: 40 }}>
+            <div style={{ fontSize: 36, marginBottom: 12 }}>🔍</div>
+            <div style={{ fontSize: 17, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>
+              No counsellors listed in {locationName} yet
+            </div>
+            <div style={{ fontSize: 14, color: 'var(--text-muted)', maxWidth: 420, margin: '0 auto 20px', lineHeight: 1.65 }}>
+              We&apos;re adding new listings daily. In the meantime, you can find addiction
+              counsellors through the BACP public directory or contact Frank for free advice.
+            </div>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <a
+                href={`https://www.bacp.co.uk/search/?q=${encodeURIComponent(locationName)}&cat=&type=2`}
+                target="_blank" rel="noopener noreferrer"
+                style={{ fontSize: 13, fontWeight: 700, background: 'var(--accent)', color: '#fff', padding: '10px 18px', borderRadius: 'var(--radius-sm)', textDecoration: 'none' }}
+              >
+                Search BACP directory →
+              </a>
+              <a
+                href="https://www.talktofrank.com/get-help/find-support-near-you"
+                target="_blank" rel="noopener noreferrer"
+                style={{ fontSize: 13, fontWeight: 700, background: '#fff', color: 'var(--accent)', border: '1.5px solid var(--accent)', padding: '10px 18px', borderRadius: 'var(--radius-sm)', textDecoration: 'none' }}
+              >
+                Frank service finder →
+              </a>
+            </div>
+            <div style={{ marginTop: 16 }}>
+              <Link href={`/counsellors/claim?location=${location}`} style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'underline' }}>
+                Are you a counsellor in {locationName}? Claim your free listing →
+              </Link>
+            </div>
           </div>
         )}
+
+        {/* Nearby rehab centres — always shown */}
+        <NearestCentres result={centresResult} locationName={locationName} locationSlug={location} limit={6} />
       </div>
     </div>
   )

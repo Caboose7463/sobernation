@@ -23,6 +23,7 @@ export async function GET() {
   const profileEntries = [
     `  <sitemap>\n    <loc>${BASE}/sitemaps/therapists</loc>\n    <lastmod>${now}</lastmod>\n  </sitemap>`,
     `  <sitemap>\n    <loc>${BASE}/sitemaps/centres</loc>\n    <lastmod>${now}</lastmod>\n  </sitemap>`,
+    `  <sitemap>\n    <loc>${BASE}/sitemaps/counsellors</loc>\n    <lastmod>${now}</lastmod>\n  </sitemap>`,
   ].join('\n')
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

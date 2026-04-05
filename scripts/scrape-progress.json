@@ -79,9 +79,19 @@
     "salford",
     "newcastle-under-lyme",
     "solihull",
-    "watford"
+    "watford",
+    "saint-peters",
+    "crawley",
+    "burton-upon-trent",
+    "cheltenham",
+    "rotherham",
+    "worthing",
+    "doncaster",
+    "chesterfield",
+    "chelmsford",
+    "mendip"
   ],
-  "total": 666,
+  "total": 758,
   "startedAt": "2026-04-05T20:20:31.193Z",
-  "updatedAt": "2026-04-05T21:11:00.302Z"
+  "updatedAt": "2026-04-05T21:20:57.924Z"
 }
