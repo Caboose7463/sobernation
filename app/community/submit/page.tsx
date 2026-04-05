@@ -2,16 +2,17 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { IconSun, IconTrophy, IconHeart, IconPill, IconBuilding, IconUsers, IconMessageCircle } from '@/components/icons'
 import { createClient } from '@/utils/supabase/client'
 
 const CATEGORIES = [
-  { slug: 'daily',      name: 'Daily Check-in',        icon: '☀️'  },
-  { slug: 'milestones', name: 'Milestones and Wins',    icon: '🏆'  },
-  { slug: 'support',    name: 'I Need Support',         icon: '🆘'  },
-  { slug: 'substances', name: 'Substances',             icon: '💊'  },
-  { slug: 'treatment',  name: 'Treatment and Rehab',    icon: '🏥'  },
-  { slug: 'family',     name: 'Family and Loved Ones',  icon: '👨‍👩‍👧' },
-  { slug: 'general',    name: 'General',                icon: '💬'  },
+  { slug: 'daily',      name: 'Daily Check-in',        Icon: IconSun          },
+  { slug: 'milestones', name: 'Milestones and Wins',    Icon: IconTrophy       },
+  { slug: 'support',    name: 'I Need Support',         Icon: IconHeart        },
+  { slug: 'substances', name: 'Substances',             Icon: IconPill         },
+  { slug: 'treatment',  name: 'Treatment and Rehab',    Icon: IconBuilding     },
+  { slug: 'family',     name: 'Family and Loved Ones',  Icon: IconUsers        },
+  { slug: 'general',    name: 'General',                Icon: IconMessageCircle },
 ]
 
 export default function SubmitPage() {
@@ -34,7 +35,7 @@ export default function SubmitPage() {
     return (
       <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
         <div style={{ maxWidth: 400, width: '100%', textAlign: 'center' }}>
-          <div style={{ fontSize: 40, marginBottom: 16 }}>💬</div>
+          <div style={{ marginBottom: 16 }}><IconMessageCircle size={40} color="var(--text-light)" /></div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>Sign in to post</h1>
           <p style={{ fontSize: 14, color: 'var(--text-muted)', marginBottom: 20 }}>You need a free account to post in the community.</p>
           <Link href="/community" style={{ padding: '12px 24px', background: 'var(--accent)', color: '#fff', borderRadius: 'var(--radius-sm)', fontWeight: 600, fontSize: 14, textDecoration: 'none', display: 'inline-block' }}>
@@ -95,9 +96,10 @@ export default function SubmitPage() {
                     borderRadius: 'var(--radius-sm)', background: category === cat.slug ? 'var(--accent-pale)' : 'var(--white)',
                     cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s',
                     fontSize: 13, fontWeight: 500, color: category === cat.slug ? 'var(--accent)' : 'var(--text)',
+                    display: 'flex', alignItems: 'center', gap: 8,
                   }}
                 >
-                  <span style={{ marginRight: 6 }}>{cat.icon}</span>
+                  <cat.Icon size={14} color={category === cat.slug ? 'var(--accent)' : 'var(--text-muted)'} />
                   {cat.name}
                 </button>
               ))}

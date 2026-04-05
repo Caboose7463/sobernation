@@ -213,7 +213,7 @@ export default function AdminPage() {
                 transition: 'all 0.15s', textTransform: 'capitalize',
               }}
             >
-              {t === 'stories' ? '📝 Stories' : '💬 Community'}
+              {t === 'stories' ? 'Stories' : 'Community'}
             </button>
           ))}
         </div>
@@ -293,7 +293,7 @@ export default function AdminPage() {
                     {storyTab === 'pending' && (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                         <button onClick={() => handleStoryAction(story.id, 'approved')} disabled={actionLoading === story.id} style={{ padding: '8px 14px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 600, fontSize: 12, cursor: 'pointer', whiteSpace: 'nowrap' }}>
-                          {actionLoading === story.id ? '...' : '✓ Approve'}
+                          {actionLoading === story.id ? 'Working...' : 'Approve'}
                         </button>
                         <button onClick={() => handleStoryAction(story.id, 'rejected')} disabled={actionLoading === story.id} style={{ padding: '8px 14px', background: 'var(--white)', border: '1px solid var(--border)', color: 'var(--text-muted)', borderRadius: 'var(--radius-sm)', fontWeight: 600, fontSize: 12, cursor: 'pointer' }}>
                           ✗ Reject
@@ -343,7 +343,7 @@ export default function AdminPage() {
             <div style={{ display: 'flex', gap: 4, marginBottom: 20, background: 'var(--bg-subtle)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: 4, width: 'fit-content' }}>
               {(['flagged', 'all'] as const).map(t => (
                 <button key={t} onClick={() => setCommunityTab(t)} style={{ padding: '7px 16px', fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', borderRadius: 'calc(var(--radius-md) - 2px)', background: communityTab === t ? 'var(--white)' : 'transparent', color: communityTab === t ? 'var(--text)' : 'var(--text-muted)', boxShadow: communityTab === t ? 'var(--shadow-sm)' : 'none', transition: 'all 0.15s' }}>
-                  {t === 'flagged' ? '🚩 Flagged' : '📋 All Posts'}
+                  {t === 'flagged' ? 'Flagged' : 'All Posts'}
                 </button>
               ))}
             </div>
@@ -352,7 +352,7 @@ export default function AdminPage() {
               <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>Loading...</div>
             ) : communityPosts.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '60px 20px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
-                <div style={{ fontSize: 40, marginBottom: 12 }}>{communityTab === 'flagged' ? '✓' : '💬'}</div>
+                <div style={{ fontSize: 32, marginBottom: 12, color: 'var(--text-light)' }}>{communityTab === 'flagged' ? '+' : '...'}</div>
                 <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text)' }}>
                   {communityTab === 'flagged' ? 'No posts flagged' : 'No posts yet'}
                 </div>
@@ -371,7 +371,7 @@ export default function AdminPage() {
                         <span style={{ fontSize: 11, color: 'var(--text-light)' }}>{post.categories?.name}</span>
                         {post.flag_count > 0 && (
                           <span style={{ fontSize: 11, background: '#fef2f2', color: '#c0392b', padding: '2px 8px', borderRadius: 10, fontWeight: 600 }}>
-                            🚩 {post.flag_count} {post.flag_count === 1 ? 'flag' : 'flags'}
+                            {post.flag_count} {post.flag_count === 1 ? 'flag' : 'flags'}
                           </span>
                         )}
                       </div>
@@ -379,13 +379,13 @@ export default function AdminPage() {
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                       <button onClick={() => handlePostAction(post.id, 'restore')} disabled={actionLoading === post.id} style={{ padding: '7px 12px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 600, fontSize: 12, cursor: 'pointer', whiteSpace: 'nowrap' }}>
-                        {actionLoading === post.id ? '...' : '✓ Restore'}
+                        {actionLoading === post.id ? 'Working...' : 'Restore'}
                       </button>
                       <button onClick={() => handlePostAction(post.id, 'pin')} disabled={actionLoading === post.id} style={{ padding: '7px 12px', background: 'var(--white)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: 'var(--radius-sm)', fontWeight: 600, fontSize: 12, cursor: 'pointer' }}>
-                        📌 Pin
+                        Pin
                       </button>
                       <button onClick={() => handlePostAction(post.id, 'delete')} disabled={actionLoading === post.id} style={{ padding: '7px 12px', background: 'var(--white)', border: '1px solid #fecaca', color: '#c0392b', borderRadius: 'var(--radius-sm)', fontWeight: 600, fontSize: 12, cursor: 'pointer' }}>
-                        ✗ Delete
+                        Delete
                       </button>
                     </div>
                   </div>

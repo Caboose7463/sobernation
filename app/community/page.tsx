@@ -3,15 +3,20 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/utils/supabase/client'
 import { User } from '@supabase/supabase-js'
+import {
+  IconSun, IconTrophy, IconHeart, IconPill, IconBuilding,
+  IconUsers, IconMessageCircle, IconTrendingUp, IconClock,
+  IconArrowUp, IconAlertTriangle, IconLock
+} from '@/components/icons'
 
 const CATEGORIES = [
-  { slug: 'daily',      name: 'Daily Check-in',        icon: '☀️'  },
-  { slug: 'milestones', name: 'Milestones and Wins',    icon: '🏆'  },
-  { slug: 'support',    name: 'I Need Support',         icon: '🆘'  },
-  { slug: 'substances', name: 'Substances',             icon: '💊'  },
-  { slug: 'treatment',  name: 'Treatment and Rehab',    icon: '🏥'  },
-  { slug: 'family',     name: 'Family and Loved Ones',  icon: '👨‍👩‍👧' },
-  { slug: 'general',    name: 'General',                icon: '💬'  },
+  { slug: 'daily',      name: 'Daily Check-in',        Icon: IconSun         },
+  { slug: 'milestones', name: 'Milestones and Wins',    Icon: IconTrophy      },
+  { slug: 'support',    name: 'I Need Support',         Icon: IconHeart       },
+  { slug: 'substances', name: 'Substances',             Icon: IconPill        },
+  { slug: 'treatment',  name: 'Treatment and Rehab',    Icon: IconBuilding    },
+  { slug: 'family',     name: 'Family and Loved Ones',  Icon: IconUsers       },
+  { slug: 'general',    name: 'General',                Icon: IconMessageCircle },
 ]
 
 type Post = {
@@ -23,7 +28,7 @@ type Post = {
   upvotes: number
   comment_count: number
   created_at: string
-  categories: { slug: string; name: string; icon: string }
+  categories: { slug: string; name: string }
 }
 
 function timeAgo(iso: string) {
@@ -55,17 +60,21 @@ export default function CommunityPage() {
       .catch(() => setLoading(false))
   }, [sort])
 
+  const SORT_OPTIONS = [
+    { key: 'hot' as const,  label: 'Top',    Icon: IconTrendingUp },
+    { key: 'new' as const,  label: 'New',    Icon: IconClock      },
+    { key: 'top' as const,  label: 'All time', Icon: IconArrowUp  },
+  ]
+
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', fontFamily: 'var(--font-body)' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
       {/* Header */}
       <div style={{ background: 'var(--white)', borderBottom: '1px solid var(--border)', padding: '0 20px' }}>
         <div className="container-wide" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 56 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <Link href="/" style={{ fontWeight: 700, fontSize: 15, color: 'var(--text)', textDecoration: 'none' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ width: 26, height: 26, borderRadius: '50%', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 13, fontWeight: 700 }}>S</span>
-                SoberNation
-              </span>
+            <Link href="/" style={{ fontWeight: 700, fontSize: 15, color: 'var(--text)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ width: 26, height: 26, borderRadius: '50%', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 13, fontWeight: 700 }}>S</span>
+              SoberNation
             </Link>
             <span style={{ color: 'var(--text-light)', fontSize: 13 }}>/</span>
             <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)' }}>Community</span>
@@ -74,7 +83,7 @@ export default function CommunityPage() {
             {user ? (
               <>
                 <Link href="/community/submit" style={{ padding: '8px 16px', background: 'var(--accent)', color: '#fff', borderRadius: 'var(--radius-sm)', fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
-                  + New Post
+                  New post
                 </Link>
                 <button onClick={() => supabase.auth.signOut().then(() => setUser(null))} style={{ fontSize: 12, color: 'var(--text-light)', background: 'none', border: 'none', cursor: 'pointer' }}>
                   Sign out
@@ -90,80 +99,91 @@ export default function CommunityPage() {
         </div>
       </div>
 
-      <div className="container-wide" style={{ padding: '24px 20px', display: 'grid', gridTemplateColumns: '1fr 280px', gap: 24, alignItems: 'start' }}>
-        {/* Main feed */}
-        <div>
-          {/* Sort tabs */}
-          <div style={{ display: 'flex', gap: 4, marginBottom: 16, background: 'var(--bg-subtle)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: 4, width: 'fit-content' }}>
-            {(['hot', 'new', 'top'] as const).map(s => (
-              <button key={s} onClick={() => setSort(s)} style={{ padding: '6px 16px', fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', borderRadius: 'calc(var(--radius-md) - 2px)', background: sort === s ? 'var(--white)' : 'transparent', color: sort === s ? 'var(--text)' : 'var(--text-muted)', boxShadow: sort === s ? 'var(--shadow-sm)' : 'none', textTransform: 'capitalize', transition: 'all 0.15s' }}>
-                {s === 'hot' ? '🔥 Hot' : s === 'new' ? '✨ New' : '⬆️ Top'}
-              </button>
-            ))}
-          </div>
+      <div className="container-wide" style={{ padding: '20px 20px' }}>
 
-          {/* Crisis banner */}
-          <div style={{ background: '#fef3f2', border: '1px solid #fecaca', borderRadius: 'var(--radius-md)', padding: '12px 16px', marginBottom: 16, fontSize: 13, color: '#991b1b', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span>🆘</span>
-            <span>If you are in crisis please call <strong>Samaritans: 116 123</strong> or <strong>FRANK: 0300 123 6600</strong></span>
-          </div>
-
-          {loading ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {[...Array(5)].map((_, i) => <div key={i} style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', height: 100, opacity: 0.5 }} />)}
-            </div>
-          ) : posts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '60px 20px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>💬</div>
-              <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text)', marginBottom: 8 }}>No posts yet</div>
-              <p style={{ fontSize: 14, color: 'var(--text-muted)', marginBottom: 20 }}>Be the first to start a conversation</p>
-              <button onClick={() => setShowSignUp(true)} style={{ padding: '10px 20px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
-                Join and post
-              </button>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {posts.map(post => (
-                <PostCard key={post.id} post={post} />
-              ))}
-            </div>
-          )}
+        {/* Mobile category scroll */}
+        <div className="community-mobile-cats" style={{ display: 'none', marginBottom: 16 }}>
+          {CATEGORIES.map(cat => (
+            <Link key={cat.slug} href={`/community/${cat.slug}`} style={{ display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap', padding: '7px 12px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 20, fontSize: 12, fontWeight: 500, color: 'var(--text)', textDecoration: 'none', flexShrink: 0 }}>
+              <cat.Icon size={13} color="var(--accent)" />
+              {cat.name}
+            </Link>
+          ))}
         </div>
 
-        {/* Sidebar */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {/* About */}
-          <div style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: 18 }}>
-            <div style={{ width: 40, height: 40, borderRadius: 8, background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12, fontSize: 20 }}>💬</div>
-            <h2 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>SoberNation Community</h2>
-            <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: 16 }}>A place to share your story, ask questions and support others in recovery. Anonymous. No judgement. Real people.</p>
-            {user ? (
-              <Link href="/community/submit" style={{ display: 'block', width: '100%', padding: '10px 0', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 600, fontSize: 14, cursor: 'pointer', textAlign: 'center', textDecoration: 'none' }}>
-                Create post
-              </Link>
+        <div className="community-layout">
+          {/* Main feed */}
+          <div>
+            {/* Crisis notice */}
+            <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 'var(--radius-md)', padding: '10px 14px', marginBottom: 14, fontSize: 13, color: '#991b1b', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <IconAlertTriangle size={14} color="#991b1b" />
+              <span>In crisis? Call <strong>Samaritans: 116 123</strong> or <strong>FRANK: 0300 123 6600</strong></span>
+            </div>
+
+            {/* Sort tabs */}
+            <div style={{ display: 'flex', gap: 4, marginBottom: 14, background: 'var(--bg-subtle)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: 4, width: 'fit-content' }}>
+              {SORT_OPTIONS.map(({ key, label, Icon }) => (
+                <button key={key} onClick={() => setSort(key)} style={{ padding: '6px 14px', fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', borderRadius: 'calc(var(--radius-md) - 2px)', background: sort === key ? 'var(--white)' : 'transparent', color: sort === key ? 'var(--text)' : 'var(--text-muted)', boxShadow: sort === key ? 'var(--shadow-sm)' : 'none', transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <Icon size={13} />
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            {loading ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {[...Array(5)].map((_, i) => <div key={i} style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', height: 96, opacity: 0.5 }} />)}
+              </div>
+            ) : posts.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '60px 20px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
+                <IconMessageCircle size={32} color="var(--text-light)" />
+                <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)', margin: '12px 0 6px' }}>No posts yet</div>
+                <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 20 }}>Be the first to start a conversation</p>
+                <button onClick={() => setShowSignUp(true)} style={{ padding: '10px 20px', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>
+                  Join and post
+                </button>
+              </div>
             ) : (
-              <button onClick={() => setShowSignUp(true)} style={{ width: '100%', padding: '10px 0', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
-                Join the community
-              </button>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {posts.map(post => <PostCard key={post.id} post={post} />)}
+              </div>
             )}
           </div>
 
-          {/* Categories */}
-          <div style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: 18 }}>
-            <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Categories</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {CATEGORIES.map(cat => (
-                <Link key={cat.slug} href={`/community/${cat.slug}`} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'var(--text)', fontSize: 13, hover: undefined, transition: 'background 0.1s' }} className="community-cat-link">
-                  <span style={{ fontSize: 16 }}>{cat.icon}</span>
-                  <span style={{ fontWeight: 500 }}>{cat.name}</span>
+          {/* Sidebar */}
+          <div className="community-sidebar">
+            <div style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: 18 }}>
+              <div style={{ width: 36, height: 36, borderRadius: 8, background: 'var(--accent-pale)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+                <IconMessageCircle size={18} color="var(--accent)" />
+              </div>
+              <h2 style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 6 }}>SoberNation Community</h2>
+              <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: 14 }}>Share your story, ask questions and support others in recovery. Anonymous. No judgement.</p>
+              {user ? (
+                <Link href="/community/submit" style={{ display: 'block', width: '100%', padding: '10px 0', background: 'var(--accent)', color: '#fff', borderRadius: 'var(--radius-sm)', fontWeight: 600, fontSize: 13, textAlign: 'center', textDecoration: 'none' }}>
+                  Create post
                 </Link>
-              ))}
+              ) : (
+                <button onClick={() => setShowSignUp(true)} style={{ width: '100%', padding: '10px 0', background: 'var(--accent)', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>
+                  Join for free
+                </button>
+              )}
+            </div>
+
+            <div style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: 18 }}>
+              <h3 style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-light)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Categories</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {CATEGORIES.map(cat => (
+                  <Link key={cat.slug} href={`/community/${cat.slug}`} className="community-cat-link" style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '8px 10px', borderRadius: 'var(--radius-sm)', textDecoration: 'none', color: 'var(--text)', fontSize: 13, transition: 'background 0.1s' }}>
+                    <cat.Icon size={14} color="var(--text-muted)" />
+                    <span style={{ fontWeight: 500 }}>{cat.name}</span>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Auth modals */}
       {showSignIn && <SignInModal onClose={() => setShowSignIn(false)} onSuccess={(u) => { setUser(u); setShowSignIn(false) }} onSwitchToSignUp={() => { setShowSignIn(false); setShowSignUp(true) }} supabase={supabase} />}
       {showSignUp && <SignUpModal onClose={() => setShowSignUp(false)} onSuccess={(u) => { setUser(u); setShowSignUp(false) }} onSwitchToSignIn={() => { setShowSignUp(false); setShowSignIn(true) }} />}
     </div>
@@ -171,39 +191,34 @@ export default function CommunityPage() {
 }
 
 function PostCard({ post }: { post: Post }) {
+  const CatIcon = CATEGORIES.find(c => c.slug === post.categories?.slug)?.Icon ?? IconMessageCircle
   return (
     <Link href={`/community/${post.categories?.slug}/${post.slug}`} style={{ textDecoration: 'none' }}>
-      <div style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '16px 18px', cursor: 'pointer', transition: 'border-color 0.15s' }} className="post-card-hover">
-        <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 6, flexWrap: 'wrap' }}>
-              <span style={{ fontSize: 11, background: 'var(--accent-pale)', color: 'var(--accent)', padding: '2px 8px', borderRadius: 10, fontWeight: 600, whiteSpace: 'nowrap' }}>
-                {post.categories?.icon} {post.categories?.name}
-              </span>
-              <span style={{ fontSize: 11, color: 'var(--text-light)' }}>
-                {post.username} &middot; {timeAgo(post.created_at)}
-              </span>
-            </div>
-            <h3 style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)', margin: '0 0 6px', lineHeight: 1.4 }}>{post.title}</h3>
-            <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0, lineHeight: 1.5, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-              {post.body}
-            </p>
-          </div>
+      <div className="post-card-hover" style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '14px 16px', cursor: 'pointer', transition: 'border-color 0.15s' }}>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 6, flexWrap: 'wrap' }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, background: 'var(--accent-pale)', color: 'var(--accent)', padding: '2px 8px', borderRadius: 10, fontWeight: 600 }}>
+            <CatIcon size={11} color="var(--accent)" />
+            {post.categories?.name}
+          </span>
+          <span style={{ fontSize: 11, color: 'var(--text-light)' }}>{post.username} &middot; {timeAgo(post.created_at)}</span>
         </div>
-        <div style={{ display: 'flex', gap: 16, marginTop: 12, fontSize: 12, color: 'var(--text-light)' }}>
-          <span>⬆️ {post.upvotes}</span>
-          <span>💬 {post.comment_count} comments</span>
+        <h3 style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', margin: '0 0 5px', lineHeight: 1.4 }}>{post.title}</h3>
+        <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0, lineHeight: 1.5, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' } as React.CSSProperties}>
+          {post.body}
+        </p>
+        <div style={{ display: 'flex', gap: 14, marginTop: 10, fontSize: 12, color: 'var(--text-light)', alignItems: 'center' }}>
+          <span className="icon-label"><IconArrowUp size={12} /> {post.upvotes}</span>
+          <span className="icon-label"><IconMessageCircle size={12} /> {post.comment_count}</span>
         </div>
       </div>
     </Link>
   )
 }
 
+// ── Auth modals ───────────────────────────────────────────────────────────────
+
 function SignInModal({ onClose, onSuccess, onSwitchToSignUp, supabase }: {
-  onClose: () => void
-  onSuccess: (u: User) => void
-  onSwitchToSignUp: () => void
-  supabase: ReturnType<typeof createClient>
+  onClose: () => void; onSuccess: (u: User) => void; onSwitchToSignUp: () => void; supabase: ReturnType<typeof createClient>
 }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -212,8 +227,7 @@ function SignInModal({ onClose, onSuccess, onSwitchToSignUp, supabase }: {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setLoading(true)
-    setError('')
+    setLoading(true); setError('')
     const { data, error: err } = await supabase.auth.signInWithPassword({ email, password })
     if (err) { setError(err.message); setLoading(false); return }
     if (data.user) onSuccess(data.user)
@@ -221,8 +235,11 @@ function SignInModal({ onClose, onSuccess, onSwitchToSignUp, supabase }: {
 
   return (
     <Modal onClose={onClose}>
-      <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>Welcome back</h2>
-      <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 20 }}>Sign in to your SoberNation account</p>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+        <IconLock size={18} color="var(--accent)" />
+        <h2 style={{ fontSize: 17, fontWeight: 700 }}>Sign in</h2>
+      </div>
+      <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 20 }}>Welcome back to SoberNation</p>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required style={inputStyle} />
         <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required style={inputStyle} />
@@ -237,9 +254,7 @@ function SignInModal({ onClose, onSuccess, onSwitchToSignUp, supabase }: {
 }
 
 function SignUpModal({ onClose, onSuccess, onSwitchToSignIn }: {
-  onClose: () => void
-  onSuccess: (u: User) => void
-  onSwitchToSignIn: () => void
+  onClose: () => void; onSuccess: (u: User) => void; onSwitchToSignIn: () => void
 }) {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
@@ -250,29 +265,25 @@ function SignUpModal({ onClose, onSuccess, onSwitchToSignIn }: {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setLoading(true)
-    setError('')
+    setLoading(true); setError('')
     const res = await fetch('/api/community/auth/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password }),
     })
     const data = await res.json()
     if (!res.ok) { setError(data.error); setLoading(false); return }
-
-    // Sign in after signup
     const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password })
-    if (signInError || !signInData.user) { setError('Account created but could not sign in. Please try signing in.'); setLoading(false); return }
+    if (signInError || !signInData.user) { setError('Account created. Please sign in.'); setLoading(false); return }
     onSuccess(signInData.user)
   }
 
   return (
     <Modal onClose={onClose}>
-      <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>Join SoberNation</h2>
+      <h2 style={{ fontSize: 17, fontWeight: 700, marginBottom: 4 }}>Join SoberNation</h2>
       <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 20 }}>Your username is the only thing others see. Your email stays private.</p>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <input type="text" placeholder="Choose a username" value={username} onChange={e => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))} required minLength={3} maxLength={20} style={inputStyle} />
-        <input type="email" placeholder="Your email (kept private)" value={email} onChange={e => setEmail(e.target.value)} required style={inputStyle} />
+        <input type="text" placeholder="Username (e.g. quiet_storm_42)" value={username} onChange={e => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))} required minLength={3} maxLength={20} style={inputStyle} />
+        <input type="email" placeholder="Email (kept private)" value={email} onChange={e => setEmail(e.target.value)} required style={inputStyle} />
         <input type="password" placeholder="Password (min 8 characters)" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} style={inputStyle} />
         {error && <div style={{ fontSize: 13, color: '#c0392b' }}>{error}</div>}
         <button type="submit" disabled={loading} style={btnStyle}>{loading ? 'Creating account...' : 'Join for free'}</button>
@@ -287,8 +298,8 @@ function SignUpModal({ onClose, onSuccess, onSwitchToSignIn }: {
 function Modal({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
   return (
     <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 20 }}>
-      <div onClick={e => e.stopPropagation()} style={{ background: 'var(--white)', borderRadius: 'var(--radius-md)', padding: 28, width: '100%', maxWidth: 400, boxShadow: 'var(--shadow-lg)', position: 'relative' }}>
-        <button onClick={onClose} style={{ position: 'absolute', top: 12, right: 14, background: 'none', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--text-light)' }}>✕</button>
+      <div onClick={e => e.stopPropagation()} style={{ background: 'var(--white)', borderRadius: 'var(--radius-md)', padding: 28, width: '100%', maxWidth: 400, boxShadow: 'var(--shadow-md)', position: 'relative' }}>
+        <button onClick={onClose} style={{ position: 'absolute', top: 12, right: 14, background: 'none', border: 'none', fontSize: 18, cursor: 'pointer', color: 'var(--text-light)', lineHeight: 1 }}>x</button>
         {children}
       </div>
     </div>
@@ -299,7 +310,6 @@ const inputStyle: React.CSSProperties = {
   width: '100%', padding: '11px 14px', border: '1px solid var(--border-mid)', borderRadius: 'var(--radius-sm)',
   fontSize: 14, outline: 'none', boxSizing: 'border-box', color: 'var(--text)', background: 'var(--bg)',
 }
-
 const btnStyle: React.CSSProperties = {
   width: '100%', padding: '12px', background: 'var(--accent)', color: '#fff', border: 'none',
   borderRadius: 'var(--radius-sm)', fontWeight: 700, fontSize: 14, cursor: 'pointer',
