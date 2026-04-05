@@ -76,6 +76,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             });
           `}}
         />
+        {/* Google Analytics 4 — G-RGCKFQLVLJ */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-RGCKFQLVLJ" />
+        <script
+          dangerouslySetInnerHTML={{ __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-RGCKFQLVLJ', { page_path: window.location.pathname });
+          `}}
+        />
         {/* Google AdSense — pub-8511236039964647 */}
         <script
           async
