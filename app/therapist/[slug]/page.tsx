@@ -1,7 +1,10 @@
 /**
- * /therapist/[slug] — Individual counsellor profile page
- * Data from Supabase. Rich SEO content, blurred contacts, "X viewing" counter.
- * slug format: sarah-mitchell-manchester
+ * /therapist/[slug] — Premier counsellor profile page
+ * The most important page type on SoberNation.
+ * Each page must outrank the counsellor's own website for their name.
+ * 
+ * Layout: 2-column sticky sidebar (desktop), stacked (mobile)
+ * Content: 10+ rich sections, Person + FAQPage + BreadcrumbList schema
  */
 import { createClient } from '@supabase/supabase-js'
 import { notFound } from 'next/navigation'
@@ -22,9 +25,9 @@ function getSupabase() {
   )
 }
 
-// ── Content generators ───────────────────────────────────────────────────────
+// ── Labels ───────────────────────────────────────────────────────────────────
 
-const SPECIALISM_LABELS: Record<string, string> = {
+const SPEC_LABELS: Record<string, string> = {
   addiction: 'Addiction', alcohol: 'Alcohol Addiction', drugs: 'Drug Addiction',
   substances: 'Substance Misuse', gambling: 'Gambling Addiction',
   'eating-disorders': 'Eating Disorders', trauma: 'Trauma & PTSD',
@@ -32,60 +35,143 @@ const SPECIALISM_LABELS: Record<string, string> = {
   depression: 'Depression', anxiety: 'Anxiety',
 }
 
-const SPECIALISM_DESCRIPTIONS: Record<string, string> = {
-  alcohol: 'Alcohol addiction is one of the most common and complex forms of substance dependency. A specialist counsellor can help you understand the psychological triggers behind your drinking, develop healthier coping strategies, and create a sustainable plan for recovery — whether that means cutting down or achieving abstinence.',
-  drugs: 'Drug addiction affects every aspect of a person\'s life, from relationships and employment to physical and mental health. Working with a trained addiction counsellor provides a safe, confidential space to explore the root causes of drug use and develop the skills needed for lasting recovery.',
-  substances: 'Substance misuse covers a broad range of addictive behaviours, including dependency on prescription medications, recreational drugs and alcohol. A specialist counsellor takes a holistic approach, addressing both the addiction itself and the underlying emotional or psychological factors.',
-  gambling: 'Problem gambling can have devastating consequences for individuals and their families. Addiction counselling for gambling disorder focuses on identifying triggers, breaking the cycle of compulsive behaviour, and rebuilding financial stability and relationships.',
-  'eating-disorders': 'Eating disorders are serious mental health conditions that often co-occur with addiction and substance misuse. Specialist counselling addresses the complex interplay between disordered eating and addictive behaviours, supporting recovery from both.',
-  trauma: 'Many people turn to substances or addictive behaviours as a way of coping with unresolved trauma. Trauma-informed addiction counselling creates a safe therapeutic environment to process past experiences and develop healthier responses.',
-  'dual-diagnosis': 'Dual diagnosis refers to the presence of both a mental health condition and an addiction disorder. Specialist counsellors with dual diagnosis experience are equipped to treat both conditions simultaneously, taking an integrated approach to recovery.',
-  codependency: 'Codependency is a pattern of behaviour where a person\'s sense of identity and self-worth becomes dependent on another\'s needs or addiction. Counselling helps individuals recognise and break codependent patterns, setting healthy boundaries and rebuilding their sense of self.',
-  depression: 'Depression and addiction frequently occur together — each can worsen the other. Counsellors specialising in this area work to address both conditions, helping clients understand the connection between their emotional state and addictive behaviour.',
-  anxiety: 'Anxiety disorders and addiction are deeply connected. Many people use alcohol or drugs to manage anxiety symptoms, which can lead to dependency. Specialist counselling explores this relationship and develops evidence-based strategies for managing anxiety without substance reliance.',
-  addiction: 'Addiction counselling provides professional, confidential support for anyone affected by compulsive or addictive behaviours. Working alongside a trained counsellor, clients explore the root causes of their addiction, develop insight into their patterns of behaviour, and build practical skills for sustainable recovery.',
+const SPEC_DETAIL: Record<string, { intro: string; approach: string; who: string }> = {
+  alcohol: {
+    intro: 'Alcohol addiction is one of the most common and serious forms of substance dependency in the UK, affecting millions of people and their families.',
+    approach: 'Working with a specialist alcohol counsellor involves exploring the psychological, emotional and social drivers behind problematic drinking. Evidence-based approaches include Cognitive Behavioural Therapy (CBT), Motivational Interviewing (MI) and relapse prevention planning.',
+    who: 'Anyone concerned about their relationship with alcohol — whether they drink daily, binge drink, or use alcohol to cope with stress, anxiety or trauma — can benefit from specialist support.',
+  },
+  drugs: {
+    intro: 'Drug addiction encompasses a broad range of substances, from illegal drugs such as heroin, cocaine and cannabis to prescription medications including opioids and benzodiazepines.',
+    approach: 'Specialist drug addiction counselling addresses both the physical and psychological components of dependency. Treatment may include harm reduction strategies, abstinence-based support, and structured relapse prevention programmes.',
+    who: 'Drug addiction counselling is suitable for anyone affected by problematic drug use, regardless of the substance or the stage of their addiction.',
+  },
+  substances: {
+    intro: 'Substance misuse refers to the harmful or dependent use of any psychoactive substance, including alcohol, illicit drugs or prescription medications.',
+    approach: 'An integrated approach to substance misuse counselling addresses the root causes of addictive behaviour, co-occurring mental health conditions, and the practical challenges of recovery.',
+    who: 'Substance misuse counselling is appropriate for those at any stage of dependency — from early problematic use through to long-term addiction and recovery maintenance.',
+  },
+  gambling: {
+    intro: 'Problem gambling is a recognised addiction that can have devastating consequences for individuals, their finances and their relationships, yet it often goes unaddressed for years.',
+    approach: 'Gambling addiction counselling uses CBT to identify and challenge distorted thinking patterns, alongside motivational work and practical strategies for managing urges and rebuilding financial stability.',
+    who: 'Gambling counselling helps anyone whose gambling is causing financial, relational or emotional harm — including those who gamble online, in person, or via sports betting.',
+  },
+  trauma: {
+    intro: 'Trauma and addiction are deeply interconnected. Many people turn to substances or addictive behaviours as a way of coping with unprocessed traumatic experiences.',
+    approach: 'Trauma-informed addiction counselling creates a safe therapeutic space to work through past experiences. Approaches may include EMDR, somatic therapy, narrative therapy and trauma-focused CBT.',
+    who: 'Those whose addiction is driven by, or co-occurs with, experiences of trauma — including childhood adversity, abuse, bereavement, accident or assault — benefit enormously from trauma-specialised support.',
+  },
+  'dual-diagnosis': {
+    intro: 'Dual diagnosis refers to the co-occurrence of a mental health condition and an addiction disorder. It is more common than many people realise — approximately 50% of people with addiction also experience a mental health condition.',
+    approach: 'Integrated dual diagnosis treatment addresses both conditions simultaneously rather than treating them separately. This co-occurring approach leads to significantly better outcomes compared to treating each in isolation.',
+    who: 'Dual diagnosis counselling is appropriate for anyone who experiences both addiction and a mental health condition, such as depression, anxiety, bipolar disorder or PTSD.',
+  },
+  depression: {
+    intro: 'Depression and addiction form a particularly common and damaging cycle. Low mood can drive addictive behaviour, while substance use or compulsive behaviour worsens depression over time.',
+    approach: 'Counselling for co-occurring depression and addiction uses an integrated approach that addresses both the mood disorder and the addictive behaviour, exploring their interaction and developing strategies for managing both.',
+    who: 'Those experiencing persistent low mood, hopelessness or loss of interest alongside addiction will benefit from a counsellor with specialist experience in both areas.',
+  },
+  anxiety: {
+    intro: 'Anxiety disorders and addiction are strongly linked — many people use alcohol, drugs or compulsive behaviours to temporarily manage anxiety, creating a cycle that ultimately makes anxiety worse.',
+    approach: 'Anxiety-informed addiction counselling helps clients understand the relationship between anxiety and their addictive behaviour, and develops alternative coping strategies using CBT, mindfulness and somatic approaches.',
+    who: 'Anxiety-specialised addiction counselling benefits those who use substances or compulsive behaviours to manage worry, panic, social anxiety or phobias.',
+  },
+  codependency: {
+    intro: 'Codependency is a relational pattern in which one person\'s sense of identity and wellbeing becomes excessively tied to another\'s needs or addiction.',
+    approach: 'Counselling for codependency focuses on establishing healthy boundaries, developing a secure sense of self, and breaking the enabling patterns that perpetuate addiction within relationships.',
+    who: 'Codependency counselling helps partners, family members and friends of people with addiction who find that their own life has become organised around another person\'s addictive behaviour.',
+  },
+  addiction: {
+    intro: 'Addiction is a complex, chronic condition characterised by compulsive engagement in rewarding behaviours despite harmful consequences. It affects the brain\'s reward, motivation and memory systems.',
+    approach: 'Addiction counselling takes a holistic, personalised approach that addresses the biological, psychological and social aspects of dependency. Therapeutic methods include CBT, 12-step facilitation, motivational interviewing and trauma-informed practice.',
+    who: 'Addiction counselling is suitable for anyone affected by compulsive or addictive behaviour, regardless of the nature of the addiction or how long it has been problematic.',
+  },
 }
 
-function generateAbout(name: string, locationName: string, specialisms: string[], title: string): string {
-  const specs = specialisms.slice(0, 3).map(s => SPECIALISM_LABELS[s] ?? s).join(', ') || 'addiction and substance misuse'
-  const credential = title && !title.toLowerCase().includes('registered') ? title : 'Registered Counsellor'
+// ── Content generators ────────────────────────────────────────────────────────
 
-  return `${name} is a ${credential} based in ${locationName}, specialising in ${specs}. They provide professional, confidential addiction counselling to adults seeking support with substance misuse, dependency and related mental health challenges.
+function generateAbout(name: string, location: string, specs: string[], title: string): string[] {
+  const specLabels = specs.slice(0, 3).map(s => SPEC_LABELS[s] ?? s)
+  const specStr = specLabels.length > 1
+    ? specLabels.slice(0, -1).join(', ') + ' and ' + specLabels[specLabels.length - 1]
+    : specLabels[0] ?? 'addiction and substance misuse'
+  const cred = title && !title.toLowerCase().includes('registered') ? title : 'Registered Counsellor'
 
-Working with a counsellor who specialises in addiction can make a significant difference to recovery outcomes. ${name} offers a safe, non-judgemental space where clients can explore the root causes of their addiction, develop insight into their patterns of behaviour, and build practical tools for long-term recovery.
-
-If you are concerned about your own or a loved one's relationship with alcohol, drugs, gambling or another addictive behaviour, ${name}'s specialist experience in ${locationName} means they are well-placed to provide the support and guidance needed to begin the journey towards recovery.`
+  return [
+    `${name} is a ${cred} based in ${location}, providing specialist addiction counselling to individuals and families affected by ${specStr}. With professional training in evidence-based therapeutic approaches, ${name} offers a confidential, compassionate and non-judgemental space for anyone seeking support with addiction and recovery.`,
+    `Choosing to seek help for addiction is a courageous step, and having the right professional by your side makes a significant difference to recovery outcomes. ${name}'s specialist knowledge and person-centred approach means that each client receives support tailored to their unique circumstances — not a one-size-fits-all programme.`,
+    `Whether you are at the beginning of your recovery journey, have tried to stop before, or are a family member supporting a loved one with addiction, ${name} in ${location} has the experience and expertise to provide meaningful, lasting support.`,
+  ]
 }
 
-function generateFAQs(name: string, locationName: string, specialisms: string[], hasBACP: boolean): Array<{ q: string; a: string }> {
-  const specs = specialisms.slice(0, 2).map(s => SPECIALISM_LABELS[s] ?? s).join(' and ') || 'addiction'
+function generateApproach(name: string, specs: string[]): string[] {
+  const usesTrauma = specs.includes('trauma') || specs.includes('dual-diagnosis')
+  const usesCBT = true
+  const usesMI = specs.includes('alcohol') || specs.includes('drugs') || specs.includes('substances')
+
+  const methods = [
+    usesCBT ? 'Cognitive Behavioural Therapy (CBT)' : null,
+    usesMI ? 'Motivational Interviewing (MI)' : null,
+    usesTrauma ? 'Trauma-informed practice' : null,
+    specs.includes('gambling') ? 'Gambling-specific CBT protocols' : null,
+    specs.includes('dual-diagnosis') ? 'Integrated dual diagnosis treatment' : null,
+    'Relapse prevention planning',
+    'Mindfulness-based approaches',
+  ].filter(Boolean) as string[]
+
+  return [
+    `${name} works with a person-centred philosophy, meaning that therapy is led by the client's needs, goals and pace of recovery. The therapeutic relationship is built on trust, respect and genuine collaboration.`,
+    `Clinical approaches drawn upon may include: ${methods.join(', ')}. The specific methods used will depend on each client's individual needs, goals and the nature of their addiction.`,
+    `Sessions are typically 50 minutes in duration and may be offered weekly or at a frequency agreed between client and counsellor. ${name} may offer sessions in-person in ${' '} or online via video consultation, depending on individual preference and circumstances.`,
+  ]
+}
+
+function generateWhatToExpect(name: string): string[] {
+  return [
+    `Your first session with ${name} is typically an assessment or introductory meeting. This is an opportunity for both you and ${name} to explore whether you are a good fit, to discuss what brings you to counselling, and to outline what you hope to achieve from the work. There is no obligation to continue after a first session.`,
+    `Subsequent sessions focus on deepening your understanding of your relationship with addictive behaviour, working through underlying issues, and developing practical strategies for change. Recovery is rarely linear, and ${name} will support you through both progress and setbacks with consistency and care.`,
+    `Everything discussed in sessions is confidential. Information will only be shared in exceptional circumstances where there is a significant risk of harm — and even then, wherever possible, ${name} would discuss this with you first.`,
+  ]
+}
+
+function generateFAQs(name: string, location: string, specs: string[], hasBACP: boolean) {
+  const spec1 = specs[0] ? SPEC_LABELS[specs[0]] : 'addiction'
+  const spec2 = specs[1] ? SPEC_LABELS[specs[1]] : 'substance misuse'
 
   return [
     {
-      q: `Is ${name} currently accepting new clients in ${locationName}?`,
-      a: `To find out about current availability, please contact ${name} directly using the contact details on this profile. Many counsellors offer a free initial consultation to discuss whether they are the right fit for your needs.`,
+      q: `Is ${name} currently accepting new clients in ${location}?`,
+      a: `To find out about ${name}'s current availability, please use the contact details on this profile (visible after listing verification) or reach out via SoberNation. Many counsellors offer a free initial consultation to discuss whether they are the right fit for your needs.`,
     },
     {
       q: `What does ${name} specialise in?`,
-      a: `${name} is an addiction counsellor based in ${locationName} specialising in ${specs}. They work with individuals and families affected by addiction, offering evidence-based therapeutic support tailored to each client's circumstances.`,
+      a: `${name} is an addiction counsellor based in ${location} with specialist experience in ${spec1}${specs[1] ? ` and ${spec2}` : ''}. They work with individuals ${specs.includes('codependency') ? 'and partners or family members of people with addiction ' : ''}seeking professional support with compulsive or addictive behaviour.`,
     },
     {
-      q: `How do I contact ${name}?`,
-      a: `Contact details for ${name} are available on this profile to verified listings. You can request to connect via the SoberNation platform. ${name} is based in ${locationName} and may offer both in-person and online sessions.`,
-    },
-    {
-      q: `${hasBACP ? 'Is ' + name + ' BACP registered?' : 'What qualifications does ' + name + ' hold?'}`,
+      q: `${hasBACP ? `Is ${name} BACP accredited?` : `What qualifications does ${name} hold?`}`,
       a: hasBACP
-        ? `${name} is registered with the British Association for Counselling and Psychotherapy (BACP), the UK's largest professional body for counsellors and psychotherapists. BACP membership indicates that a counsellor has met professional standards of training, ethics and ongoing professional development.`
-        : `${name} is a professional addiction counsellor practising in ${locationName}. For specific qualification and accreditation information, please contact them directly or visit the BACP Find a Therapist register.`,
+        ? `${name} is registered with the British Association for Counselling and Psychotherapy (BACP), the UK's leading professional body for counsellors and psychotherapists. BACP registration means ${name} has met national standards for training, ethics and ongoing professional development — giving clients confidence in the quality of care they receive.`
+        : `${name} is a qualified addiction counsellor practising in ${location}. For specific qualification, accreditation and professional membership details, please contact them directly. You can also search the BACP Find a Therapist register to verify professional registrations.`,
     },
     {
-      q: `Does ${name} offer online counselling?`,
-      a: `Many addiction counsellors now offer sessions via video call as well as in-person appointments. Contact ${name} directly to discuss your preferences and find out what formats they currently offer in and around ${locationName}.`,
+      q: `How long does counselling with ${name} take?`,
+      a: `The length of counselling varies significantly depending on the individual, the nature of their addiction and their personal goals. Some clients benefit from short-term focused work of 6–12 sessions; others engage in longer-term therapy over months or years. ${name} will discuss realistic timeframes and review progress with you throughout the work.`,
     },
     {
-      q: `How much does counselling with ${name} cost?`,
-      a: `Counselling fees vary depending on the therapist's experience, session length and location. Contact ${name} directly to discuss their current fee structure. Some counsellors offer reduced rates for those on low incomes, and some addiction treatment may be funded through the NHS.`,
+      q: `Does ${name} offer online sessions?`,
+      a: `Many addiction counsellors, including those practising in ${location}, now offer online sessions via video call in addition to in-person appointments. Online therapy has been shown to be as effective as face-to-face work for most forms of addiction counselling. Please contact ${name} directly to confirm what formats they currently offer.`,
+    },
+    {
+      q: `How much does counselling with ${name} cost per session?`,
+      a: `Counsellor fees vary depending on experience, qualifications and location. In ${location}, addiction counselling typically costs between £50 and £150 per session. Contact ${name} directly for their current fee structure. Some counsellors offer concessions for those on lower incomes, and NHS-funded counselling may be available through a GP referral.`,
+    },
+    {
+      q: `Can I see ${name} if I'm not yet ready to stop using?`,
+      a: `Yes. Many addiction counsellors, including those specialising in ${spec1.toLowerCase()}, work with clients who are not yet abstinent and are not yet sure they want to be. Harm reduction — reducing the risks associated with addictive behaviour — is a valid and valuable therapeutic goal in its own right. ${name} will meet you where you are, whatever stage of change you are at.`,
+    },
+    {
+      q: `Is it confidential if I contact ${name}?`,
+      a: `Yes. Counselling is confidential. Everything you share with ${name} is held in confidence, subject to very limited exceptions where there is a risk of serious harm. ${name} will explain their confidentiality policy in full at the start of your work together, so you know exactly where you stand.`,
     },
   ]
 }
@@ -97,361 +183,543 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const supabase = getSupabase()
   const { data } = await supabase
     .from('counsellors')
-    .select('name, title, location_name, specialisms')
+    .select('name, title, location_name, specialisms, bacp_number')
     .eq('profile_slug', slug)
     .maybeSingle()
 
   if (!data) return {}
-  const specs = data.specialisms?.slice(0, 2).map((s: string) => SPECIALISM_LABELS[s] ?? s).join(' & ') || 'Addiction'
+  const s1 = data.specialisms?.[0] ? SPEC_LABELS[data.specialisms[0]] : 'Addiction'
+  const s2 = data.specialisms?.[1] ? SPEC_LABELS[data.specialisms[1]] : null
 
   return {
-    title: `${data.name} | ${specs} Counsellor in ${data.location_name} | SoberNation`,
-    description: `${data.name} is an addiction counsellor based in ${data.location_name}, specialising in ${specs}. View their profile, qualifications and contact details on SoberNation.`,
+    title: `${data.name} | ${s1} Counsellor in ${data.location_name} | SoberNation`,
+    description: `${data.name} is a${data.bacp_number ? ' BACP-registered' : ''} addiction counsellor in ${data.location_name} specialising in ${s1}${s2 ? ` and ${s2}` : ''}. View their profile, qualifications, FAQs and contact details on SoberNation.`,
     openGraph: {
-      title: `${data.name} | Addiction Counsellor in ${data.location_name}`,
-      type: 'website',
+      title: `${data.name} | ${s1} Counsellor — ${data.location_name}`,
+      description: `Professional addiction counselling in ${data.location_name}. Specialising in ${s1}${s2 ? ` and ${s2}` : ''}.`,
+      type: 'profile',
+    },
+    alternates: {
+      canonical: `https://www.sobernation.co.uk/therapist/${slug}`,
     },
   }
 }
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 
-export default async function TherapistProfilePage({ params }: Props) {
+export default async function TherapistPage({ params }: Props) {
   const { slug } = await params
   const supabase = getSupabase()
 
-  const { data: counsellor } = await supabase
+  const { data: c } = await supabase
     .from('counsellors')
-    .select('id, name, title, location_name, location_slug, specialisms, phone, email, website, photo_url, verified, bacp_number, listing_type, view_count')
+    .select('id, name, title, location_name, location_slug, specialisms, phone, email, website, photo_url, verified, bacp_number, listing_type, view_count, profile_slug')
     .eq('profile_slug', slug)
     .maybeSingle()
 
-  if (!counsellor) notFound()
+  if (!c) notFound()
 
-  // Increment view count (fire and forget)
-  supabase.from('counsellors').update({ view_count: (counsellor.view_count ?? 0) + 1 }).eq('id', counsellor.id)
-    .then(() => {}).catch(() => {})
+  // Increment view count async
+  supabase.from('counsellors').update({ view_count: (c.view_count ?? 0) + 1 }).eq('id', c.id).then(() => {}).catch(() => {})
 
-  // Related counsellors in same area
   const { data: related } = await supabase
     .from('counsellors')
-    .select('id, name, title, location_name, location_slug, specialisms, profile_slug, verified')
-    .eq('location_slug', counsellor.location_slug)
-    .neq('id', counsellor.id)
-    .limit(3)
+    .select('id, name, title, location_slug, location_name, specialisms, profile_slug, verified, photo_url')
+    .eq('location_slug', c.location_slug)
+    .neq('id', c.id)
+    .order('verified', { ascending: false })
+    .limit(4)
 
+  const specs: string[] = c.specialisms ?? []
   const viewers = getLiveViewers(slug)
-  const hasBACP = !!counsellor.bacp_number
-  const specialisms: string[] = counsellor.specialisms ?? []
-  const about = generateAbout(counsellor.name, counsellor.location_name, specialisms, counsellor.title ?? '')
-  const faqs = generateFAQs(counsellor.name, counsellor.location_name, specialisms, hasBACP)
-  const initials = counsellor.name.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()
+  const hasBACP = !!c.bacp_number
+  const initials = c.name.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()
 
-  // Structured data
-  const personSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: counsellor.name,
-    jobTitle: counsellor.title || 'Addiction Counsellor',
-    worksFor: { '@type': 'Organization', name: 'SoberNation' },
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: counsellor.location_name,
-      addressCountry: 'GB',
+  const aboutParas = generateAbout(c.name, c.location_name, specs, c.title ?? '')
+  const approachParas = generateApproach(c.name, specs)
+  const expectParas = generateWhatToExpect(c.name)
+  const faqs = generateFAQs(c.name, c.location_name, specs, hasBACP)
+
+  // Schema.org
+  const schemas = [
+    {
+      '@context': 'https://schema.org',
+      '@type': ['Person', 'MedicalBusiness'],
+      name: c.name,
+      jobTitle: c.title ?? 'Addiction Counsellor',
+      description: `${c.name} is an addiction counsellor based in ${c.location_name}, specialising in ${specs.map(s => SPEC_LABELS[s] ?? s).join(', ')}.`,
+      address: { '@type': 'PostalAddress', addressLocality: c.location_name, addressCountry: 'GB' },
+      url: `https://www.sobernation.co.uk/therapist/${slug}`,
+      ...(c.photo_url ? { image: c.photo_url } : {}),
+      ...(c.website ? { sameAs: [c.website] } : {}),
     },
-    url: `https://www.sobernation.co.uk/therapist/${slug}`,
-    ...(counsellor.photo_url ? { image: counsellor.photo_url } : {}),
-  }
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqs.map(f => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.sobernation.co.uk' },
+        { '@type': 'ListItem', position: 2, name: `Counsellors in ${c.location_name}`, item: `https://www.sobernation.co.uk/counsellors/${c.location_slug}` },
+        { '@type': 'ListItem', position: 3, name: c.name, item: `https://www.sobernation.co.uk/therapist/${slug}` },
+      ],
+    },
+  ]
 
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map(f => ({
-      '@type': 'Question',
-      name: f.q,
-      acceptedAnswer: { '@type': 'Answer', text: f.a },
-    })),
-  }
-
-  const breadcrumbSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.sobernation.co.uk' },
-      { '@type': 'ListItem', position: 2, name: `Counsellors in ${counsellor.location_name}`, item: `https://www.sobernation.co.uk/counsellors/${counsellor.location_slug}` },
-      { '@type': 'ListItem', position: 3, name: counsellor.name, item: `https://www.sobernation.co.uk/therapist/${slug}` },
-    ],
-  }
+  const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(c.location_name + ' UK')}&output=embed&z=12`
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--white)' }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+    <div style={{ minHeight: '100vh', background: '#f8f9fa' }}>
+      {schemas.map((s, i) => (
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }} />
+      ))}
 
       <style>{`
-        .tp-hero { background: var(--white); border-bottom: 1px solid var(--border); padding: 40px 20px 36px; }
-        .tp-hero-inner { max-width: 840px; margin: 0 auto; }
-        .tp-wrap { max-width: 840px; margin: 0 auto; padding: 0 20px 64px; }
-        .tp-breadcrumb { font-size: 12px; color: var(--text-light); margin-bottom: 16px; }
-        .tp-breadcrumb a { color: var(--text-light); text-decoration: none; }
-        .tp-breadcrumb a:hover { color: var(--accent); }
-        .tp-hero-row { display: flex; gap: 20px; align-items: flex-start; }
-        .tp-avatar { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: var(--accent-pale); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; color: var(--accent); }
-        .tp-name { font-size: clamp(22px,4vw,32px); font-weight: 800; color: var(--text); letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 4px; }
-        .tp-title { font-size: 14px; color: var(--text-muted); margin-bottom: 10px; }
-        .tp-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-        .tp-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
-        .tp-badge--verified { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-        .tp-badge--unverified { background: #f3f4f6; color: #6b7280; border: 1px solid #e5e7eb; }
-        .tp-badge--bacp { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+        .tp { font-family: inherit; }
+
+        /* Layout */
+        .tp-hero { background: var(--white); border-bottom: 1px solid var(--border); padding: 32px 20px 0; }
+        .tp-hero-inner { max-width: 1100px; margin: 0 auto; }
+        .tp-body-wrap { max-width: 1100px; margin: 0 auto; padding: 32px 20px 64px; display: grid; grid-template-columns: 1fr 300px; gap: 28px; align-items: start; }
+        @media (max-width: 880px) { .tp-body-wrap { grid-template-columns: 1fr; } .tp-sidebar { order: -1; } }
+
+        /* Breadcrumb */
+        .tp-bc { font-size: 12px; color: var(--text-light); margin-bottom: 20px; }
+        .tp-bc a { color: var(--text-light); text-decoration: none; }
+        .tp-bc a:hover { color: var(--accent); }
+
+        /* Hero content */
+        .tp-hero-profile { display: flex; gap: 20px; align-items: flex-start; padding-bottom: 28px; }
+        .tp-avatar-lg {
+          width: 88px; height: 88px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
+          background: linear-gradient(135deg, var(--accent), #1a8a6e);
+          display: flex; align-items: center; justify-content: center;
+          font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -1px;
+          border: 3px solid var(--white); box-shadow: 0 2px 16px rgba(29,107,90,0.18);
+        }
+        .tp-h1 { font-size: clamp(22px, 3.5vw, 32px); font-weight: 800; color: var(--text); letter-spacing: -0.025em; line-height: 1.15; margin-bottom: 5px; }
+        .tp-subtitle { font-size: 14px; color: var(--text-muted); margin-bottom: 12px; }
+        .tp-badges { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 12px; }
+        .tp-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px; }
+        .tp-badge--verified { background: #dcfce7; color: #166534; }
+        .tp-badge--unverified { background: #f3f4f6; color: #6b7280; }
+        .tp-badge--bacp { background: #eff6ff; color: #1d4ed8; }
         .tp-badge--spec { background: var(--accent-pale); color: var(--accent); }
-        .tp-viewers { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
-        .tp-viewers-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; animation: pulse2 2s infinite; flex-shrink: 0; }
-        @keyframes pulse2 { 0%,100%{opacity:1}50%{opacity:0.4} }
-        .tp-section { margin-top: 40px; }
-        .tp-section-title { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 14px; letter-spacing: -0.01em; }
-        .tp-body { font-size: 15px; color: var(--text-muted); line-height: 1.8; }
-        .tp-body p { margin-bottom: 14px; }
-        .tp-blurred-contact { background: #f9fafb; border: 1px dashed #d1d5db; border-radius: 10px; padding: 20px 22px; margin-top: 28px; position: relative; overflow: hidden; }
-        .tp-blurred-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-        .tp-blurred-val { font-size: 14px; font-weight: 600; color: #374151; filter: blur(5px); user-select: none; letter-spacing: 0.04em; }
-        .tp-blurred-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: rgba(255,255,255,0.75); backdrop-filter: blur(2px); }
-        .tp-claim-overlay-btn { font-size: 13px; font-weight: 700; background: var(--accent); color: #fff; padding: 9px 20px; border-radius: 8px; text-decoration: none; transition: opacity 0.12s; }
-        .tp-claim-overlay-btn:hover { opacity: 0.88; }
-        .tp-verified-contact { background: var(--accent-pale); border: 1px solid #c8e6df; border-radius: 10px; padding: 18px 20px; margin-top: 28px; }
-        .tp-contact-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-        .tp-contact-row:last-child { margin-bottom: 0; }
-        .tp-faq { margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
-        .tp-faq:last-child { border-bottom: none; }
+        .tp-viewers { font-size: 13px; color: #059669; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+        .tp-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; animation: blink 2s ease-in-out infinite; flex-shrink: 0; }
+        @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.35} }
+
+        /* Nav tabs under hero */
+        .tp-tabs { display: flex; gap: 0; border-top: 1px solid var(--border); margin-top: 4px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .tp-tab { font-size: 13px; font-weight: 600; color: var(--text-muted); padding: 14px 18px; text-decoration: none; border-bottom: 2px solid transparent; white-space: nowrap; transition: color 0.12s, border-color 0.12s; }
+        .tp-tab:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+        /* Main content sections */
+        .tp-section { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 26px 28px; margin-bottom: 16px; }
+        .tp-section-title { font-size: 19px; font-weight: 700; color: var(--text); margin-bottom: 16px; letter-spacing: -0.01em; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+        .tp-body-text { font-size: 15px; color: var(--text-muted); line-height: 1.85; }
+        .tp-body-text p { margin-bottom: 14px; }
+        .tp-body-text p:last-child { margin-bottom: 0; }
+
+        /* Spec grid */
+        .tp-spec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+        .tp-spec-card { background: #f9fafb; border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+        .tp-spec-card-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .tp-spec-card-body { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+
+        /* Methods list */
+        .tp-methods { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .tp-method { font-size: 12px; font-weight: 600; color: var(--accent); background: var(--accent-pale); padding: 5px 12px; border-radius: 20px; }
+
+        /* FAQ */
+        .tp-faq-item { border-bottom: 1px solid var(--border); padding: 16px 0; }
+        .tp-faq-item:first-child { padding-top: 0; }
+        .tp-faq-item:last-child { border-bottom: none; padding-bottom: 0; }
         .tp-faq-q { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-        .tp-faq-a { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
-        .tp-spec-item { margin-bottom: 28px; }
-        .tp-spec-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-        .tp-map { width: 100%; height: 260px; border-radius: 10px; border: 1px solid var(--border); margin-top: 12px; }
-        .tp-related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 16px; }
-        .tp-related-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
-        .tp-claim-cta { margin-top: 40px; background: var(--accent-pale); border: 1px solid #c8e6df; border-radius: 12px; padding: 24px 28px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
-        .tp-reviews-empty { background: #f9fafb; border: 1px solid var(--border); border-radius: 10px; padding: 32px; text-align: center; }
-        .tp-stars { font-size: 24px; letter-spacing: 4px; margin-bottom: 12px; opacity: 0.3; }
-        @media (max-width: 600px) { .tp-hero-row { flex-direction: column; } .tp-claim-cta { flex-direction: column; } }
+        .tp-faq-a { font-size: 14px; color: var(--text-muted); line-height: 1.75; }
+
+        /* Location */
+        .tp-map { width: 100%; height: 240px; border-radius: 10px; border: 1px solid var(--border); display: block; margin-top: 14px; }
+
+        /* Related */
+        .tp-related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-top: 4px; }
+        .tp-related-card { border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-decoration: none; display: block; background: #fafafa; transition: border-color 0.12s; }
+        .tp-related-card:hover { border-color: var(--accent); background: var(--white); }
+        .tp-related-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-pale); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+        .tp-related-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+        .tp-related-spec { font-size: 11px; color: var(--text-light); }
+
+        /* Sidebar */
+        .tp-sidebar { position: sticky; top: 24px; }
+        .tp-sidebar-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 14px; }
+        .tp-sidebar-head { background: linear-gradient(135deg, var(--accent) 0%, #1a8a6e 100%); padding: 18px 20px; text-align: center; }
+        .tp-sidebar-avatar {
+          width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 10px;
+          background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center;
+          font-size: 22px; font-weight: 800; color: #fff; border: 2px solid rgba(255,255,255,0.5);
+          overflow: hidden;
+        }
+        .tp-sidebar-name { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+        .tp-sidebar-loc { font-size: 12px; color: rgba(255,255,255,0.8); }
+        .tp-sidebar-body { padding: 18px 20px; }
+        .tp-sidebar-viewers { display: flex; align-items: center; gap: 7px; font-size: 13px; color: #059669; font-weight: 600; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+
+        /* Contact blurred */
+        .tp-contact-blurred { position: relative; border-radius: 10px; overflow: hidden; }
+        .tp-contact-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #f3f4f6; }
+        .tp-contact-row:last-child { border-bottom: none; }
+        .tp-contact-val { font-size: 13px; font-weight: 600; color: #374151; filter: blur(5px); user-select: none; }
+        .tp-contact-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.72); backdrop-filter: blur(1px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+        .tp-contact-overlay-text { font-size: 12px; color: var(--text-muted); text-align: center; font-weight: 500; max-width: 180px; line-height: 1.5; }
+        .tp-claim-btn { display: block; width: 100%; text-align: center; font-size: 13px; font-weight: 700; background: var(--accent); color: #fff; padding: 11px; border-radius: 8px; text-decoration: none; margin-top: 14px; transition: opacity 0.12s; }
+        .tp-claim-btn:hover { opacity: 0.88; }
+        .tp-claim-sub { font-size: 11px; color: var(--text-light); text-align: center; margin-top: 8px; }
+
+        /* Verified contact */
+        .tp-contact-real { display: block; width: 100%; text-align: center; font-size: 13px; font-weight: 700; padding: 10px; border-radius: 8px; text-decoration: none; margin-bottom: 8px; transition: opacity 0.12s; }
+        .tp-contact-real:hover { opacity: 0.88; }
+        .tp-contact-phone { background: var(--accent); color: #fff; }
+        .tp-contact-email { background: #fff; color: var(--accent); border: 1.5px solid var(--accent); }
+        .tp-contact-web { background: #fff; color: var(--text-muted); border: 1px solid var(--border); font-size: 12px; }
+
+        /* Trust signals */
+        .tp-trust { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); padding: 10px 0; border-top: 1px solid var(--border); }
+
+        /* Reviews */
+        .tp-reviews-empty { text-align: center; padding: 28px 12px; }
+        .tp-stars { font-size: 28px; letter-spacing: 4px; color: #d1d5db; margin-bottom: 10px; }
+
+        @media (max-width: 600px) { .tp-section { padding: 18px 16px; } .tp-hero-profile { flex-direction: column; } }
       `}</style>
 
-      {/* Hero */}
-      <div className="tp-hero">
+      {/* ── Hero ── */}
+      <div className="tp-hero tp">
         <div className="tp-hero-inner">
-          <nav className="tp-breadcrumb">
+          <nav className="tp-bc">
             <Link href="/">Home</Link>{' / '}
-            <Link href={`/counsellors/${counsellor.location_slug}`}>Counsellors in {counsellor.location_name}</Link>{' / '}
-            <span>{counsellor.name}</span>
+            <Link href={`/counsellors/${c.location_slug}`}>Counsellors in {c.location_name}</Link>{' / '}
+            <span>{c.name}</span>
           </nav>
 
-          <div className="tp-hero-row">
-            {/* Avatar */}
-            {counsellor.photo_url ? (
+          <div className="tp-hero-profile">
+            {c.photo_url ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={counsellor.photo_url} alt={counsellor.name} className="tp-avatar" />
+              <img src={c.photo_url} alt={`${c.name} — addiction counsellor in ${c.location_name}`} className="tp-avatar-lg" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
             ) : (
-              <div className="tp-avatar">{initials}</div>
+              <div className="tp-avatar-lg">{initials}</div>
             )}
-
-            <div style={{ flex: 1 }}>
-              <h1 className="tp-name">{counsellor.name}</h1>
-              {counsellor.title && <div className="tp-title">{counsellor.title}</div>}
-
-              <div className="tp-meta">
-                {counsellor.verified ? (
-                  <span className="tp-badge tp-badge--verified">✓ Verified by SoberNation</span>
-                ) : (
-                  <span className="tp-badge tp-badge--unverified">Unverified listing</span>
-                )}
+            <div>
+              <h1 className="tp-h1">{c.name}</h1>
+              <p className="tp-subtitle">{c.title ?? 'Addiction Counsellor'} · {c.location_name}</p>
+              <div className="tp-badges">
+                {c.verified
+                  ? <span className="tp-badge tp-badge--verified">✓ Verified by SoberNation</span>
+                  : <span className="tp-badge tp-badge--unverified">Unverified listing</span>}
                 {hasBACP && <span className="tp-badge tp-badge--bacp">BACP Registered</span>}
-                <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{counsellor.location_name}</span>
-              </div>
-
-              {/* Specialism chips */}
-              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 10 }}>
-                {specialisms.map(s => (
-                  <span key={s} className="tp-badge tp-badge--spec">{SPECIALISM_LABELS[s] ?? s}</span>
+                {specs.slice(0, 3).map(s => (
+                  <span key={s} className="tp-badge tp-badge--spec">{SPEC_LABELS[s] ?? s}</span>
                 ))}
               </div>
-
-              {/* Live viewers */}
               <div className="tp-viewers">
-                <span className="tp-viewers-dot" />
-                <strong>{viewers}</strong> people are viewing this profile today
+                <span className="tp-dot" />
+                {viewers} people viewing this profile today
               </div>
             </div>
           </div>
+
+          {/* Tab nav */}
+          <nav className="tp-tabs">
+            {['About', 'Approach', 'Specialisms', 'FAQs', 'Location', 'Reviews'].map(t => (
+              <a key={t} href={`#${t.toLowerCase()}`} className="tp-tab">{t}</a>
+            ))}
+          </nav>
         </div>
       </div>
 
-      <div className="tp-wrap">
+      {/* ── Body ── */}
+      <div className="tp-body-wrap tp">
 
-        {/* Contact block */}
-        {counsellor.verified && (counsellor.phone || counsellor.email || counsellor.website) ? (
-          <div className="tp-verified-contact">
-            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)', marginBottom: 12 }}>Contact {counsellor.name}</div>
-            {counsellor.phone?.trim() && (
-              <div className="tp-contact-row">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.81a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16"/></svg>
-                <a href={`tel:${counsellor.phone}`} style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>{counsellor.phone}</a>
-              </div>
-            )}
-            {counsellor.email?.trim() && (
-              <div className="tp-contact-row">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                <a href={`mailto:${counsellor.email}`} style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>{counsellor.email}</a>
-              </div>
-            )}
-            {counsellor.website?.trim() && (
-              <div className="tp-contact-row">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                <a href={counsellor.website} target="_blank" rel="noopener noreferrer" style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>Visit website ↗</a>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="tp-blurred-contact">
-            <div className="tp-blurred-row">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.81a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16"/></svg>
-              <span className="tp-blurred-val">07### ######</span>
+        {/* ── Main column ── */}
+        <main>
+
+          {/* About */}
+          <section id="about" className="tp-section">
+            <h2 className="tp-section-title">About {c.name}</h2>
+            <div className="tp-body-text">
+              {aboutParas.map((p, i) => <p key={i}>{p}</p>)}
             </div>
-            <div className="tp-blurred-row">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-              <span className="tp-blurred-val">••••••@••••••.com</span>
+          </section>
+
+          {/* Therapeutic approach */}
+          <section id="approach" className="tp-section">
+            <h2 className="tp-section-title">Therapeutic Approach</h2>
+            <div className="tp-body-text">
+              {approachParas.map((p, i) => <p key={i}>{p}</p>)}
             </div>
-            <div className="tp-blurred-overlay">
-              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', textAlign: 'center', maxWidth: 260 }}>
-                Contact details are only visible for verified listings
+            <div className="tp-methods">
+              {['Person-centred therapy', 'Cognitive Behavioural Therapy (CBT)', 'Motivational Interviewing',
+                ...(specs.includes('trauma') ? ['EMDR, Trauma-informed practice'] : []),
+                ...(specs.includes('dual-diagnosis') ? ['Integrated dual diagnosis'] : []),
+                'Relapse prevention', 'Mindfulness'].map(m => (
+                <span key={m} className="tp-method">{m}</span>
+              ))}
+            </div>
+          </section>
+
+          {/* Specialisms */}
+          {specs.length > 0 && (
+            <section id="specialisms" className="tp-section">
+              <h2 className="tp-section-title">Specialisms &amp; Areas of Practice</h2>
+              <div className="tp-spec-grid">
+                {specs.map(s => {
+                  const detail = SPEC_DETAIL[s]
+                  if (!detail) return null
+                  return (
+                    <div key={s} className="tp-spec-card">
+                      <div className="tp-spec-card-title">
+                        <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--accent)', display: 'inline-block', flexShrink: 0 }} />
+                        {SPEC_LABELS[s]}
+                      </div>
+                      <div className="tp-spec-card-body">{detail.intro}</div>
+                    </div>
+                  )
+                })}
               </div>
-              <Link href={`/counsellors/claim?id=${counsellor.id}&name=${encodeURIComponent(counsellor.name)}&location=${counsellor.location_slug}`} className="tp-claim-overlay-btn">
-                Claim this profile →
+
+              {/* Deep dives for top 3 specialisms */}
+              <div style={{ marginTop: 24 }}>
+                {specs.slice(0, 3).map(s => {
+                  const detail = SPEC_DETAIL[s]
+                  if (!detail) return null
+                  return (
+                    <div key={s} style={{ marginBottom: 28, paddingBottom: 28, borderBottom: '1px solid var(--border)' }}>
+                      <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', marginBottom: 10 }}>
+                        {SPEC_LABELS[s]} Counselling in {c.location_name}
+                      </h3>
+                      <div className="tp-body-text">
+                        <p><strong>About this specialism:</strong> {detail.intro}</p>
+                        <p><strong>Therapeutic approach:</strong> {detail.approach}</p>
+                        <p><strong>Who benefits:</strong> {detail.who}</p>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </section>
+          )}
+
+          {/* What to expect */}
+          <section id="whattoexpect" className="tp-section">
+            <h2 className="tp-section-title">What to Expect Working With {c.name}</h2>
+            <div className="tp-body-text">
+              {expectParas.map((p, i) => <p key={i}>{p}</p>)}
+            </div>
+          </section>
+
+          {/* BACP */}
+          {hasBACP && (
+            <section className="tp-section">
+              <h2 className="tp-section-title">Professional Accreditation</h2>
+              <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+                <div style={{ flexShrink: 0, width: 48, height: 48, background: '#eff6ff', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <polyline points="9,12 11,14 15,10" />
+                  </svg>
+                </div>
+                <div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 6 }}>BACP Registered</div>
+                  <div className="tp-body-text">
+                    <p>{c.name} is registered with the British Association for Counselling and Psychotherapy (BACP) — the UK&apos;s largest professional body for counsellors. BACP registration confirms that {c.name} has met the national standards of training, ethics and ongoing professional development. Clients can check their registration status directly on the BACP website.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* FAQs */}
+          <section id="faqs" className="tp-section">
+            <h2 className="tp-section-title">Frequently Asked Questions About {c.name}</h2>
+            <div>
+              {faqs.map(f => (
+                <div key={f.q} className="tp-faq-item">
+                  <div className="tp-faq-q">{f.q}</div>
+                  <div className="tp-faq-a">{f.a}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Location */}
+          <section id="location" className="tp-section">
+            <h2 className="tp-section-title">Serving Clients in {c.location_name}</h2>
+            <div className="tp-body-text">
+              <p>{c.name} provides addiction counselling to clients in {c.location_name} and the surrounding area. Sessions may be available in person or online, depending on the client&apos;s circumstances and preference. Online therapy via video call has been shown to be as effective as face-to-face sessions for addiction counselling, and allows clients to work with {c.name} from the comfort of their own home.</p>
+              <p>If you are based outside {c.location_name} and are looking for a specialist addiction counsellor, SoberNation lists qualified professionals across the UK. You can also <Link href={`/counsellors/${c.location_slug}`} style={{ color: 'var(--accent)' }}>browse all counsellors in {c.location_name}</Link>.</p>
+            </div>
+            <iframe className="tp-map" src={mapSrc} allowFullScreen loading="lazy" title={`Map of ${c.location_name}`} referrerPolicy="no-referrer-when-downgrade" />
+            <div style={{ marginTop: 12, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <Link href={`/counsellors/${c.location_slug}`} style={{ fontSize: 13, color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
+                All counsellors in {c.location_name} →
+              </Link>
+              <Link href={`/rehab/${c.location_slug}`} style={{ fontSize: 13, color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
+                Rehab centres in {c.location_name} →
               </Link>
             </div>
-          </div>
-        )}
+          </section>
 
-        {/* About */}
-        <div className="tp-section">
-          <h2 className="tp-section-title">About {counsellor.name}</h2>
-          <div className="tp-body">
-            {about.split('\n\n').map((para, i) => <p key={i}>{para}</p>)}
-          </div>
-        </div>
-
-        {/* Specialisms */}
-        {specialisms.length > 0 && (
-          <div className="tp-section">
-            <h2 className="tp-section-title">Specialisms & Areas of Practice</h2>
-            {specialisms.map(s => (
-              <div key={s} className="tp-spec-item">
-                <div className="tp-spec-title">{SPECIALISM_LABELS[s] ?? s} in {counsellor.location_name}</div>
-                <div className="tp-faq-a">{SPECIALISM_DESCRIPTIONS[s] ?? `${counsellor.name} provides specialist counselling support in ${counsellor.location_name} for people affected by ${SPECIALISM_LABELS[s] ?? s.toLowerCase()}.`}</div>
+          {/* Reviews */}
+          <section id="reviews" className="tp-section">
+            <h2 className="tp-section-title">Reviews of {c.name}</h2>
+            <div className="tp-reviews-empty">
+              <div className="tp-stars">★★★★★</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 6 }}>No reviews yet</div>
+              <div style={{ fontSize: 13, color: 'var(--text-muted)', maxWidth: 340, margin: '0 auto 16px' }}>
+                Have you worked with {c.name}? Your anonymous review helps others find the right support. All submissions are moderated.
               </div>
-            ))}
-          </div>
-        )}
+              <a href={`mailto:editorial@sobernation.co.uk?subject=Review for ${encodeURIComponent(c.name)}&body=Name (optional): %0D%0AStar rating (1-5): %0D%0AReview: `}
+                style={{ display: 'inline-block', fontSize: 13, fontWeight: 700, color: 'var(--accent)', border: '1.5px solid var(--accent)', borderRadius: 8, padding: '9px 18px', textDecoration: 'none' }}>
+                Leave a review →
+              </a>
+            </div>
+          </section>
 
-        {/* BACP section */}
-        {hasBACP && (
-          <div className="tp-section">
-            <h2 className="tp-section-title">Professional Accreditation</h2>
-            <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 10, padding: '16px 18px' }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#1e40af', marginBottom: 6 }}>BACP Registered</div>
-              <div style={{ fontSize: 14, color: '#1e40af', lineHeight: 1.7 }}>
-                {counsellor.name} is registered with the British Association for Counselling and Psychotherapy (BACP) — the UK&apos;s largest professional body for counsellors and psychotherapists. BACP registration confirms that a therapist has met professional standards of training, experience and ethical practice, and is committed to ongoing professional development.
+          {/* Related */}
+          {related && related.length > 0 && (
+            <section className="tp-section">
+              <h2 className="tp-section-title">Other Counsellors in {c.location_name}</h2>
+              <div className="tp-related-grid">
+                {related.map(r => {
+                  const ri = r.name.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()
+                  return (
+                    <Link key={r.id} href={r.profile_slug ? `/therapist/${r.profile_slug}` : `/counsellors/${r.location_slug}`} className="tp-related-card">
+                      {r.photo_url
+                        // eslint-disable-next-line @next/next/no-img-element
+                        ? <img src={r.photo_url} alt={r.name} className="tp-related-avatar" style={{ objectFit: 'cover' }} />
+                        : <div className="tp-related-avatar">{ri}</div>}
+                      <div className="tp-related-name">{r.name}</div>
+                      <div className="tp-related-spec">{r.title ?? 'Counsellor'}</div>
+                      {r.verified && <div style={{ fontSize: 10, fontWeight: 700, color: '#166534', marginTop: 4 }}>✓ Verified</div>}
+                    </Link>
+                  )
+                })}
               </div>
+            </section>
+          )}
+        </main>
+
+        {/* ── Sidebar ── */}
+        <aside className="tp-sidebar">
+          <div className="tp-sidebar-card">
+            <div className="tp-sidebar-head">
+              <div className="tp-sidebar-avatar">
+                {c.photo_url
+                  // eslint-disable-next-line @next/next/no-img-element
+                  ? <img src={c.photo_url} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                  : initials}
+              </div>
+              <div className="tp-sidebar-name">{c.name}</div>
+              <div className="tp-sidebar-loc">{c.location_name}</div>
             </div>
-          </div>
-        )}
+            <div className="tp-sidebar-body">
+              <div className="tp-sidebar-viewers">
+                <span className="tp-dot" />
+                {viewers} viewing today
+              </div>
 
-        {/* Location */}
-        <div className="tp-section">
-          <h2 className="tp-section-title">Serving Clients in {counsellor.location_name}</h2>
-          <div className="tp-body">
-            <p>{counsellor.name} provides addiction counselling services in {counsellor.location_name} and the surrounding area. Many counsellors now offer online sessions in addition to in-person appointments, meaning that clients can access specialist support regardless of location.</p>
-          </div>
-          <iframe
-            className="tp-map"
-            src={`https://maps.google.com/maps?q=${encodeURIComponent(counsellor.location_name + ', UK')}&output=embed&z=12`}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title={`Map of ${counsellor.location_name}`}
-          />
-        </div>
-
-        {/* FAQ */}
-        <div className="tp-section">
-          <h2 className="tp-section-title">Frequently Asked Questions</h2>
-          {faqs.map(f => (
-            <div key={f.q} className="tp-faq">
-              <div className="tp-faq-q">{f.q}</div>
-              <div className="tp-faq-a">{f.a}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Reviews */}
-        <div className="tp-section">
-          <h2 className="tp-section-title">Reviews of {counsellor.name}</h2>
-          <div className="tp-reviews-empty">
-            <div className="tp-stars">★★★★★</div>
-            <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text)', marginBottom: 6 }}>No reviews yet</div>
-            <div style={{ fontSize: 13, color: 'var(--text-muted)', maxWidth: 360, margin: '0 auto 16px' }}>
-              Have you worked with {counsellor.name}? Leave an anonymous review to help others find the right support.
-            </div>
-            <a href={`mailto:editorial@sobernation.co.uk?subject=Review: ${encodeURIComponent(counsellor.name)}`}
-               style={{ fontSize: 13, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>
-              Submit a review →
-            </a>
-          </div>
-        </div>
-
-        {/* Related counsellors */}
-        {related && related.length > 0 && (
-          <div className="tp-section">
-            <h2 className="tp-section-title">Other Counsellors in {counsellor.location_name}</h2>
-            <div className="tp-related-grid">
-              {related.map(r => (
-                <Link key={r.id} href={r.profile_slug ? `/therapist/${r.profile_slug}` : `/counsellors/${r.location_slug}`} style={{ textDecoration: 'none' }}>
-                  <div className="tp-related-card">
-                    <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>{r.name}</div>
-                    <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{r.title || 'Counsellor'}</div>
-                    {r.verified && <div style={{ marginTop: 6, fontSize: 11, fontWeight: 700, color: '#166534' }}>✓ Verified</div>}
+              {/* Contact / Claim */}
+              {c.verified && (c.phone?.trim() || c.email?.trim() || c.website?.trim()) ? (
+                <>
+                  {c.phone?.trim() && (
+                    <a href={`tel:${c.phone.replace(/\s/g,'')}`} className="tp-contact-real tp-contact-phone">
+                      📞 {c.phone}
+                    </a>
+                  )}
+                  {c.email?.trim() && c.email.includes('@') && (
+                    <a href={`mailto:${c.email}`} className="tp-contact-real tp-contact-email">
+                      ✉ Send email
+                    </a>
+                  )}
+                  {c.website?.trim() && (
+                    <a href={c.website} target="_blank" rel="noopener noreferrer" className="tp-contact-real tp-contact-web">
+                      🌐 Visit website
+                    </a>
+                  )}
+                </>
+              ) : (
+                <>
+                  <div className="tp-contact-blurred">
+                    <div>
+                      <div className="tp-contact-row">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.33A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.81a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 21.73 16"/></svg>
+                        <span className="tp-contact-val">07### ######</span>
+                      </div>
+                      <div className="tp-contact-row">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                        <span className="tp-contact-val">••••@••••.co.uk</span>
+                      </div>
+                    </div>
+                    <div className="tp-contact-overlay">
+                      <div className="tp-contact-overlay-text">Contact details visible for verified listings only</div>
+                    </div>
                   </div>
-                </Link>
+                  <Link
+                    href={`/counsellors/claim?id=${c.id}&name=${encodeURIComponent(c.name)}&location=${c.location_slug}`}
+                    className="tp-claim-btn"
+                  >
+                    {c.verified ? 'Manage listing' : 'Claim this profile'}
+                  </Link>
+                  <div className="tp-claim-sub">From £10/month · Cancel anytime</div>
+                </>
+              )}
+
+              {/* Trust */}
+              <div className="tp-trust">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Verified against BACP register
+              </div>
+            </div>
+          </div>
+
+          {/* Specialism sidebar card */}
+          {specs.length > 0 && (
+            <div className="tp-sidebar-card">
+              <div style={{ padding: '16px 20px' }}>
+                <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--text-light)', marginBottom: 10 }}>Specialisms</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {specs.map(s => (
+                    <span key={s} className="tp-badge tp-badge--spec">{SPEC_LABELS[s] ?? s}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Useful links */}
+          <div className="tp-sidebar-card">
+            <div style={{ padding: '16px 20px' }}>
+              <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--text-light)', marginBottom: 12 }}>Useful Links</div>
+              {[
+                { href: `https://www.bacp.co.uk/search/`, label: 'BACP Find a Therapist →', ext: true },
+                { href: `/counsellors/${c.location_slug}`, label: `All counsellors in ${c.location_name} →`, ext: false },
+                { href: `/rehab/${c.location_slug}`, label: `Rehab centres in ${c.location_name} →`, ext: false },
+                { href: `https://www.talktofrank.com`, label: 'Frank helpline →', ext: true },
+              ].map(link => (
+                <a key={link.href} href={link.href} target={link.ext ? '_blank' : undefined} rel={link.ext ? 'noopener noreferrer' : undefined}
+                  style={{ display: 'block', fontSize: 13, color: 'var(--accent)', textDecoration: 'none', marginBottom: 8, fontWeight: 500 }}>
+                  {link.label}
+                </a>
               ))}
             </div>
           </div>
-        )}
-
-        {/* Claim CTA */}
-        {!counsellor.verified && (
-          <div className="tp-claim-cta">
-            <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--accent)', marginBottom: 4 }}>
-                Is this your profile?
-              </div>
-              <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
-                Claim and verify your listing to display your real contact details, manage your profile, and show a verified badge — from £10/month.
-              </div>
-            </div>
-            <Link
-              href={`/counsellors/claim?id=${counsellor.id}&name=${encodeURIComponent(counsellor.name)}&location=${counsellor.location_slug}`}
-              style={{ fontSize: 13, fontWeight: 700, background: 'var(--accent)', color: '#fff', padding: '10px 20px', borderRadius: 8, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}
-            >
-              Claim & verify →
-            </Link>
-          </div>
-        )}
-
-        <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)' }}>
-          <Link href={`/counsellors/${counsellor.location_slug}`} style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none' }}>
-            ← All counsellors in {counsellor.location_name}
-          </Link>
-        </div>
+        </aside>
       </div>
     </div>
   )
