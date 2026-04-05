@@ -83,41 +83,73 @@ const COL = {}
 headers.forEach((h, i) => { COL[h] = i })
 
 // ── Filter criteria ──────────────────────────────────────────────────────────
-// Capture all addiction-relevant services:
-// - Direct substance misuse services
-// - NHS community care with drug/alcohol/rehab specialism
-// - Mental health services with drug or alcohol specialism
-// - Residential services with rehab/detox specialism
-// - Any service with addiction-related specialisms
+// Only include services specifically for substance misuse / addiction treatment.
+// EXCLUDES:
+//  - Nursing homes / residential care homes (elderly, physical rehab)
+//  - "Rehabilitation (illness/injury)" — that's physical rehab, NOT addiction
+//  - General hospitals unless substance-specific
+//  - Residential homes where substance misuse is just one of many specialisms
 
-const RELEVANT_SERVICE_TYPES = [
-  'substance', 'drug', 'alcohol', 'addiction', 'detox', 'rehab',
-  'community health care services - substance', 'community services - substance',
+// Service types that are ALWAYS addiction-related — include unconditionally
+const SUBSTANCE_SERVICE_TYPES = [
+  'rehabilitation (substance',     // "Rehabilitation (substance abuse)"
+  'community services - substance', // "Community services - Substance abuse"
+  'community health care services - substance',
+  'substance misuse',
+  'drug treatment',
+  'alcohol treatment',
+  'addiction',
+  'detox',
 ]
 
-const RELEVANT_SPECIALISMS = [
-  'substance misuse', 'drug misuse', 'alcohol', 'addiction', 'detox',
-  'rehabilitation', 'drug dependence', 'dependence',
+// Service types that should be EXCLUDED outright (care homes, general hospitals)
+const EXCLUDE_SERVICE_TYPES = [
+  'nursing home',
+  'rehabilitation (illness',       // Physical rehab — NOT addiction
+  'rehabilitation for elderly',
+]
+
+// For community/mental health services: only include if specialism is
+// specifically about substance/drug/alcohol — NOT general "rehabilitation"
+const SUBSTANCE_SPECIALISMS = [
+  'substance misuse problems',
+  'drug misuse',
+  'alcohol misuse',
+  'addiction',
+  'detox',
+  'drug dependence',
 ]
 
 const isTreatmentService = (serviceType, specialism) => {
   const st = (serviceType || '').toLowerCase()
   const sp = (specialism || '').toLowerCase()
 
-  // Direct hit on service type
-  for (const kw of RELEVANT_SERVICE_TYPES) {
+  // Explicitly exclude care homes and physical rehab
+  for (const kw of EXCLUDE_SERVICE_TYPES) {
+    if (st.includes(kw)) return false
+  }
+
+  // Explicitly exclude pure residential/nursing homes
+  // (they can appear WITH substance misuse in specialism but aren't rehab centres)
+  if (st.includes('nursing home') || st.includes('residential home')) {
+    return false
+  }
+
+  // Direct hit on substance-specific service type — always include
+  for (const kw of SUBSTANCE_SERVICE_TYPES) {
     if (st.includes(kw)) return true
   }
 
-  // Community or mental health services WITH addiction specialism
-  if (st.includes('community') || st.includes('mental health') || st.includes('residential')) {
-    for (const kw of RELEVANT_SPECIALISMS) {
+  // Community or mental health services — include ONLY if sub-specialism is addiction
+  if (st.includes('community') || st.includes('mental health')) {
+    for (const kw of SUBSTANCE_SPECIALISMS) {
       if (sp.includes(kw)) return true
     }
   }
 
   return false
 }
+
 
 const services  = []
 let skipped = 0

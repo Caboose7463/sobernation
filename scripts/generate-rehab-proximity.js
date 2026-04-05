@@ -68,8 +68,42 @@ for (const slug of cqcSlugs) {
 }
 
 // For CQC slugs that match local authority names (not in locations.json),
-// derive coords from the centres themselves — but we don't have postcode coords,
-// so we skip those (they'll be picked up via haversine to nearby known cities).
+// use manually-specified representative coordinates (approx centre of the county
+// or the location of a flagship treatment centre in that county).
+const COUNTY_COORDS = {
+  'wiltshire':               { lat: 51.06, lng: -2.14, name: 'Wiltshire' },   // near Clouds House
+  'north-yorkshire':         { lat: 54.00, lng: -1.54, name: 'North Yorkshire' },
+  'county-durham':           { lat: 54.78, lng: -1.57, name: 'County Durham' },
+  'east-riding-of-yorkshire':{ lat: 53.84, lng: -0.43, name: 'East Riding of Yorkshire' },
+  'herefordshire':           { lat: 52.06, lng: -2.72, name: 'Herefordshire' },
+  'rutland':                 { lat: 52.66, lng: -0.64, name: 'Rutland' },
+  'shropshire':              { lat: 52.61, lng: -2.74, name: 'Shropshire' },
+  'cornwall':                { lat: 50.40, lng: -5.00, name: 'Cornwall' },
+  'devon':                   { lat: 50.72, lng: -3.53, name: 'Devon' },
+  'dorset':                  { lat: 50.75, lng: -2.35, name: 'Dorset' },
+  'somerset':                { lat: 51.10, lng: -2.79, name: 'Somerset' },
+  'gloucestershire':         { lat: 51.87, lng: -2.24, name: 'Gloucestershire' },
+  'worcestershire':          { lat: 52.19, lng: -2.22, name: 'Worcestershire' },
+  'warwickshire':            { lat: 52.35, lng: -1.59, name: 'Warwickshire' },
+  'northamptonshire':        { lat: 52.28, lng: -0.88, name: 'Northamptonshire' },
+  'lincolnshire':            { lat: 53.23, lng: -0.53, name: 'Lincolnshire' },
+  'norfolk':                 { lat: 52.63, lng: 1.29,  name: 'Norfolk' },
+  'suffolk':                 { lat: 52.20, lng: 1.00,  name: 'Suffolk' },
+  'kent':                    { lat: 51.28, lng: 0.53,  name: 'Kent' },
+  'hampshire':               { lat: 51.06, lng: -1.31, name: 'Hampshire' },
+  'oxfordshire':             { lat: 51.76, lng: -1.26, name: 'Oxfordshire' },
+  'buckinghamshire':         { lat: 51.81, lng: -0.81, name: 'Buckinghamshire' },
+  'hertfordshire':           { lat: 51.81, lng: -0.24, name: 'Hertfordshire' },
+  'essex':                   { lat: 51.74, lng: 0.47,  name: 'Essex' },
+  'cambridgeshire':          { lat: 52.23, lng: 0.14,  name: 'Cambridgeshire' },
+};
+
+for (const [slug, coord] of Object.entries(COUNTY_COORDS)) {
+  if (cqcSlugs.has(slug) && !cqcCoords[slug]) {
+    cqcCoords[slug] = coord;
+  }
+}
+
 console.log('CQC slugs with known coords:', Object.keys(cqcCoords).length);
 
 // ── Haversine distance ────────────────────────────────────────────────────────
