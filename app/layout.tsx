@@ -76,10 +76,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             });
           `}}
         />
-        {/* Google AdSense — replace pub-REPLACE_WITH_YOUR_PUBLISHER_ID */}
+        {/* Google AdSense — pub-8511236039964647 */}
         <script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-REPLACE_WITH_YOUR_PUBLISHER_ID"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8511236039964647"
           crossOrigin="anonymous"
         />
         <script
