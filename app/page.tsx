@@ -131,29 +131,7 @@ export default function HomePage() {
         {' '}— both free, 24/7
       </div>
 
-      {/* Nav */}
-      <nav style={{ borderBottom: '1px solid var(--border)', background: 'var(--white)', position: 'sticky', top: 0, zIndex: 100 }}>
-        <div className="container-wide" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 56 }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-            <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ color: '#fff', fontSize: 14, fontWeight: 700 }}>S</span>
-            </div>
-            <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--text)', letterSpacing: '-0.01em' }}>SoberNation</span>
-          </Link>
-          <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-            {/* Desktop nav links — hidden on mobile */}
-            <div className="nav-links" style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-              <Link href="/rehab/london" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>Find Rehab</Link>
-              <Link href="/aa-meetings/london" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>AA Meetings</Link>
-              <Link href="/sobriety-counter" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>Sobriety Counter</Link>
-            </div>
-            {/* CTA always visible */}
-            <Link href="/days-sober/1" style={{ fontSize: 13, background: 'var(--accent)', color: '#fff', padding: '7px 14px', borderRadius: 'var(--radius-sm)', fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-              Get help
-            </Link>
-          </div>
-        </div>
-      </nav>
+
 
       {/* Hero — location search */}
       <section style={{ background: 'var(--white)', padding: '72px 20px 64px', borderBottom: '1px solid var(--border)' }}>
