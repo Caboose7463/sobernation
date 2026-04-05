@@ -109,6 +109,13 @@ export default function HomePage() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--white)' }}>
+      {/* Mobile responsive styles */}
+      <style>{`
+        @media (max-width: 600px) {
+          .nav-links { display: none !important; }
+          .home-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
 
       {/* Crisis bar */}
       <div className="crisis-bar">
@@ -129,10 +136,14 @@ export default function HomePage() {
             <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--text)', letterSpacing: '-0.01em' }}>SoberNation</span>
           </Link>
           <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-            <Link href="/rehab" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>Find Rehab</Link>
-            <Link href="/aa-meetings" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>AA Meetings</Link>
-            <Link href="/guides" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>Guides</Link>
-            <Link href="/days-sober/1" style={{ fontSize: 13, background: 'var(--accent)', color: '#fff', padding: '7px 14px', borderRadius: 'var(--radius-sm)', fontWeight: 600, textDecoration: 'none' }}>
+            {/* Desktop nav links — hidden on mobile */}
+            <div className="nav-links" style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
+              <Link href="/rehab" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>Find Rehab</Link>
+              <Link href="/aa-meetings" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>AA Meetings</Link>
+              <Link href="/guides" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>Guides</Link>
+            </div>
+            {/* CTA always visible */}
+            <Link href="/days-sober/1" style={{ fontSize: 13, background: 'var(--accent)', color: '#fff', padding: '7px 14px', borderRadius: 'var(--radius-sm)', fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap' }}>
               Get help
             </Link>
           </div>
@@ -266,7 +277,7 @@ export default function HomePage() {
       {/* Main content grid */}
 
       <section style={{ padding: '56px 20px' }}>
-        <div className="container-wide" style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 48, alignItems: 'start' }}>
+        <div className="container-wide home-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 48, alignItems: 'start' }}>
 
           {/* Left — guides & content */}
           <div>
