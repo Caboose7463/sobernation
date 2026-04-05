@@ -2,6 +2,11 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import {
+  IconBuilding, IconPill, IconUsers, IconHeart, IconMapPin,
+  IconCalendar, IconBarChart, IconDollarSign, IconSearch,
+  IconShield, IconLeaf, IconCross, IconBeaker, IconSyringe
+} from '@/components/icons'
 
 const HELPLINES = [
   { name: 'Frank (drugs & alcohol)', number: '0300 123 6600', hours: '24/7' },
@@ -12,23 +17,23 @@ const HELPLINES = [
 ]
 
 const QUICK_LINKS = [
-  { label: 'Find Rehab', href: '/rehab/london', icon: '🏥' },
-  { label: 'Alcohol Detox', href: '/alcohol-detox/london', icon: '🍺' },
-  { label: 'Drug Detox', href: '/drug-detox/london', icon: '💊' },
-  { label: 'AA Meetings', href: '/aa-meetings/london', icon: '🗣️' },
-  { label: 'NA Meetings', href: '/na-meetings/london', icon: '🤝' },
-  { label: 'Heroin Help', href: '/heroin-addiction/london', icon: '💉' },
-  { label: 'Cocaine Help', href: '/cocaine-addiction/london', icon: '🤍' },
-  { label: 'Cannabis Help', href: '/cannabis-addiction/london', icon: '🌿' },
-  { label: 'Harm Reduction', href: '/harm-reduction/london', icon: '🛡️' },
-  { label: 'Family Support', href: '/family-therapy/london', icon: '👨‍👩‍👧' },
+  { label: 'Find Rehab',     href: '/rehab/london',             Icon: IconBuilding  },
+  { label: 'Alcohol Detox', href: '/alcohol-detox/london',     Icon: IconBeaker    },
+  { label: 'Drug Detox',    href: '/drug-detox/london',        Icon: IconPill      },
+  { label: 'AA Meetings',   href: '/aa-meetings/london',       Icon: IconUsers     },
+  { label: 'NA Meetings',   href: '/na-meetings/london',       Icon: IconUsers     },
+  { label: 'Heroin Help',   href: '/heroin-addiction/london',  Icon: IconSyringe   },
+  { label: 'Cocaine Help',  href: '/cocaine-addiction/london', Icon: IconCross     },
+  { label: 'Cannabis Help', href: '/cannabis-addiction/london',Icon: IconLeaf      },
+  { label: 'Harm Reduction',href: '/harm-reduction/london',    Icon: IconShield    },
+  { label: 'Family Support',href: '/family-therapy/london',    Icon: IconHeart     },
 ]
 
 const TOOLS = [
-  { label: 'Sobriety Calculator', href: '/sobriety-counter', desc: 'How many days sober are you?', icon: '🗓' },
-  { label: 'Withdrawal Timeline', href: '/withdrawal-timeline', desc: 'What to expect when you stop', icon: '📈' },
-  { label: 'Addiction Cost Calculator', href: '/addiction-cost-calculator', desc: 'How much is your habit costing you?', icon: '💷' },
-  { label: 'Am I an Alcoholic?', href: '/am-i-an-alcoholic', desc: 'WHO AUDIT alcohol screening quiz', icon: '🔍' },
+  { label: 'Sobriety Calculator',   href: '/sobriety-counter',          desc: 'How many days sober are you?',          Icon: IconCalendar   },
+  { label: 'Withdrawal Timeline',   href: '/withdrawal-timeline',        desc: 'What to expect when you stop',           Icon: IconBarChart   },
+  { label: 'Addiction Cost Calc',   href: '/addiction-cost-calculator',  desc: 'How much is your habit costing you?',    Icon: IconDollarSign },
+  { label: 'Am I an Alcoholic?',    href: '/am-i-an-alcoholic',          desc: 'WHO AUDIT alcohol screening quiz',        Icon: IconSearch     },
 ]
 
 const MILESTONES = [
@@ -207,9 +212,9 @@ export default function HomePage() {
                 router.push(`/help/near-me?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}`)
               })
             }}
-            style={{ marginTop: 12, background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5, margin: '12px auto 0' }}
+            style={{ display: 'flex', alignItems: 'center', gap: 5, margin: '12px auto 0', background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 13, cursor: 'pointer' }}
           >
-            <span>📍</span> Use my location
+            <IconMapPin size={14} color="var(--text-muted)" /> Use my location
           </button>
         </div>
       </section>
@@ -231,7 +236,9 @@ export default function HomePage() {
                 textDecoration: 'none',
                 transition: 'border-color 0.15s',
               }}>
-                <span style={{ fontSize: 20 }}>{link.icon}</span>
+                <div style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--accent-pale)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 6 }}>
+                  <link.Icon size={16} color="var(--accent)" />
+                </div>
                 <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', lineHeight: 1.3 }}>{link.label}</span>
               </Link>
             ))}
@@ -245,8 +252,10 @@ export default function HomePage() {
           <div className="label" style={{ marginBottom: 20 }}>Free recovery tools</div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
             {TOOLS.map(tool => (
-              <Link key={tool.href} href={tool.href} style={{ display: 'flex', gap: 14, padding: '18px', background: 'var(--accent-pale)', border: '1px solid #c8e6df', borderRadius: 'var(--radius-md)', textDecoration: 'none' }}>
-                <span style={{ fontSize: 24, flexShrink: 0 }}>{tool.icon}</span>
+              <Link key={tool.href} href={tool.href} style={{ display: 'flex', gap: 14, padding: '18px', background: 'var(--accent-pale)', border: '1px solid #c8e6df', borderRadius: 'var(--radius-md)', textDecoration: 'none', alignItems: 'flex-start' }}>
+                <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(26,107,90,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                  <tool.Icon size={18} color="var(--accent)" />
+                </div>
                 <div>
                   <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--accent)', marginBottom: 4 }}>{tool.label}</div>
                   <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.4 }}>{tool.desc}</div>

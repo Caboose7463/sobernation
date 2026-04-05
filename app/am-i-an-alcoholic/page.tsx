@@ -46,7 +46,7 @@ export default function AmIAnAlcoholicPage() {
             Take the free <strong>WHO AUDIT</strong> (Alcohol Use Disorders Identification Test) — the clinically validated 10-question screening tool used by GPs and healthcare professionals worldwide. Your result is instant, private, and free. It takes about 2 minutes.
           </p>
           <div style={{ marginTop: 12, padding: '10px 14px', background: '#fef3c7', borderRadius: 'var(--radius-sm)', fontSize: 13, color: '#92400e', display: 'inline-block' }}>
-            ⚠️ If you drink daily and want to stop, <strong>speak to a doctor first</strong> — stopping suddenly can be dangerous.
+            Note: If you drink daily and want to stop, <strong>speak to a doctor first</strong> — stopping suddenly can be dangerous.
           </div>
         </div>
       </section>

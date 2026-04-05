@@ -13,7 +13,6 @@ interface TimelineStage {
 
 interface SubstanceTimeline {
   name: string
-  icon: string
   intro: string
   warning?: string
   stages: TimelineStage[]
@@ -23,9 +22,8 @@ interface SubstanceTimeline {
 const TIMELINES: Record<string, SubstanceTimeline> = {
   alcohol: {
     name: 'Alcohol',
-    icon: '🍺',
     intro: 'Alcohol withdrawal is one of the most medically serious. Symptoms can begin within hours of the last drink and may include life-threatening seizures in people with severe dependency.',
-    warning: '⚠️ IMPORTANT: Alcohol withdrawal can be life-threatening. Do NOT stop drinking suddenly if you are heavily dependent without medical support. Call your GP or Frank (0300 123 6600) before stopping.',
+    warning: 'IMPORTANT: Alcohol withdrawal can be life-threatening. Do NOT stop drinking suddenly if you are heavily dependent without medical support. Call your GP or Frank (0300 123 6600) before stopping.',
     stages: [
       {
         timeLabel: '6–12 hours',
@@ -75,9 +73,8 @@ const TIMELINES: Record<string, SubstanceTimeline> = {
 
   heroin: {
     name: 'Heroin',
-    icon: '💉',
     intro: 'Heroin (opioid) withdrawal is intensely uncomfortable but is rarely life-threatening in physically healthy adults. The greatest danger is relapse and overdose after a period of abstinence, as tolerance drops rapidly.',
-    warning: '⚠️ Relapse after heroin withdrawal dramatically increases overdose risk. Tolerance drops very quickly. Naloxone (Narcan) should be carried by anyone who uses heroin — available free from needle exchanges.',
+    warning: 'Relapse after heroin withdrawal dramatically increases overdose risk. Tolerance drops very quickly. Naloxone (Narcan) should be carried by anyone who uses heroin — available free from needle exchanges.',
     stages: [
       {
         timeLabel: '8–24 hours',
@@ -120,7 +117,6 @@ const TIMELINES: Record<string, SubstanceTimeline> = {
 
   cocaine: {
     name: 'Cocaine',
-    icon: '🤍',
     intro: 'Cocaine withdrawal is primarily psychological rather than physical. There is no life-threatening withdrawal, but the intense depression and cravings make it very difficult to stop alone.',
     stages: [
       {
@@ -157,7 +153,6 @@ const TIMELINES: Record<string, SubstanceTimeline> = {
 
   cannabis: {
     name: 'Cannabis',
-    icon: '🌿',
     intro: 'Cannabis withdrawal is uncomfortable but not medically dangerous. Symptoms typically peak in the first few days and resolve within 1–2 weeks, though psychological cravings and sleep disruption can persist.',
     stages: [
       {
@@ -194,9 +189,8 @@ const TIMELINES: Record<string, SubstanceTimeline> = {
 
   benzodiazepines: {
     name: 'Benzodiazepines',
-    icon: '💊',
     intro: 'Benzodiazepine withdrawal is among the most dangerous — similar to alcohol in severity. Seizures can occur. NEVER stop benzodiazepines suddenly. Always reduce gradually under medical supervision.',
-    warning: '🚨 CRITICAL: Stopping benzodiazepines suddenly can cause life-threatening seizures. This is a medical emergency risk. Always speak to your GP before reducing. A slow taper under supervision is essential.',
+    warning: 'CRITICAL: Stopping benzodiazepines suddenly can cause life-threatening seizures. This is a medical emergency risk. Always speak to your GP before reducing. A slow taper under supervision is essential.',
     stages: [
       {
         timeLabel: '6–24 hours (short-acting)',
@@ -232,9 +226,8 @@ const TIMELINES: Record<string, SubstanceTimeline> = {
 
   methamphetamine: {
     name: 'Methamphetamine',
-    icon: '⚡',
     intro: 'Methamphetamine withdrawal causes a prolonged and severe crash. Depression can be intense and suicidal ideation is a risk. The brain\'s reward system is significantly depleted and takes a long time to recover.',
-    warning: '⚠️ Severe depression and suicidal thoughts are a real risk during meth withdrawal. If you feel suicidal, call 999 or Samaritans on 116 123 immediately.',
+    warning: 'Severe depression and suicidal thoughts are a real risk during meth withdrawal. If you feel suicidal, call 999 or Samaritans on 116 123 immediately.',
     stages: [
       {
         timeLabel: '0–24 hours',
@@ -318,7 +311,6 @@ export default function WithdrawalTimeline() {
                 onClick={() => { setSelected(key); setOpenStage(0) }}
                 style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', borderRadius: 'var(--radius-md)', border: `2px solid ${selected === key ? 'var(--accent)' : 'var(--border)'}`, background: selected === key ? 'var(--accent-pale)' : 'var(--white)', color: selected === key ? 'var(--accent)' : 'var(--text-muted)', fontWeight: selected === key ? 700 : 500, fontSize: 14, cursor: 'pointer', transition: 'all 0.15s' }}
               >
-                <span>{sub.icon}</span>
                 {sub.name}
               </button>
             ))}
@@ -331,8 +323,8 @@ export default function WithdrawalTimeline() {
 
         {/* Intro */}
         <div style={{ marginBottom: 24, padding: 20, background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 10 }}>
-            {substance.icon} {substance.name} Withdrawal
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 10 }}>
+            {substance.name} Withdrawal
           </h2>
           <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.75, margin: 0 }}>{substance.intro}</p>
         </div>

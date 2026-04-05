@@ -4,7 +4,6 @@ import Link from 'next/link'
 
 interface SubstanceData {
   name: string
-  icon: string
   unit: string
   unitPlural: string
   avgCostPerUnit: number
@@ -12,62 +11,13 @@ interface SubstanceData {
 }
 
 const SUBSTANCES: Record<string, SubstanceData> = {
-  alcohol: {
-    name: 'Alcohol',
-    icon: '🍺',
-    unit: 'drink',
-    unitPlural: 'drinks',
-    avgCostPerUnit: 4.50,
-    unitHint: 'e.g. pints of beer, glasses of wine, shots of spirits (avg £4.50 each)',
-  },
-  cocaine: {
-    name: 'Cocaine',
-    icon: '🤍',
-    unit: 'gram',
-    unitPlural: 'grams',
-    avgCostPerUnit: 60,
-    unitHint: 'Avg UK street price: £50–£80/g (we use £60)',
-  },
-  heroin: {
-    name: 'Heroin',
-    icon: '💉',
-    unit: 'bag',
-    unitPlural: 'bags',
-    avgCostPerUnit: 8,
-    unitHint: 'A typical bag (0.1–0.2g). Avg UK street price: £5–£12 per bag',
-  },
-  cannabis: {
-    name: 'Cannabis',
-    icon: '🌿',
-    unit: 'gram',
-    unitPlural: 'grams',
-    avgCostPerUnit: 10,
-    unitHint: 'Avg UK street price: £8–£12/g (we use £10)',
-  },
-  mdma: {
-    name: 'MDMA',
-    icon: '💎',
-    unit: 'pill',
-    unitPlural: 'pills',
-    avgCostPerUnit: 8,
-    unitHint: 'Avg UK street price: £5–£12 per pill',
-  },
-  ketamine: {
-    name: 'Ketamine',
-    icon: '🔮',
-    unit: 'gram',
-    unitPlural: 'grams',
-    avgCostPerUnit: 25,
-    unitHint: 'Avg UK street price: £20–£30/g',
-  },
-  prescription: {
-    name: 'Prescription drugs',
-    icon: '💊',
-    unit: 'pill',
-    unitPlural: 'pills/doses',
-    avgCostPerUnit: 15,
-    unitHint: 'Estimated cost per pill/dose including prescription or black market cost',
-  },
+  alcohol:      { name: 'Alcohol',           unit: 'drink', unitPlural: 'drinks',      avgCostPerUnit: 4.50, unitHint: 'e.g. pints, glasses of wine, shots (avg £4.50 each)' },
+  cocaine:      { name: 'Cocaine',           unit: 'gram',  unitPlural: 'grams',       avgCostPerUnit: 60,   unitHint: 'Avg UK street price: £50–£80/g (we use £60)' },
+  heroin:       { name: 'Heroin',            unit: 'bag',   unitPlural: 'bags',        avgCostPerUnit: 8,    unitHint: 'A typical bag (0.1–0.2g). Avg UK street price: £5–£12 per bag' },
+  cannabis:     { name: 'Cannabis',          unit: 'gram',  unitPlural: 'grams',       avgCostPerUnit: 10,   unitHint: 'Avg UK street price: £8–£12/g (we use £10)' },
+  mdma:         { name: 'MDMA',              unit: 'pill',  unitPlural: 'pills',       avgCostPerUnit: 8,    unitHint: 'Avg UK street price: £5–£12 per pill' },
+  ketamine:     { name: 'Ketamine',          unit: 'gram',  unitPlural: 'grams',       avgCostPerUnit: 25,   unitHint: 'Avg UK street price: £20–£30/g' },
+  prescription: { name: 'Prescription drugs',unit: 'pill',  unitPlural: 'pills/doses', avgCostPerUnit: 15,   unitHint: 'Estimated per pill/dose including prescription or black market cost' },
 }
 
 const FREQ_OPTIONS = [
@@ -84,12 +34,12 @@ const FREQ_OPTIONS = [
 
 // Real affordability benchmarks
 const COMPARISONS = (amount: number) => [
-  { label: 'Netflix subscriptions', value: Math.round(amount / 10.99), icon: '📺', suffix: '/yr' },
-  { label: 'UK holidays', value: Math.round(amount / 800), icon: '✈️', suffix: '' },
-  { label: 'Restaurant meals', value: Math.round(amount / 25), icon: '🍽️', suffix: '' },
-  { label: 'New iPhones', value: (amount / 999).toFixed(1), icon: '📱', suffix: '' },
-  { label: 'Gym memberships', value: Math.round(amount / 480), icon: '💪', suffix: '/yr' },
-  { label: 'Private therapy sessions', value: Math.round(amount / 80), icon: '🧠', suffix: '' },
+  { label: 'Netflix subscriptions',    value: Math.round(amount / 10.99),  suffix: '/yr' },
+  { label: 'UK holidays',              value: Math.round(amount / 800),    suffix: '' },
+  { label: 'Restaurant meals',         value: Math.round(amount / 25),     suffix: '' },
+  { label: 'New iPhones',              value: (amount / 999).toFixed(1),   suffix: '' },
+  { label: 'Gym memberships',          value: Math.round(amount / 480),    suffix: '/yr' },
+  { label: 'Private therapy sessions', value: Math.round(amount / 80),     suffix: '' },
 ]
 
 function formatGBP(n: number): string {
@@ -160,12 +110,8 @@ export default function AddictionCostCalculator() {
               <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Substance</label>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                 {Object.entries(SUBSTANCES).map(([key, s]) => (
-                  <button
-                    key={key}
-                    onClick={() => setSubstance(key)}
-                    style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 'var(--radius-md)', border: `2px solid ${substance === key ? 'var(--accent)' : 'var(--border)'}`, background: substance === key ? 'var(--accent-pale)' : 'var(--white)', color: substance === key ? 'var(--accent)' : 'var(--text-muted)', fontWeight: substance === key ? 700 : 500, fontSize: 13, cursor: 'pointer', transition: 'all 0.15s' }}
-                  >
-                    {s.icon} {s.name}
+                    <button key={key} onClick={() => setSubstance(key)} style={{ padding: '8px 14px', borderRadius: 'var(--radius-md)', border: `2px solid ${substance === key ? 'var(--accent)' : 'var(--border)'}`, background: substance === key ? 'var(--accent-pale)' : 'var(--white)', color: substance === key ? 'var(--accent)' : 'var(--text-muted)', fontWeight: substance === key ? 700 : 500, fontSize: 13, cursor: 'pointer', transition: 'all 0.15s' }}>
+                      {s.name}
                   </button>
                 ))}
               </div>
@@ -239,7 +185,7 @@ export default function AddictionCostCalculator() {
                 {formatGBP(results.total)}
               </div>
               <div style={{ marginTop: 12, fontSize: 13, color: 'rgba(255,255,255,0.7)' }}>
-                {sub.icon} {amount} {sub.unitPlural} · {freq.label.toLowerCase()}
+                {amount} {sub.unitPlural} · {freq.label.toLowerCase()}
               </div>
             </div>
 
@@ -266,7 +212,7 @@ export default function AddictionCostCalculator() {
                 {comparisons.filter(c => Number(c.value) >= 1).map((c, i) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'var(--bg-subtle)', borderRadius: 'var(--radius-sm)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--text-muted)' }}>
-                      <span style={{ fontSize: 18 }}>{c.icon}</span> {c.label}
+                      {c.label}
                     </div>
                     <div style={{ fontSize: 15, fontWeight: 800, color: 'var(--text)' }}>
                       {Number(c.value).toLocaleString()}{c.suffix}

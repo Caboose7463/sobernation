@@ -139,7 +139,7 @@ export default function SobrietyCounter() {
                 onClick={() => setType(t)}
                 style={{ padding: '8px 20px', borderRadius: 8, border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer', background: type === t ? 'var(--accent)' : 'transparent', color: type === t ? '#fff' : 'var(--text-muted)', transition: 'all 0.15s' }}
               >
-                {t === 'sober' ? '🍺 Days Sober' : '💊 Days Clean'}
+                {t === 'sober' ? 'Days Sober' : 'Days Clean'}
               </button>
             ))}
           </div>
@@ -198,13 +198,12 @@ export default function SobrietyCounter() {
           {/* Stats grid */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>
             {[
-              { label: 'Cigarettes not smoked', value: Math.round(result.days * 20).toLocaleString(), sub: 'if you smoked 20/day', icon: '🚭' },
-              { label: 'Sleep gained', value: Math.round(result.days * 1.5) + 'hrs', sub: 'better sleep quality', icon: '😴' },
-              { label: 'Calories avoided', value: Math.round(result.days * 500).toLocaleString(), sub: 'avg based on typical drinking', icon: '🥗' },
-              { label: 'Days of brain healing', value: result.days.toLocaleString(), sub: 'neuroplasticity is working', icon: '🧠' },
+              { label: 'Cigarettes not smoked', value: Math.round(result.days * 20).toLocaleString(), sub: 'if you smoked 20/day' },
+              { label: 'Better sleep',           value: Math.round(result.days * 1.5) + 'hrs',         sub: 'better sleep quality' },
+              { label: 'Calories avoided',       value: Math.round(result.days * 500).toLocaleString(), sub: 'avg based on typical drinking' },
+              { label: 'Days of brain healing',  value: result.days.toLocaleString(),                   sub: 'neuroplasticity is working' },
             ].map((s, i) => (
               <div key={i} style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '16px 14px', textAlign: 'center' }}>
-                <div style={{ fontSize: 22, marginBottom: 6 }}>{s.icon}</div>
                 <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.02em' }}>{s.value}</div>
                 <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 2 }}>{s.label}</div>
                 <div style={{ fontSize: 10, color: 'var(--text-light)' }}>{s.sub}</div>
@@ -241,7 +240,7 @@ export default function SobrietyCounter() {
             onClick={handleShare}
             style={{ width: '100%', padding: '14px', background: copied ? '#16a34a' : 'var(--accent)', color: '#fff', border: 'none', borderRadius: 'var(--radius-md)', fontWeight: 700, fontSize: 15, cursor: 'pointer', transition: 'background 0.2s', marginBottom: 12 }}
           >
-            {copied ? '✓ Copied to clipboard!' : `🎉 Share my ${result.days.toLocaleString()} days ${type} milestone`}
+            {copied ? 'Copied to clipboard!' : `Share my ${result.days.toLocaleString()} days ${type} milestone`}
           </button>
 
           <p style={{ fontSize: 12, color: 'var(--text-light)', textAlign: 'center' }}>
@@ -254,7 +253,9 @@ export default function SobrietyCounter() {
       {/* Empty state */}
       {!result && (
         <div style={{ padding: '60px 20px', textAlign: 'center' }}>
-          <div style={{ fontSize: 48, marginBottom: 12 }}>📅</div>
+          <div style={{ fontSize: 48, marginBottom: 16, color: 'var(--text-light)' }}>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
           <div style={{ fontSize: 16, color: 'var(--text-muted)' }}>Enter your sobriety date above to see your results</div>
         </div>
       )}

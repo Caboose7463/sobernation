@@ -45,14 +45,13 @@ export default function AboutPage() {
           <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 14 }}>Editorial standards</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {[
-              { icon: '🔬', title: 'Evidence-based', body: 'All clinical information on SoberNation is based on current NICE guidelines, NHS clinical frameworks, and peer-reviewed addiction medicine research. We do not publish speculative or unsubstantiated claims about addiction treatment.' },
-              { icon: '🔄', title: 'Regularly reviewed', body: 'Our content is reviewed at regular intervals to ensure it remains accurate and reflects current NHS guidance, drug classification changes, and treatment evidence.' },
-              { icon: '🏥', title: 'CQC-verified facility data', body: 'Rehabilitation centre information displayed on SoberNation is sourced from the Care Quality Commission (CQC) register of regulated health and care services. We use CQC-registered facilities only.' },
-              { icon: '🛡️', title: 'Independent', body: 'SoberNation does not accept payment to promote specific treatment providers. Rehab centre listings are based solely on CQC registration data and geographic relevance.' },
-              { icon: '💙', title: 'Safe messaging', body: 'All content about addiction, overdose, and mental health follows established UK safe messaging guidelines. We include crisis helplines on all pages and encourage professional consultation for personal medical decisions.' },
+              { title: 'Evidence-based',          body: 'All clinical information on SoberNation is based on current NICE guidelines, NHS clinical frameworks, and peer-reviewed addiction medicine research. We do not publish speculative or unsubstantiated claims about addiction treatment.' },
+              { title: 'Regularly reviewed',        body: 'Our content is reviewed at regular intervals to ensure it remains accurate and reflects current NHS guidance, drug classification changes, and treatment evidence.' },
+              { title: 'CQC-verified facility data',body: 'Rehabilitation centre information displayed on SoberNation is sourced from the Care Quality Commission (CQC) register of regulated health and care services. We use CQC-registered facilities only.' },
+              { title: 'Independent',               body: 'SoberNation does not accept payment to promote specific treatment providers. Rehab centre listings are based solely on CQC registration data and geographic relevance.' },
+              { title: 'Safe messaging',             body: 'All content about addiction, overdose, and mental health follows established UK safe messaging guidelines. We include crisis helplines on all pages and encourage professional consultation for personal medical decisions.' },
             ].map(item => (
               <div key={item.title} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-                <span style={{ fontSize: 18, flexShrink: 0, marginTop: 2 }}>{item.icon}</span>
                 <div>
                   <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>{item.title}</div>
                   <div style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7 }}>{item.body}</div>
@@ -115,7 +114,7 @@ export default function AboutPage() {
             For editorial corrections, data inaccuracies, or general enquiries, please contact us at:
           </p>
           <div style={{ fontSize: 14, color: 'var(--text)', fontWeight: 600, marginBottom: 4 }}>
-            📧 <a href="mailto:editorial@sobernation.co.uk" style={{ color: 'var(--accent)', textDecoration: 'none' }}>editorial@sobernation.co.uk</a>
+            <a href="mailto:editorial@sobernation.co.uk" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600, fontSize: 14 }}>editorial@sobernation.co.uk</a>
           </div>
           <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 12, lineHeight: 1.6 }}>
             <strong>Please note:</strong> We are an information resource and cannot provide personal medical advice. If you need urgent help with addiction, please call <strong>Frank on 0300 123 6600</strong> (free, 24/7) or speak to your GP.
