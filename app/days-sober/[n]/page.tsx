@@ -323,15 +323,29 @@ export default async function DaysSoberPage(
               </div>
             )}
 
-            {/* Also see: days clean */}
-            <div style={{ marginBottom: 36, padding: 16, background: 'var(--bg-subtle)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>Struggling with drugs, not alcohol?</div>
-                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Read our guide to {days} days clean from drugs</div>
+            {/* Also see: days clean + equivalent time formats */}
+            <div style={{ marginBottom: 36, padding: 16, background: 'var(--bg-subtle)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Also see</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                <Link href={`/days-clean/${days}`} style={{ fontSize: 13, padding: '7px 14px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', color: 'var(--text)', textDecoration: 'none', background: 'var(--white)', fontWeight: 600 }}>
+                  {days} days clean from drugs
+                </Link>
+                {weeks >= 1 && (
+                  <Link href={`/weeks-sober/${weeks}`} style={{ fontSize: 13, padding: '7px 14px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', color: 'var(--text)', textDecoration: 'none', background: 'var(--white)', fontWeight: 600 }}>
+                    {weeks} week{weeks === 1 ? '' : 's'} sober
+                  </Link>
+                )}
+                {months >= 1 && (
+                  <Link href={`/months-sober/${months}`} style={{ fontSize: 13, padding: '7px 14px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', color: 'var(--text)', textDecoration: 'none', background: 'var(--white)', fontWeight: 600 }}>
+                    {months} month{months === 1 ? '' : 's'} sober
+                  </Link>
+                )}
+                {years >= 1 && (
+                  <Link href={`/years-sober/${years}`} style={{ fontSize: 13, padding: '7px 14px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', color: 'var(--text)', textDecoration: 'none', background: 'var(--white)', fontWeight: 600 }}>
+                    {years} year{years === 1 ? '' : 's'} sober
+                  </Link>
+                )}
               </div>
-              <Link href={`/days-clean/${days}`} style={{ fontSize: 13, padding: '8px 14px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', color: 'var(--text)', textDecoration: 'none', background: 'var(--white)', fontWeight: 600, whiteSpace: 'nowrap' }}>
-                {days} days clean →
-              </Link>
             </div>
 
             {/* Calculator CTA */}
@@ -360,7 +374,7 @@ export default async function DaysSoberPage(
         <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
           <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation</div>
           <div style={{ display: 'flex', gap: 20 }}>
-            {[['Privacy', '/privacy'], ['Contact', '/contact'], ['Sobriety calculator', '/sobriety-counter']].map(([label, href]) => (
+            {[['About', '/about'], ['Editorial policy', '/editorial-policy'], ['Privacy', '/privacy-policy'], ['Sobriety calculator', '/sobriety-counter']].map(([label, href]) => (
               <Link key={href} href={href} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{label}</Link>
             ))}
           </div>

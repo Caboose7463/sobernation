@@ -86,16 +86,27 @@ export default function HowToQuitAlcoholPage() {
           </details>
         ))}
         <div style={{ marginTop: 32, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          {[['Alcohol detox', '/alcohol-detox/london'], ['Am I an alcoholic?', '/am-i-an-alcoholic'], ['Signs of alcoholism', '/signs-of-alcoholism'], ['Alcohol withdrawal', '/alcohol-withdrawal-symptoms']].map(([l, h]) => (
+          {[['Alcohol detox', '/alcohol-detox/london'], ['Am I an alcoholic?', '/am-i-an-alcoholic'], ['Signs of alcoholism', '/signs-of-alcoholism'], ['Alcohol withdrawal', '/alcohol-withdrawal-symptoms'], ['Alcohol rehab', '/alcohol-rehab/london'], ['AA meetings', '/aa-meetings/london'], ['Al-Anon (for families)', '/al-anon/london']].map(([l, h]) => (
             <Link key={h} href={h} style={{ padding: '9px 16px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 20, fontSize: 13, color: 'var(--text)', textDecoration: 'none' }}>{l} →</Link>
           ))}
+        </div>
+
+        {/* Sobriety counter CTA */}
+        <div style={{ marginTop: 32, padding: 24, background: 'var(--accent)', borderRadius: 'var(--radius-md)' }}>
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 6 }}>Track your sobriety from day one</div>
+          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', marginBottom: 16 }}>
+            Once you have stopped drinking, use our free sobriety calculator to count your days, weeks, and months alcohol-free.
+          </div>
+          <Link href="/sobriety-counter" style={{ display: 'inline-block', padding: '10px 18px', background: '#fff', color: 'var(--accent)', borderRadius: 'var(--radius-sm)', fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>
+            Start counting →
+          </Link>
         </div>
       </div>
       <footer style={{ borderTop: '1px solid var(--border)', padding: '24px 20px', background: 'var(--white)', marginTop: 24 }}>
         <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
           <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation</div>
           <div style={{ display: 'flex', gap: 16 }}>
-            {[['About', '/about'], ['Editorial policy', '/editorial-policy'], ['Privacy', '/privacy-policy']].map(([l, h]) => <Link key={h} href={h} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{l}</Link>)}
+            {[['Alcohol rehab', '/alcohol-rehab/london'], ['AA meetings', '/aa-meetings/london'], ['About', '/about'], ['Editorial policy', '/editorial-policy'], ['Privacy', '/privacy-policy']].map(([l, h]) => <Link key={h} href={h} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{l}</Link>)}
           </div>
         </div>
       </footer>

@@ -127,7 +127,6 @@ export default async function sitemap({
       { route: 'nhs-rehab', weight: 0.85 },
       { route: 'rehab-cost', weight: 0.85 },
       { route: 'detox-centres', weight: 0.85 },
-      { route: 'addiction-statistics', weight: 0.8 },
     ], slugs)
   }
 

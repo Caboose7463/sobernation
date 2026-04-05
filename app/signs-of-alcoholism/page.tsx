@@ -110,6 +110,11 @@ export default function SignsOfAlcoholismPage() {
       <footer style={{ borderTop: '1px solid var(--border)', padding: '28px 20px', background: 'var(--white)' }}>
         <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
           <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation</div>
+          <div style={{ display: 'flex', gap: 20 }}>
+            {[['Am I an alcoholic?', '/am-i-an-alcoholic'], ['Alcohol withdrawal', '/alcohol-withdrawal-symptoms'], ['How to stop drinking', '/how-to-stop-drinking'], ['Alcohol rehab', '/alcohol-rehab/london'], ['About', '/about'], ['Privacy', '/privacy-policy']].map(([l, h]) => (
+              <Link key={h} href={h} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{l}</Link>
+            ))}
+          </div>
         </div>
       </footer>
     </div>

@@ -174,14 +174,47 @@ export default function SubstanceLocationPage({
               </ul>
             </div>
 
-            {/* Related links */}
+            {/* Related links — substance-aware */}
             <div style={{ marginBottom: 36 }}>
               <div className="section-label" style={{ marginBottom: 12 }}>More help in {loc.name}</div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                 {[
                   { label: `Rehab in ${loc.name}`, href: `/rehab/${locationSlug}` },
                   { label: `Drug treatment in ${loc.name}`, href: `/drug-treatment/${locationSlug}` },
-                  { label: `NA Meetings in ${loc.name}`, href: `/na-meetings/${locationSlug}` },
+                  // Alcohol-specific links
+                  ...(substance.slug === 'alcohol-addiction' ? [
+                    { label: `Alcohol detox in ${loc.name}`, href: `/alcohol-detox/${locationSlug}` },
+                    { label: `Alcohol counselling in ${loc.name}`, href: `/alcohol-counselling/${locationSlug}` },
+                    { label: 'Alcohol withdrawal symptoms', href: '/alcohol-withdrawal-symptoms' },
+                    { label: 'How to stop drinking', href: '/how-to-stop-drinking' },
+                    { label: 'Signs of alcoholism', href: '/signs-of-alcoholism' },
+                    { label: `AA Meetings in ${loc.name}`, href: `/aa-meetings/${locationSlug}` },
+                    { label: `Al-Anon in ${loc.name}`, href: `/al-anon/${locationSlug}` },
+                  ] : []),
+                  // Heroin-specific
+                  ...(substance.slug === 'heroin-addiction' ? [
+                    { label: `Heroin detox in ${loc.name}`, href: `/heroin-detox/${locationSlug}` },
+                    { label: 'Heroin withdrawal symptoms', href: '/heroin-withdrawal-symptoms' },
+                    { label: `Opioid substitution in ${loc.name}`, href: `/opioid-substitution/${locationSlug}` },
+                    { label: 'What is methadone?', href: '/what-is-methadone' },
+                    { label: `NA Meetings in ${loc.name}`, href: `/na-meetings/${locationSlug}` },
+                  ] : []),
+                  // Cocaine-specific
+                  ...(substance.slug === 'cocaine-addiction' ? [
+                    { label: `Cocaine Anonymous in ${loc.name}`, href: `/cocaine-anonymous/${locationSlug}` },
+                    { label: `NA Meetings in ${loc.name}`, href: `/na-meetings/${locationSlug}` },
+                  ] : []),
+                  // Opiate / prescription drug pages
+                  ...(['opiate-addiction','codeine-addiction','tramadol-addiction','fentanyl-addiction','diazepam-addiction','pregabalin-addiction','gabapentin-addiction','benzodiazepine-addiction'].includes(substance.slug) ? [
+                    { label: `Opioid substitution in ${loc.name}`, href: `/opioid-substitution/${locationSlug}` },
+                    { label: `Drug counselling in ${loc.name}`, href: `/drug-counselling/${locationSlug}` },
+                    { label: 'What is methadone?', href: '/what-is-methadone' },
+                  ] : []),
+                  // Generic fallback for all others
+                  ...(!['alcohol-addiction','heroin-addiction','cocaine-addiction','opiate-addiction','codeine-addiction','tramadol-addiction','fentanyl-addiction','diazepam-addiction','pregabalin-addiction','gabapentin-addiction','benzodiazepine-addiction'].includes(substance.slug) ? [
+                    { label: `NA Meetings in ${loc.name}`, href: `/na-meetings/${locationSlug}` },
+                  ] : []),
+                  // Always include the hub
                   { label: `All addiction help in ${loc.name}`, href: `/help/${locationSlug}` },
                 ].map(l => (
                   <Link key={l.href} href={l.href} style={{ fontSize: 13, padding: '7px 14px', borderRadius: 20, border: '1px solid var(--border)', color: 'var(--text-muted)', textDecoration: 'none', background: 'var(--white)' }}>

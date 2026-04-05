@@ -199,10 +199,14 @@ export default async function RehabLocationPage(
             {/* Related guides */}
             <div style={{ marginBottom: 40, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               {[
-                { label: 'NHS vs private rehab', href: '/nhs-vs-private-rehab' },
-                { label: 'How much does rehab cost?', href: '/rehab-cost' },
-                { label: 'Residential vs outpatient', href: '/residential-vs-outpatient-rehab' },
-                { label: 'What to expect in rehab', href: '/early-sobriety' },
+                { label: 'NHS rehab (free)', href: `/nhs-rehab/${location}` },
+                { label: 'Private rehab', href: `/private-rehab/${location}` },
+                { label: 'Residential rehab', href: `/residential-rehab/${location}` },
+                { label: 'Outpatient rehab', href: `/outpatient-rehab/${location}` },
+                { label: 'Alcohol detox', href: `/alcohol-detox/${location}` },
+                { label: 'Drug detox', href: `/drug-detox/${location}` },
+                { label: 'How much does rehab cost?', href: `/rehab-cost/${location}` },
+                { label: 'Sober living', href: `/sober-living/${location}` },
               ].map(g => (
                 <Link key={g.href} href={g.href} style={{ fontSize: 13, padding: '7px 14px', borderRadius: 20, border: '1px solid var(--border)', color: 'var(--text-muted)', textDecoration: 'none', background: 'var(--white)' }}>
                   {g.label} →
@@ -225,7 +229,7 @@ export default async function RehabLocationPage(
         <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
           <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation · CQC data: Open Government Licence</div>
           <div style={{ display: 'flex', gap: 20 }}>
-            {[['Privacy', '/privacy'], ['Contact', '/contact'], ['About', '/about']].map(([label, href]) => (
+            {[['About', '/about'], ['Editorial policy', '/editorial-policy'], ['Privacy', '/privacy-policy']].map(([label, href]) => (
               <Link key={href} href={href} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{label}</Link>
             ))}
           </div>

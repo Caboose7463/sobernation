@@ -87,7 +87,7 @@ const SERVICE_SECTIONS = [
   { heading: 'Support Groups', links: [
     ['AA Meetings', '/aa-meetings/london'], ['NA Meetings', '/na-meetings/london'],
     ['Al-Anon', '/al-anon/london'], ['SMART Recovery', '/smart-recovery/london'],
-    ['Cocaine Anonymous', '/cocaine-anonymous/london'], ['12-Step Programmes', '/12-step-programme/london'],
+    ['Cocaine Anonymous', '/cocaine-anonymous/london'],
   ]},
   { heading: 'Specialist Services', links: [
     ['Dual Diagnosis', '/dual-diagnosis/london'], ["Women's Rehab", '/womens-rehab/london'],
@@ -143,9 +143,9 @@ export default function HomePage() {
           <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
             {/* Desktop nav links — hidden on mobile */}
             <div className="nav-links" style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-              <Link href="/rehab" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>Find Rehab</Link>
-              <Link href="/aa-meetings" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>AA Meetings</Link>
-              <Link href="/guides" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>Guides</Link>
+              <Link href="/rehab/london" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>Find Rehab</Link>
+              <Link href="/aa-meetings/london" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>AA Meetings</Link>
+              <Link href="/sobriety-counter" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none', fontWeight: 500 }}>Sobriety Counter</Link>
             </div>
             {/* CTA always visible */}
             <Link href="/days-sober/1" style={{ fontSize: 13, background: 'var(--accent)', color: '#fff', padding: '7px 14px', borderRadius: 'var(--radius-sm)', fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap' }}>
@@ -320,13 +320,24 @@ export default function HomePage() {
             <div style={{ marginTop: 40 }}>
               <div className="label" style={{ marginBottom: 16 }}>Popular right now</div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                {['30 days clean', '1 year sober', 'alcohol withdrawal', 'drug withdrawal', 'AA meetings London', 'NA meetings near me', 'free rehab UK', 'signs of addiction', 'cocaine addiction help', 'cannabis dependency'].map(tag => (
+                {[
+                  { label: '30 days clean', href: '/days-clean/30' },
+                  { label: '1 year sober', href: '/years-sober/1' },
+                  { label: 'alcohol withdrawal', href: '/alcohol-withdrawal-symptoms' },
+                  { label: 'drug withdrawal', href: '/withdrawal-timeline' },
+                  { label: 'AA meetings London', href: '/aa-meetings/london' },
+                  { label: 'NA meetings near me', href: '/na-meetings/london' },
+                  { label: 'free rehab UK', href: '/nhs-rehab/london' },
+                  { label: 'signs of addiction', href: '/signs-of-drug-addiction' },
+                  { label: 'cocaine addiction help', href: '/cocaine-addiction/london' },
+                  { label: 'cannabis dependency', href: '/cannabis-addiction/london' },
+                ].map(tag => (
                   <Link
-                    key={tag}
-                    href={`/search?q=${encodeURIComponent(tag)}`}
+                    key={tag.href}
+                    href={tag.href}
                     style={{ fontSize: 12, padding: '6px 12px', borderRadius: 20, border: '1px solid var(--border)', color: 'var(--text-muted)', textDecoration: 'none', background: 'var(--white)', fontWeight: 500 }}
                   >
-                    {tag}
+                    {tag.label}
                   </Link>
                 ))}
               </div>
