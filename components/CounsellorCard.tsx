@@ -225,7 +225,8 @@ export default function CounsellorCard({ counsellor }: Props) {
         )}
 
         <div className="cc__actions">
-          {counsellor.phone && (
+          {/* Only show phone if it's a real non-empty value */}
+          {counsellor.phone?.trim() && (
             showPhone ? (
               <a href={`tel:${counsellor.phone.replace(/\s/g, '')}`} className="cc__icon-btn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -243,7 +244,8 @@ export default function CounsellorCard({ counsellor }: Props) {
             )
           )}
 
-          {counsellor.email && (
+          {/* Only show email if it's a real non-empty value with @ */}
+          {counsellor.email?.trim() && counsellor.email.includes('@') && (
             showEmail ? (
               <a href={`mailto:${counsellor.email}`} className="cc__icon-btn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -261,7 +263,7 @@ export default function CounsellorCard({ counsellor }: Props) {
             )
           )}
 
-          {counsellor.website && (
+          {counsellor.website?.trim() && (
             <a href={counsellor.website} target="_blank" rel="noopener noreferrer" className="cc__icon-btn">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
@@ -271,14 +273,12 @@ export default function CounsellorCard({ counsellor }: Props) {
           )}
 
           {!counsellor.verified && (
-            <Link
-              href={`/counsellors/claim?id=${counsellor.id}`}
-              className="cc__claim"
-            >
+            <Link href={`/counsellors/claim?id=${counsellor.id}`} className="cc__claim">
               Claim listing →
             </Link>
           )}
         </div>
+
       </div>
     </>
   )
