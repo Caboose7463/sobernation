@@ -145,7 +145,7 @@ export default async function RehabLocationPage(
             {/* Counsellors — shown below centres, comment updated */}
 
             {/* CQC centres — direct, borough-aggregated, or nearest-city fallback */}
-            <NearestCentres result={rehabsResult} locationName={loc.name} limit={6} />
+            <NearestCentres result={rehabsResult} locationName={loc.name} locationSlug={location} limit={6} />
 
             {/* Counsellors below treatment centres */}
             <CounsellorsSection locationSlug={location} locationName={loc.name} />

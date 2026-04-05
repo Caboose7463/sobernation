@@ -251,7 +251,7 @@ export default async function HelpLocationPage(
             <LastReviewed dataDate={BUILD_MONTH} />
 
             {/* CQC centres — direct, borough-aggregated, or nearest fallback */}
-            <NearestCentres result={rehabsResult} locationName={loc.name} limit={8} />
+            <NearestCentres result={rehabsResult} locationName={loc.name} locationSlug={location} limit={8} />
 
             {/* Counsellors — below treatment centres */}
             <CounsellorsSection locationSlug={location} locationName={loc.name} />

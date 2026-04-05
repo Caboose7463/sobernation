@@ -40,29 +40,65 @@ export async function POST(req: NextRequest) {
   }
 
   const supabase = getSupabase()
+  const locationName = location.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
 
-  // Upsert counsellor record (not yet verified — verification happens after payment)
-  const { data: counsellor, error: dbError } = await supabase
+  // Check if a scraped record already exists for this name + location
+  // If so, update it — otherwise insert new
+  let counsellorId: string
+
+  const { data: existing } = await supabase
     .from('counsellors')
-    .upsert({
-      name,
-      location_slug: location,
-      location_name: location.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-      specialisms: specialisms || [],
-      phone: phone || null,
-      email,
-      website: website || null,
-      bacp_number: bacpNumber || null,
-      listing_type: listingType,
-      verified: false,
-      source: 'self_registered',
-    }, { onConflict: 'name,location_slug' })
     .select('id')
-    .single()
+    .eq('name', name)
+    .eq('location_slug', location)
+    .maybeSingle()
 
-  if (dbError || !counsellor) {
-    console.error('Supabase error:', dbError)
-    return NextResponse.json({ error: 'Failed to save listing' }, { status: 500 })
+  if (existing?.id) {
+    // Update the existing scraped record
+    const { error: updateError } = await supabase
+      .from('counsellors')
+      .update({
+        email,
+        phone: phone || null,
+        website: website || null,
+        bacp_number: bacpNumber || null,
+        listing_type: listingType,
+        specialisms: specialisms || [],
+        source: 'self_registered',
+        verified: false,
+      })
+      .eq('id', existing.id)
+
+    if (updateError) {
+      console.error('Supabase update error:', updateError)
+      return NextResponse.json({ error: 'Failed to save listing' }, { status: 500 })
+    }
+    counsellorId = existing.id
+  } else {
+    // Insert new record
+    const { data: inserted, error: insertError } = await supabase
+      .from('counsellors')
+      .insert({
+        name,
+        location_slug: location,
+        location_name: locationName,
+        specialisms: specialisms || [],
+        phone: phone || null,
+        email,
+        website: website || null,
+        bacp_number: bacpNumber || null,
+        listing_type: listingType,
+        verified: false,
+        source: 'self_registered',
+      })
+      .select('id')
+      .single()
+
+    if (insertError || !inserted) {
+      console.error('Supabase insert error:', insertError)
+      return NextResponse.json({ error: 'Failed to save listing' }, { status: 500 })
+    }
+    counsellorId = inserted.id
   }
 
   const priceId = listingType === 'counsellor'
@@ -79,14 +115,14 @@ export async function POST(req: NextRequest) {
     success_url: `${origin}/counsellors/claim/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${origin}/counsellors/claim?cancelled=1`,
     metadata: {
-      counsellor_id: counsellor.id,
+      counsellor_id: counsellorId,
       listing_type: listingType,
       counsellor_name: name,
       location_slug: location,
     },
     subscription_data: {
       metadata: {
-        counsellor_id: counsellor.id,
+        counsellor_id: counsellorId,
         listing_type: listingType,
       },
     },

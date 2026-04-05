@@ -13,6 +13,7 @@ import type { RehabsResult, RehabCentre } from '../lib/rehabs'
 interface Props {
   result: RehabsResult
   locationName: string
+  locationSlug: string
   /** Max number of centres to display */
   limit?: number
 }
@@ -132,7 +133,7 @@ function CentreCard({ centre }: { centre: RehabCentre }) {
   )
 }
 
-export default function NearestCentres({ result, locationName, limit = 8 }: Props) {
+export default function NearestCentres({ result, locationName, locationSlug, limit = 8 }: Props) {
   const displayed = result.centres.slice(0, limit)
   const total = result.centres.length
 
@@ -183,20 +184,18 @@ export default function NearestCentres({ result, locationName, limit = 8 }: Prop
         ))}
       </div>
 
-      {/* Show more / Frank link */}
-      {total > limit && (
-        <div style={{ marginTop: 16, fontSize: 13, color: 'var(--text-muted)' }}>
-          Showing {limit} of {total} services.{' '}
-          <a
-            href={`https://www.nhs.uk/service-search/find-a-drug-or-alcohol-service/`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: 'var(--accent)', fontWeight: 600, textDecoration: 'none' }}
-          >
-            Find all NHS services near you →
-          </a>
-        </div>
-      )}
+      {/* View all link */}
+      <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+        {total > limit && (
+          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>Showing {limit} of {total} services.</span>
+        )}
+        <a
+          href={`/centres/${locationSlug}`}
+          style={{ fontSize: 13, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}
+        >
+          View all {total} centres →
+        </a>
+      </div>
 
       {/* Frank NHS fallback */}
       <div style={{

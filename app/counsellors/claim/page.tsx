@@ -100,7 +100,7 @@ function ClaimFlowInner() {
       const res = await fetch('/api/counsellors/verify-bacp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: form.name, bacpNumber: form.bacpNumber }),
+        body: JSON.stringify({ name: form.name, bacpNumber: form.bacpNumber, listingType: form.listingType }),
       })
       const data = await res.json()
 
