@@ -1,14 +1,13 @@
 /**
  * NearestCentres — shows CQC-registered rehab/drug services on every location page.
  *
- * For locations with direct CQC data: "Rehab centres in [Location]"
- * For fallback locations: "Nearest rehab centres to [Location]"
- *
- * Each card links to the CQC profile + shows name/address/phone/type.
- * Private AND NHS centres are both included (CQC regulates both).
+ * Each card links to /centre/[slug] profile page.
+ * Matches the visual style of CounsellorCard.
  */
 
+import Link from 'next/link'
 import type { RehabsResult, RehabCentre } from '../lib/rehabs'
+import { getCentreSlug } from '../lib/rehabs'
 
 interface Props {
   result: RehabsResult
@@ -31,105 +30,145 @@ function serviceTypeLabel(serviceType: string): { label: string; color: string; 
 function isPrivate(name: string, serviceType: string): boolean {
   const n = name.toLowerCase()
   const s = serviceType.toLowerCase()
-  // NHS orgs typically mention NHS, Trust, Community Health, Change Grow Live etc.
   const nhsIndicators = ['nhs', 'trust', 'change grow live', 'turning point', 'cgl', 'with you', 'forward leeds', 'swanswell']
   return !nhsIndicators.some(kw => n.includes(kw) || s.includes(kw))
 }
 
-function CentreCard({ centre }: { centre: RehabCentre }) {
+function CentreCard({ centre, townSlug }: { centre: RehabCentre; townSlug: string }) {
   const badge = serviceTypeLabel(centre.serviceType)
   const private_ = isPrivate(centre.name, centre.serviceType)
+  const slug = getCentreSlug(centre, townSlug)
+  const initials = centre.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()
+  const specs = centre.specialism ? centre.specialism.split('|').slice(0, 3).map(s => s.trim()).filter(Boolean) : []
 
   return (
-    <div style={{
-      background: '#fff',
-      border: '1px solid var(--border)',
-      borderRadius: 'var(--radius-md)',
-      padding: '16px 18px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 8,
-    }}>
-      {/* Name row */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', lineHeight: 1.3 }}>
-          {centre.name}
+    <>
+      <style>{`
+        .nc-card {
+          background: var(--white);
+          border: 1px solid var(--border);
+          border-radius: var(--radius-md);
+          padding: 18px 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+          text-decoration: none;
+          color: inherit;
+          cursor: pointer;
+        }
+        .nc-card:hover {
+          border-color: #1d4ed8;
+          box-shadow: 0 4px 16px rgba(29,78,216,0.10);
+          transform: translateY(-1px);
+          text-decoration: none;
+          color: inherit;
+        }
+        .nc-card__top {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          gap: 12px;
+        }
+        .nc-card__logo {
+          width: 44px;
+          height: 44px;
+          border-radius: 10px;
+          background: linear-gradient(135deg, #1d4ed8, #2563eb);
+          color: #fff;
+          font-size: 14px;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          letter-spacing: 0.02em;
+        }
+        .nc-card__info { flex: 1; min-width: 0; }
+        .nc-card__name {
+          font-size: 15px;
+          font-weight: 700;
+          color: var(--text);
+          line-height: 1.3;
+        }
+        .nc-card__sub {
+          font-size: 12px;
+          color: var(--text-muted);
+          margin-top: 2px;
+        }
+        .nc-card__tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 5px;
+        }
+        .nc-card__tag {
+          font-size: 11px;
+          padding: 3px 8px;
+          border-radius: 20px;
+          font-weight: 500;
+        }
+        .nc-card__footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: 2px;
+        }
+        .nc-card__cqc-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 10px;
+          font-weight: 700;
+          color: #1d4ed8;
+          background: #eff6ff;
+          border: 1px solid #bfdbfe;
+          border-radius: 20px;
+          padding: 2px 8px;
+        }
+        .nc-card__cta {
+          font-size: 12px;
+          font-weight: 600;
+          color: #1d4ed8;
+        }
+      `}</style>
+      <Link href={`/centre/${slug}`} className="nc-card">
+        <div className="nc-card__top">
+          <div className="nc-card__logo">{initials}</div>
+          <div className="nc-card__info">
+            <div className="nc-card__name">{centre.name}</div>
+            {centre.address && (
+              <div className="nc-card__sub">{centre.address}{centre.postcode ? `, ${centre.postcode}` : ''}</div>
+            )}
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
-          <span style={{
-            fontSize: 10, fontWeight: 700, padding: '3px 7px', borderRadius: 20,
-            background: badge.bg, color: badge.color, whiteSpace: 'nowrap',
-          }}>
+
+        {/* Type + funding tags */}
+        <div className="nc-card__tags">
+          <span className="nc-card__tag" style={{ background: badge.bg, color: badge.color }}>
             {badge.label}
           </span>
-          {private_ && (
-            <span style={{
-              fontSize: 10, fontWeight: 700, padding: '3px 7px', borderRadius: 20,
-              background: '#fef3c7', color: '#92400e', whiteSpace: 'nowrap',
-            }}>
-              Private
+          <span className="nc-card__tag" style={{ background: private_ ? '#fef3c7' : '#f0fdf4', color: private_ ? '#92400e' : '#166534' }}>
+            {private_ ? 'Private' : 'NHS'}
+          </span>
+          {specs.slice(0, 2).map(s => (
+            <span key={s} className="nc-card__tag" style={{ background: '#f9fafb', color: '#4b5563' }}>
+              {s}
             </span>
-          )}
+          ))}
         </div>
-      </div>
 
-      {/* Address */}
-      {centre.address && (
-        <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5 }}>
-          📍 {centre.address}{centre.postcode ? `, ${centre.postcode}` : ''}
+        <div className="nc-card__footer">
+          <div className="nc-card__cqc-badge">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polyline points="9,12 11,14 15,10"/>
+            </svg>
+            CQC Registered
+          </div>
+          <span className="nc-card__cta">View centre →</span>
         </div>
-      )}
-
-      {/* Specialism */}
-      {centre.specialism && (
-        <div style={{ fontSize: 11, color: 'var(--text-light)', lineHeight: 1.4 }}>
-          Specialisms: {centre.specialism.split('|').slice(0, 3).join(' · ')}
-        </div>
-      )}
-
-      {/* Actions */}
-      <div style={{ display: 'flex', gap: 8, marginTop: 4, flexWrap: 'wrap' }}>
-        {centre.phone && (
-          <a
-            href={`tel:${centre.phone.replace(/\s/g, '')}`}
-            style={{
-              fontSize: 12, fontWeight: 600, color: 'var(--accent)',
-              textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4,
-            }}
-          >
-            📞 {centre.phone}
-          </a>
-        )}
-        {centre.cqcUrl && centre.cqcUrl.includes('cqc.org.uk') && (
-          <a
-            href={centre.cqcUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              fontSize: 11, color: 'var(--text-light)', textDecoration: 'none',
-              border: '1px solid var(--border)', borderRadius: 20,
-              padding: '2px 10px', display: 'inline-flex', alignItems: 'center', gap: 4,
-            }}
-          >
-            CQC profile ↗
-          </a>
-        )}
-        {centre.website && (
-          <a
-            href={centre.website.startsWith('http') ? centre.website : `https://${centre.website}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              fontSize: 11, color: 'var(--text-light)', textDecoration: 'none',
-              border: '1px solid var(--border)', borderRadius: 20,
-              padding: '2px 10px',
-            }}
-          >
-            Website ↗
-          </a>
-        )}
-      </div>
-    </div>
+      </Link>
+    </>
   )
 }
 
@@ -163,38 +202,24 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
         )}
       </div>
 
-      {/* CQC trust badge */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 8,
-        padding: '8px 12px', background: '#eff6ff',
-        border: '1px solid #bfdbfe', borderRadius: 'var(--radius-sm)',
-        marginBottom: 16, width: 'fit-content',
-      }}>
-        <span style={{ fontSize: 12 }}>🏛️</span>
-        <span style={{ fontSize: 12, color: '#1e40af', fontWeight: 500 }}>
-          All centres are registered with the Care Quality Commission (CQC)
-          — England's independent health & social care regulator.
-        </span>
-      </div>
-
-      {/* Centre cards grid */}
+      {/* Centre cards grid — matches counsellor card layout */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
         {displayed.map((centre, i) => (
-          <CentreCard key={centre.cqcUrl || i} centre={centre} />
+          <CentreCard key={centre.cqcUrl || i} centre={centre} townSlug={locationSlug} />
         ))}
       </div>
 
-      {/* View all link */}
+      {/* View all / Frank fallback */}
       <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
         {total > limit && (
           <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>Showing {limit} of {total} services.</span>
         )}
-        <a
+        <Link
           href={`/centres/${locationSlug}`}
           style={{ fontSize: 13, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}
         >
           View all {total} centres →
-        </a>
+        </Link>
       </div>
 
       {/* Frank NHS fallback */}
@@ -211,7 +236,6 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
           </div>
           <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
             Frank&apos;s NHS service finder includes every drug &amp; alcohol service in the UK.
-            Free, confidential and available 24/7.
           </div>
         </div>
         <a

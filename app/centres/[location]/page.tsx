@@ -5,7 +5,7 @@
  */
 import { notFound } from 'next/navigation'
 import { getLocation } from '../../../lib/locations'
-import { getRehabsForLocation } from '../../../lib/rehabs'
+import { getRehabsForLocation, getCentreSlug } from '../../../lib/rehabs'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import type { RehabCentre } from '../../../lib/rehabs'
@@ -42,68 +42,82 @@ function isPrivate(name: string, serviceType: string): boolean {
   return !nhsIndicators.some(kw => n.includes(kw) || s.includes(kw))
 }
 
-function CentreCard({ centre }: { centre: RehabCentre }) {
+function CentreCard({ centre, townSlug }: { centre: RehabCentre; townSlug: string }) {
   const badge = serviceTypeLabel(centre.serviceType)
   const private_ = isPrivate(centre.name, centre.serviceType)
+  const slug = getCentreSlug(centre, townSlug)
+  const initials = centre.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()
+  const specs = centre.specialism ? centre.specialism.split('|').slice(0, 2).map(s => s.trim()).filter(Boolean) : []
 
   return (
-    <div style={{
-      background: '#fff',
-      border: '1px solid var(--border)',
-      borderRadius: 'var(--radius-md)',
-      padding: '16px 18px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 8,
-    }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
-        <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', lineHeight: 1.3 }}>
-          {centre.name}
+    <Link
+      href={`/centre/${slug}`}
+      style={{
+        background: '#fff',
+        border: '1px solid var(--border)',
+        borderRadius: 'var(--radius-md)',
+        padding: '18px 20px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 10,
+        textDecoration: 'none',
+        color: 'inherit',
+        transition: 'border-color 0.15s, box-shadow 0.15s, transform 0.15s',
+        cursor: 'pointer',
+      }}
+      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#1d4ed8'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(29,78,216,0.10)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)' }}
+      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; (e.currentTarget as HTMLElement).style.transform = '' }}
+    >
+      {/* Top row: logo + name */}
+      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+        <div style={{
+          width: 44, height: 44, borderRadius: 10, flexShrink: 0,
+          background: 'linear-gradient(135deg, #1d4ed8, #2563eb)',
+          color: '#fff', fontSize: 14, fontWeight: 700,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          {initials}
         </div>
-        <div style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
-          <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 7px', borderRadius: 20, background: badge.bg, color: badge.color, whiteSpace: 'nowrap' }}>
-            {badge.label}
-          </span>
-          {private_ && (
-            <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 7px', borderRadius: 20, background: '#fef3c7', color: '#92400e', whiteSpace: 'nowrap' }}>
-              Private
-            </span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', lineHeight: 1.3 }}>
+            {centre.name}
+          </div>
+          {centre.address && (
+            <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>
+              {centre.address}{centre.postcode ? `, ${centre.postcode}` : ''}
+            </div>
           )}
         </div>
       </div>
 
-      {centre.address && (
-        <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5 }}>
-          {centre.address}{centre.postcode ? `, ${centre.postcode}` : ''}
-        </div>
-      )}
-
-      {centre.specialism && (
-        <div style={{ fontSize: 11, color: 'var(--text-light)' }}>
-          {centre.specialism.split('|').slice(0, 4).join(' · ')}
-        </div>
-      )}
-
-      <div style={{ display: 'flex', gap: 8, marginTop: 4, flexWrap: 'wrap' }}>
-        {centre.phone?.trim() && (
-          <a href={`tel:${centre.phone.replace(/\s/g, '')}`} style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>
-            {centre.phone}
-          </a>
-        )}
-        {centre.cqcUrl?.includes('cqc.org.uk') && (
-          <a href={centre.cqcUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, color: 'var(--text-light)', textDecoration: 'none', border: '1px solid var(--border)', borderRadius: 20, padding: '2px 10px' }}>
-            CQC ↗
-          </a>
-        )}
-        {centre.website?.trim() && (
-          <a href={centre.website.startsWith('http') ? centre.website : `https://${centre.website}`} target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, color: 'var(--text-light)', textDecoration: 'none', border: '1px solid var(--border)', borderRadius: 20, padding: '2px 10px' }}>
-            Website ↗
-          </a>
-        )}
+      {/* Tags */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+        <span style={{ fontSize: 11, padding: '3px 8px', borderRadius: 20, fontWeight: 500, background: badge.bg, color: badge.color }}>
+          {badge.label}
+        </span>
+        <span style={{ fontSize: 11, padding: '3px 8px', borderRadius: 20, fontWeight: 500, background: private_ ? '#fef3c7' : '#f0fdf4', color: private_ ? '#92400e' : '#166534' }}>
+          {private_ ? 'Private' : 'NHS'}
+        </span>
+        {specs.map(s => (
+          <span key={s} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 20, fontWeight: 500, background: '#f9fafb', color: '#4b5563' }}>{s}</span>
+        ))}
       </div>
-    </div>
+
+      {/* Footer */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#1d4ed8', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: 20, padding: '2px 8px' }}>
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <polyline points="9,12 11,14 15,10"/>
+          </svg>
+          CQC Registered
+        </div>
+        <span style={{ fontSize: 12, fontWeight: 600, color: '#1d4ed8' }}>View centre →</span>
+      </div>
+    </Link>
   )
 }
+
 
 export default async function CentresLocationPage({ params }: Props) {
   const { location } = await params
@@ -195,7 +209,7 @@ export default async function CentresLocationPage({ params }: Props) {
         {centres.length > 0 ? (
           <div className="ct-grid">
             {centres.map((centre, i) => (
-              <CentreCard key={centre.cqcUrl || i} centre={centre} />
+              <CentreCard key={centre.cqcUrl || i} centre={centre} townSlug={location} />
             ))}
           </div>
         ) : (

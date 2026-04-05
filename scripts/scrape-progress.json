@@ -39,9 +39,29 @@
     "portsmouth",
     "swindon",
     "dudley",
-    "aberdeen"
+    "aberdeen",
+    "sutton",
+    "st-helens",
+    "ipswich",
+    "wigan",
+    "croydon",
+    "warrington",
+    "walsall",
+    "mansfield",
+    "sunderland",
+    "ilford",
+    "slough",
+    "bournemouth",
+    "peterborough",
+    "oxford",
+    "newport",
+    "enfield-town",
+    "york",
+    "telford",
+    "poole",
+    "burnley"
   ],
-  "total": 356,
+  "total": 509,
   "startedAt": "2026-04-05T20:20:31.193Z",
-  "updatedAt": "2026-04-05T20:49:18.830Z"
+  "updatedAt": "2026-04-05T21:00:03.017Z"
 }
