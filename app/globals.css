@@ -169,7 +169,7 @@ button, input, select, textarea {
 /* ── Helplines Sidebar ─────────────────────────────────────────────────────── */
 .helplines-sidebar {
   position: sticky;
-  top: 80px;
+  top: 72px;
 }
 
 .helpline-card {

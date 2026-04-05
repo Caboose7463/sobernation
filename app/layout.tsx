@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import StoriesCTA from '../components/StoriesCTA'
 import CommunityCard from '../components/CommunityCard'
+import Nav from '../components/Nav'
 import { headers } from 'next/headers'
 
 export const metadata: Metadata = {
@@ -70,6 +71,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body>
+        <Nav />
         {children}
         {!hideCommunityCard && <CommunityCard />}
         <StoriesCTA />
