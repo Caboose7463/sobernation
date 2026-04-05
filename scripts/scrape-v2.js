@@ -205,7 +205,9 @@ async function scrapeCity(page, city) {
 async function saveToSupabase(city, counsellors) {
   const rows = counsellors.map(c => ({
     name: c.name,
-    title: c.credential?.slice(0, 120) || 'Registered Counsellor',
+    title: (c.credential || '')
+      .replace(/\b(task_alt|check_circle|verified|person|star|thumb_up|favorite|info|warning|error|home|settings|close|menu|search|add|delete|edit|visibility)\b/gi, '')
+      .replace(/\s{2,}/g, ' ').trim().slice(0, 120) || 'Registered Counsellor',
     location_slug: city.slug,
     location_name: city.name,
     profile_slug: toProfileSlug(c.name, city.slug),

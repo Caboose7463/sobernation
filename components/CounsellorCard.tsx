@@ -57,11 +57,31 @@ interface Props {
   counsellor: Counsellor
 }
 
+/** Mirror of the scraper's toProfileSlug — used as client-side fallback when DB slug is null */
+function toProfileSlug(name: string, locationSlug: string): string {
+  return name
+    .toLowerCase()
+    .replace(/['']/g, '')
+    .replace(/[^a-z0-9\s]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .trim() + '-' + locationSlug
+}
+
+/** Strip Material Icon glyph names that sometimes get scraped as text */
+const ICON_GLYPHS = /\b(task_alt|check_circle|verified|person|star|thumb_up|favorite|info|warning|error|home|settings|close|menu|search|add|delete|edit|visibility)\b/gi
+
+function cleanTitle(title: string | null | undefined): string {
+  if (!title) return 'Registered Counsellor'
+  const cleaned = title.replace(ICON_GLYPHS, '').replace(/\s{2,}/g, ' ').trim()
+  return cleaned || 'Registered Counsellor'
+}
+
 export default function CounsellorCard({ counsellor }: Props) {
   const specialisms = (counsellor.specialisms || []).slice(0, 3)
-  const profileHref = counsellor.profile_slug
-    ? `/therapist/${counsellor.profile_slug}`
-    : `/counsellors/${counsellor.location_slug}`
+  // Use DB slug if set; otherwise generate it on the fly using the same formula as the scraper
+  const slug = counsellor.profile_slug || toProfileSlug(counsellor.name, counsellor.location_slug)
+  const profileHref = `/therapist/${slug}`
 
   return (
     <>
@@ -207,9 +227,7 @@ export default function CounsellorCard({ counsellor }: Props) {
                 </span>
               )}
             </div>
-            {counsellor.title && (
-              <div className="cc__title">{counsellor.title}</div>
-            )}
+            {(() => { const t = cleanTitle(counsellor.title); return t !== 'Registered Counsellor' ? <div className="cc__title">{t}</div> : null })()}
           </div>
         </div>
 
