@@ -11,6 +11,7 @@ import HelplinesSidebar from '../../../components/HelplinesSidebar'
 import FaqBlock from '../../../components/FaqBlock'
 import Breadcrumb from '../../../components/Breadcrumb'
 import LastReviewed from '../../../components/LastReviewed'
+import CounsellorsSection from '../../../components/CounsellorsSection'
 
 export const dynamicParams = true
 export const revalidate = 604800 // ISR: regenerate after 7 days
@@ -140,6 +141,9 @@ export default async function RehabLocationPage(
 
             {/* Freshness badge — updates every deploy */}
             <LastReviewed dataDate={BUILD_MONTH} />
+
+            {/* Counsellors — shown above centres */}
+            <CounsellorsSection locationSlug={location} locationName={loc.name} />
 
             {/* CQC centres — direct, borough-aggregated, or nearest-city fallback */}
             <NearestCentres result={rehabsResult} locationName={loc.name} limit={6} />
