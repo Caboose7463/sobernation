@@ -1,13 +1,19 @@
 User-agent: *
 Allow: /
 
-# Block admin/internal routes
-Disallow: /admin/
+# Block dynamic search pages (prevents infinite crawl loop)
+Disallow: /search?*
 Disallow: /api/
+Disallow: /admin/
 Disallow: /_next/
 
-# Allow Google AdSense crawler
-User-agent: Mediapartners-Google
-Allow: /
+# Block infinite URL patterns
+Disallow: /*?page=
+Disallow: /*?sort=
+Disallow: /*?filter=
 
+# Crawl-delay for polite bots
+Crawl-delay: 1
+
+# Sitemaps
 Sitemap: https://www.sobernation.co.uk/sitemap.xml

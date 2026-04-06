@@ -16,6 +16,23 @@ const faqs = [
   { question: 'What are the benefits of stopping drinking?', answer: 'Within 24 hours: heart rate normalises. Within a week: sleep improves, hydration recovers. Within a month: liver function improves, skin clears, anxiety reduces. Within 3 months: liver begins to repair, blood pressure normalises. Within a year: cancer risk reduces significantly, mental health substantially improves. Long-term: dramatically reduced risk of liver disease, cancer, heart disease, and death.' },
 ]
 
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Stop Drinking Alcohol Safely in the UK',
+  description: 'The safest step-by-step guide to stopping drinking alcohol in the UK, including medical detox, NHS support, medication options, and long-term recovery.',
+  totalTime: 'P6W',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Decide whether you need medical detox first', text: 'If you drink daily and experience withdrawal symptoms (shakes, sweats, anxiety in the morning), you need medical supervision before stopping. Call your GP or Frank (0300 123 6600). Never try to stop cold turkey if physically dependent — alcohol withdrawal can cause fatal seizures.' },
+    { '@type': 'HowToStep', position: 2, name: 'Tell your GP or call Frank', text: 'Your GP can assess your dependency level and refer you to local alcohol services. Alternatively, call Frank on 0300 123 6600 (free, 24/7) to self-refer directly to your nearest NHS alcohol treatment service. You do not need a GP referral to access most services.' },
+    { '@type': 'HowToStep', position: 3, name: 'Complete a medically supervised detox (if needed)', text: 'NHS community detox (at home, with daily medical supervision and chlordiazepoxide medication) is free and available for most people who are physically dependent. Residential detox is available for those with severe dependency.' },
+    { '@type': 'HowToStep', position: 4, name: 'Access psychological support', text: 'After detox, CBT (Cognitive Behavioural Therapy) and motivational interviewing address the psychological reasons for drinking. Free through NHS alcohol services. Private alcohol counsellors are also available.' },
+    { '@type': 'HowToStep', position: 5, name: 'Consider medication to reduce cravings', text: 'Ask your GP or alcohol service about Acamprosate (Campral) or Naltrexone. Both significantly reduce cravings and relapse risk. Available free on NHS prescription.' },
+    { '@type': 'HowToStep', position: 6, name: 'Join AA or SMART Recovery', text: 'AA meetings are free and available across the UK. SMART Recovery offers a secular evidence-based alternative. Both provide critical peer support throughout recovery.' },
+    { '@type': 'HowToStep', position: 7, name: 'Build a long-term aftercare plan', text: 'Recovery is ongoing. A good aftercare plan includes regular counselling, AA or SMART meetings, medication review, sober social activities, and a relapse response plan.' },
+  ],
+}
+
 const STEPS = [
   { n: 1, title: 'Decide whether you need medical detox first', body: 'If you drink daily and experience withdrawal symptoms (shakes, sweats, anxiety in the morning), you need medical supervision before stopping. Call your GP or Frank (0300 123 6600). Never try to stop cold turkey if physically dependent — alcohol withdrawal can cause fatal seizures.', urgent: true },
   { n: 2, title: 'Tell your GP or call Frank', body: 'Your GP can assess your dependency level and refer you to local alcohol services. Alternatively, call Frank on 0300 123 6600 (free, 24/7) to self-refer directly to your nearest NHS alcohol treatment service. You do not need a GP referral to access most services.', urgent: false },
@@ -30,6 +47,7 @@ export default function HowToQuitAlcoholPage() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(faqs)) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
       <div style={{ background: '#fef3c7', padding: '10px 20px', textAlign: 'center', fontSize: 14, color: '#92400e', borderBottom: '1px solid #fde68a' }}>
         ⚠️ If you drink heavily every day — <strong>do not stop suddenly without medical advice.</strong> Call your GP or Frank (0300 123 6600) first.
       </div>

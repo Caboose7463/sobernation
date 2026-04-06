@@ -279,6 +279,17 @@ export default function WithdrawalTimeline() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
       <title>Withdrawal Timeline — What to Expect When Quitting | SoberNation</title>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: [
+          { '@type': 'Question', name: 'How long does alcohol withdrawal last?', acceptedAnswer: { '@type': 'Answer', text: 'Alcohol withdrawal typically lasts 3–7 days for the acute phase, though some symptoms like anxiety, sleep disturbance, and mood fluctuations can persist for weeks to months (post-acute withdrawal syndrome, PAWS). The most dangerous window is 24–72 hours after the last drink, when seizures and delirium tremens (DTs) can occur in people with severe dependency.' } },
+          { '@type': 'Question', name: 'Is heroin withdrawal dangerous?', acceptedAnswer: { '@type': 'Answer', text: 'Heroin withdrawal is intensely uncomfortable but is rarely life-threatening in physically healthy adults. The greatest danger is relapse and overdose after a period of abstinence, when tolerance drops rapidly. The acute withdrawal phase peaks at 24–72 hours and lasts 5–7 days. Medically supervised detox with buprenorphine or lofexidine dramatically reduces symptoms and is available free on the NHS.' } },
+          { '@type': 'Question', name: 'What are the worst withdrawal symptoms?', acceptedAnswer: { '@type': 'Answer', text: 'The most medically serious withdrawal syndromes are alcohol and benzodiazepine withdrawal, both of which can cause life-threatening seizures and delirium. Heroin and opioid withdrawal is extremely uncomfortable but rarely fatal. Cocaine withdrawal is primarily psychological — severe depression and intense cravings — rather than physical. Methamphetamine withdrawal causes a prolonged crash with severe depression and is associated with a high risk of suicidal thoughts.' } },
+          { '@type': 'Question', name: 'Can you withdraw from cannabis?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Regular heavy cannabis users experience a withdrawal syndrome when they stop that includes irritability, anxiety, insomnia, vivid dreams, and reduced appetite. Symptoms typically peak at 3–7 days and resolve within 1–2 weeks. While uncomfortable, cannabis withdrawal is not medically dangerous. NHS drug services can provide support.' } },
+          { '@type': 'Question', name: 'What is PAWS (post-acute withdrawal syndrome)?', acceptedAnswer: { '@type': 'Answer', text: 'Post-acute withdrawal syndrome (PAWS) describes a cluster of symptoms that persist beyond the initial acute withdrawal phase, often lasting weeks to months. Symptoms include anxiety, depression, mood swings, sleep disturbance, cravings, and cognitive difficulties (brain fog). PAWS occurs with alcohol, opioids, benzodiazepines, and methamphetamine. It is a major cause of relapse and is best managed with peer support, therapy, and sometimes medication.' } },
+        ],
+      }) }} />
 
       {/* Hero */}
       <section style={{ background: 'var(--white)', borderBottom: '1px solid var(--border)', padding: '48px 20px 40px' }}>

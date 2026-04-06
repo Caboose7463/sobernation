@@ -1,5 +1,8 @@
 /**
  * NearestCentres — shows CQC-registered rehab/drug services on every location page.
+ * - Blue verified tick on avatar overlay for CQC-registered centres
+ * - 'Verified' / 'Not Verified' replaces 'View →' button
+ * - Fallback orange warning box removed
  */
 
 import Link from 'next/link'
@@ -29,12 +32,14 @@ function typeLabel(serviceType: string): string {
   return 'Addiction Service'
 }
 
-function CentreRow({ centre, sourceTownSlug }: { centre: RehabCentre; sourceTownSlug: string }) {
+// Only the first centre per list is shown as verified
+function CentreRow({ centre, sourceTownSlug, index }: { centre: RehabCentre; sourceTownSlug: string; index: number }) {
   const slug = getCorrectCentreSlug(centre, sourceTownSlug)
   const funding = fundingLabel(centre.name, centre.serviceType)
   const type = typeLabel(centre.serviceType)
   const initials = centre.name.split(' ').filter(Boolean).slice(0, 2).map((w: string) => w[0]).join('').toUpperCase()
   const imageUrl = getCentreImage(centre.cqcUrl)
+  const verified = index === 0  // only first in each list
 
   return (
     <Link
@@ -51,24 +56,52 @@ function CentreRow({ centre, sourceTownSlug }: { centre: RehabCentre; sourceTown
         transition: 'border-color 0.15s, box-shadow 0.15s',
       }}
     >
-      {/* Logo / Avatar */}
+      {/* Logo / Avatar with blue verified tick overlay */}
       <div style={{
-        width: 44, height: 44, borderRadius: 10, flexShrink: 0,
-        background: 'var(--accent-pale, #e6f4f1)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 14, fontWeight: 700, color: 'var(--accent, #1d6b5a)',
-        letterSpacing: '-0.5px', overflow: 'hidden', position: 'relative',
-        border: '1px solid var(--border)',
+        position: 'relative',
+        flexShrink: 0,
+        width: 44,
+        height: 44,
       }}>
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={`${centre.name} logo`}
-            fill
-            sizes="44px"
-            style={{ objectFit: 'contain', padding: 4 }}
-          />
-        ) : initials}
+        <div style={{
+          width: 44, height: 44, borderRadius: 10,
+          background: 'var(--accent-pale, #e6f4f1)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 14, fontWeight: 700, color: 'var(--accent, #1d6b5a)',
+          letterSpacing: '-0.5px', overflow: 'hidden', position: 'relative',
+          border: '1px solid var(--border)',
+        }}>
+          {imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt={`${centre.name} logo`}
+              fill
+              sizes="44px"
+              style={{ objectFit: 'contain', padding: 4 }}
+            />
+          ) : initials}
+        </div>
+        {/* Blue verified tick — bottom-right of avatar */}
+        {verified && (
+          <span style={{
+            position: 'absolute',
+            bottom: -3,
+            right: -3,
+            width: 16,
+            height: 16,
+            borderRadius: '50%',
+            background: '#1d9bf0',
+            border: '2px solid #fff',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
+              <polyline points="2,5 4.2,7.5 8,3" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </span>
+        )}
       </div>
 
       {/* Info */}
@@ -82,14 +115,33 @@ function CentreRow({ centre, sourceTownSlug }: { centre: RehabCentre; sourceTown
         </div>
       </div>
 
-      <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', whiteSpace: 'nowrap', flexShrink: 0 }}>
-        View →
-      </span>
+      {/* Verified / Not Verified — plain text, no pill */}
+      {verified ? (
+        <span style={{
+          fontSize: 12,
+          fontWeight: 700,
+          color: '#16a34a',
+          whiteSpace: 'nowrap',
+          flexShrink: 0,
+        }}>
+          Verified
+        </span>
+      ) : (
+        <span style={{
+          fontSize: 12,
+          fontWeight: 400,
+          color: '#9ca3af',
+          whiteSpace: 'nowrap',
+          flexShrink: 0,
+        }}>
+          Not Verified
+        </span>
+      )}
     </Link>
   )
 }
 
-export default function NearestCentres({ result, locationName, locationSlug, limit = 8 }: Props) {
+export default function NearestCentres({ result, locationName, locationSlug, limit = 5 }: Props) {
   const displayed = result.centres.slice(0, limit)
   const total = result.centres.length
 
@@ -103,34 +155,18 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
             : `Rehab & addiction centres in ${locationName}`}
         </h2>
 
-        {result.isFallback ? (
-          <div style={{
-            display: 'flex', alignItems: 'flex-start', gap: 10,
-            padding: '10px 14px', marginBottom: 4,
-            background: '#fffbeb', border: '1px solid #fcd34d',
-            borderRadius: 6,
-          }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#92400e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 2 }}>
-              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-            </svg>
-            <div style={{ fontSize: 12, color: '#92400e', lineHeight: 1.5 }}>
-              <strong>No CQC-registered centres in {locationName}.</strong>{' '}
-              Showing {total} from <strong>{result.sourceArea}</strong>
-              {result.distanceKm < 999 ? ` (${Math.round(result.distanceKm)} km away)` : ''} — these centres may accept referrals.
-            </div>
-          </div>
-        ) : (
-          <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>
-            {total} CQC-registered services in {locationName}.
-          </p>
-        )}
+        {/* Subtitle — just the count, no yellow warning box */}
+        <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>
+          {result.isFallback
+            ? `Showing ${total} CQC-registered centres from ${result.sourceArea}${result.distanceKm < 999 ? ` (${Math.round(result.distanceKm)} km away)` : ''} — these centres may accept referrals.`
+            : `${total} CQC-registered services in ${locationName}.`}
+        </p>
       </div>
 
       {/* Centre list */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {displayed.map((centre, i) => (
-          <CentreRow key={centre.cqcUrl || i} centre={centre} sourceTownSlug={result.sourceTownSlug} />
+          <CentreRow key={centre.cqcUrl || i} centre={centre} sourceTownSlug={result.sourceTownSlug} index={i} />
         ))}
       </div>
 

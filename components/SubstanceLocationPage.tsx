@@ -61,6 +61,31 @@ export default function SubstanceLocationPage({
         `${substance.nameAdjective} help ${loc.name}`,
       ],
     }),
+    {
+      '@context': 'https://schema.org',
+      '@type': 'MedicalWebPage',
+      name: `${substance.name} Addiction Services in ${loc.name}`,
+      url: `https://www.sobernation.co.uk/${substance.slug}/${locationSlug}`,
+      description: `Information about ${substance.nameAdjective} addiction treatment and support services in ${loc.name}, ${loc.admin2 || loc.admin1 || 'UK'}.`,
+      audience: {
+        '@type': 'MedicalAudience',
+        audienceType: 'Patient',
+        geographicArea: {
+          '@type': 'AdministrativeArea',
+          name: loc.name,
+        },
+      },
+      about: {
+        '@type': 'MedicalCondition',
+        name: `${substance.name} Use Disorder`,
+        code: { '@type': 'MedicalCode', codeSystem: 'ICD-10' },
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'SoberNation',
+        url: 'https://www.sobernation.co.uk',
+      },
+    },
   ]
 
   return (

@@ -253,13 +253,11 @@ export default async function CentreProfilePage({ params }: Props) {
         .cp-sidebar-body { padding: 18px 20px; }
         .cp-sidebar-viewers { display: flex; align-items: center; gap: 7px; font-size: 13px; color: #059669; font-weight: 600; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
 
-        /* Blurred contact */
-        .cp-contact-blurred { position: relative; border-radius: 10px; overflow: hidden; }
+        /* Contact info */
         .cp-contact-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #f3f4f6; }
         .cp-contact-row:last-child { border-bottom: none; }
-        .cp-contact-val { font-size: 13px; font-weight: 600; color: #374151; filter: blur(5px); user-select: none; }
-        .cp-contact-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.72); backdrop-filter: blur(1px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
-        .cp-contact-overlay-text { font-size: 12px; color: var(--text-muted); text-align: center; font-weight: 500; max-width: 180px; line-height: 1.5; }
+        .cp-contact-val { font-size: 13px; font-weight: 600; color: #374151; text-decoration: none; }
+        .cp-contact-val:hover { color: var(--accent); }
         .cp-claim-btn { display: block; width: 100%; text-align: center; font-size: 13px; font-weight: 700; background: var(--accent); color: #fff; padding: 11px; border-radius: 8px; text-decoration: none; margin-top: 14px; transition: opacity 0.12s; }
         .cp-claim-btn:hover { opacity: 0.88; }
         .cp-claim-sub { font-size: 11px; color: var(--text-light); text-align: center; margin-top: 8px; }
@@ -301,7 +299,7 @@ export default async function CentreProfilePage({ params }: Props) {
               </div>
               <div className="cp-viewers">
                 <span className="cp-dot" />
-                {viewers} people viewing this centre today
+                {viewers} Currently Viewing
               </div>
             </div>
           </div>
@@ -517,23 +515,37 @@ export default async function CentreProfilePage({ params }: Props) {
             <div className="cp-sidebar-body">
               <div className="cp-sidebar-viewers">
                 <span className="cp-dot" />
-                {viewers} viewing today
+                {viewers} Currently Viewing
               </div>
 
-              <div className="cp-contact-blurred">
-                <div>
+              {/* Contact info — always visible */}
+              <div style={{ marginBottom: 14 }}>
+                {centre.phone && (
                   <div className="cp-contact-row">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.33A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.81a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 21.73 16"/></svg>
-                    <span className="cp-contact-val">020 #### ####</span>
+                    <a href={`tel:${centre.phone.replace(/\s/g, '')}`} className="cp-contact-val">{centre.phone}</a>
                   </div>
+                )}
+                {centre.website && (
                   <div className="cp-contact-row">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                    <span className="cp-contact-val">www.••••••••.co.uk</span>
+                    <a href={centre.website} target="_blank" rel="noopener noreferrer" className="cp-contact-val">
+                      {centre.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
+                    </a>
                   </div>
-                </div>
-                <div className="cp-contact-overlay">
-                  <div className="cp-contact-overlay-text">Contact info visible for verified listings only</div>
-                </div>
+                )}
+                {centre.email && (
+                  <div className="cp-contact-row">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    <a href={`mailto:${centre.email}`} className="cp-contact-val">{centre.email}</a>
+                  </div>
+                )}
+                {!centre.phone && !centre.website && !centre.email && (
+                  <div style={{ fontSize: 12, color: 'var(--text-light)', padding: '8px 0' }}>
+                    Contact details not yet available.
+                    {centre.cqcUrl && <> <a href={centre.cqcUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>View CQC listing →</a></>}
+                  </div>
+                )}
               </div>
 
               <Link href={`/counsellors/claim?type=centre&name=${encodeURIComponent(centre.name)}&location=${centre.townSlug}`} className="cp-claim-btn">

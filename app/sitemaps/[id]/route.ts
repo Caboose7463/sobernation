@@ -134,6 +134,10 @@ export async function GET(
       { url: `${BASE}/community`, lastmod: now, changefreq: 'daily', priority: 0.85 },
       { url: `${BASE}/articles`, lastmod: now, changefreq: 'daily', priority: 0.90 },
       { url: `${BASE}/search`, lastmod: now, changefreq: 'monthly', priority: 0.60 },
+      // SEO sprint pages
+      { url: `${BASE}/drug-addiction-treatment`, lastmod: now, changefreq: 'monthly', priority: 0.94 },
+      { url: `${BASE}/alcohol-and-mental-health`, lastmod: now, changefreq: 'monthly', priority: 0.90 },
+      { url: `${BASE}/private-vs-nhs-rehab`, lastmod: now, changefreq: 'monthly', priority: 0.86 },
       ...drugs.map(d => ({
         url: `${BASE}/how-long-does-${d}-stay-in-your-system`,
         lastmod: now,

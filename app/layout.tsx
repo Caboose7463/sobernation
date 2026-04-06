@@ -28,17 +28,38 @@ const orgSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'SoberNation',
+  alternateName: 'SoberNation Health & Wellbeing',
   url: 'https://www.sobernation.co.uk',
-  logo: 'https://www.sobernation.co.uk/logo.png',
+  logo: {
+    '@type': 'ImageObject',
+    url: 'https://www.sobernation.co.uk/logo.png',
+    width: '200',
+    height: '60',
+  },
   description: "The UK's addiction recovery hub — free information about alcohol and drug addiction treatment, rehab centres, NHS services, and recovery support across the UK.",
   contactPoint: {
     '@type': 'ContactPoint',
     email: 'editorial@sobernation.co.uk',
-    contactType: 'editorial',
+    contactType: 'customer support',
     areaServed: 'GB',
     availableLanguage: 'English',
   },
-  sameAs: [],
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: 'GB',
+  },
+  sameAs: [
+    'https://www.facebook.com/sobernation',
+    'https://twitter.com/sobernationuk',
+  ],
+  foundingDate: '2024',
+  knowsAbout: [
+    'Alcohol addiction treatment',
+    'Drug rehabilitation',
+    'NHS addiction services',
+    'Substance use disorder',
+    'Recovery support UK',
+  ],
 }
 
 const webSiteSchema = {
@@ -50,7 +71,7 @@ const webSiteSchema = {
     '@type': 'SearchAction',
     target: {
       '@type': 'EntryPoint',
-      urlTemplate: 'https://www.sobernation.co.uk/?q={search_term_string}',
+      urlTemplate: 'https://www.sobernation.co.uk/search?q={search_term_string}',
     },
     'query-input': 'required name=search_term_string',
   },
@@ -64,6 +85,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://clvhzvuhwjtyvrddoorm.supabase.co" />
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}

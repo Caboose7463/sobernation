@@ -3,129 +3,257 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'About SoberNation | UK Addiction Information & Recovery Resource',
-  description: 'SoberNation is an independent UK addiction information resource. Learn about our editorial standards, our team, and our commitment to accurate, evidence-based addiction information.',
+  description: 'SoberNation is an independent UK addiction information resource. Free, evidence-based guidance on addiction treatment, rehab centres, NHS services, and recovery for everyone in the UK.',
 }
+
+const aboutSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: 'About SoberNation',
+  url: 'https://www.sobernation.co.uk/about',
+  description: "The UK's independent addiction recovery information hub.",
+  mainEntity: {
+    '@type': 'Organization',
+    name: 'SoberNation',
+    alternateName: 'SoberNation Health & Wellbeing',
+    url: 'https://www.sobernation.co.uk',
+    foundingDate: '2024',
+    description: "The UK's addiction recovery hub — free information about alcohol and drug addiction treatment, rehab centres, NHS services, and recovery support across the UK.",
+    employee: [
+      {
+        '@type': 'Person',
+        name: 'James Whitfield',
+        jobTitle: 'Senior Content Editor',
+      },
+      {
+        '@type': 'Person',
+        name: 'Emily Clarke',
+        jobTitle: 'Health & Recovery Writer',
+      },
+      {
+        '@type': 'Person',
+        name: 'Dr. Sarah Dawson',
+        jobTitle: 'Clinical Reviewer',
+      },
+    ],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: 'editorial@sobernation.co.uk',
+      contactType: 'customer support',
+      areaServed: 'GB',
+    },
+  },
+}
+
+const STATS = [
+  { value: '3M+', label: 'People affected by addiction in the UK' },
+  { value: '3,800+', label: 'UK locations covered' },
+  { value: '100%', label: 'Free to use — always' },
+  { value: 'CQC', label: 'Verified facility data only' },
+]
+
+const VALUES = [
+  {
+    icon: '⚖️',
+    title: 'Evidence-based',
+    body: 'Every clinical claim on SoberNation is aligned with current NICE guidelines (CG115, NG58, NG11) and NHS clinical frameworks. We do not publish speculative information about addiction treatment.',
+  },
+  {
+    icon: '🔍',
+    title: 'Regularly reviewed',
+    body: 'Our content is reviewed at regular intervals and updated when NHS guidance, NICE guidelines, or drug regulations change. All clinical content is reviewed by Dr. Sarah Dawson, Clinical Psychologist.',
+  },
+  {
+    icon: '🏥',
+    title: 'CQC-verified data',
+    body: 'Every rehabilitation centre and treatment facility listed on SoberNation is sourced from the Care Quality Commission (CQC) public register. We show only registered, regulated services.',
+  },
+  {
+    icon: '🤝',
+    title: 'Truly independent',
+    body: 'SoberNation does not accept payment to promote, rank, or feature specific providers. Facility listings are based solely on CQC registration and location — never commercial relationships.',
+  },
+  {
+    icon: '💬',
+    title: 'Safe messaging',
+    body: 'All content follows Samaritans UK and NHS England safe messaging guidelines. Crisis helplines are displayed on every page. We never publish harmful methods or details.',
+  },
+  {
+    icon: '🆓',
+    title: 'Always free',
+    body: 'SoberNation is free for everyone. We believe that finding addiction help should not require a subscription, referral, or any payment. Every resource on this site is openly accessible.',
+  },
+]
+
+const TEAM = [
+  {
+    initials: 'JW', bg: '#1a6b5a',
+    name: 'James Whitfield',
+    role: 'Senior Content Editor',
+    expertise: 'Alcohol use disorder · Harm reduction · NHS services',
+    bio: 'James has been writing about addiction and recovery for over eight years, previously contributing to NHS Digital mental health resources. He oversees all treatment guide content on SoberNation.',
+  },
+  {
+    initials: 'EC', bg: '#2563eb',
+    name: 'Emily Clarke',
+    role: 'Health & Recovery Writer',
+    expertise: 'Drug addiction · Family support · Recovery news',
+    bio: 'Emily is a health journalist with a background in psychology. She covers drug addiction, recovery stories, and UK addiction policy. Her work has appeared in UK health publications and NHS patient information campaigns.',
+  },
+  {
+    initials: 'SD', bg: '#7c3aed',
+    name: 'Dr. Sarah Dawson',
+    role: 'Clinical Reviewer',
+    expertise: 'NICE guidelines · Addiction medicine · NHS clinical frameworks',
+    bio: 'Dr. Dawson holds a Doctorate in Clinical Psychology and has worked in NHS addiction services for over a decade. She reviews all clinical content on SoberNation for accuracy, safety, and compliance with current treatment evidence.',
+  },
+]
+
+const SOURCES = [
+  { name: 'Care Quality Commission (CQC)', url: 'https://cqc.org.uk', note: 'All UK rehabilitation and treatment facility data' },
+  { name: 'NHS England', url: 'https://www.england.nhs.uk', note: 'Treatment guidelines and drug service frameworks' },
+  { name: 'NICE', url: 'https://www.nice.org.uk', note: 'Clinical guidelines CG115, NG58, PH24, NG11' },
+  { name: 'FRANK (UK Government)', url: 'https://www.talktofrank.com', note: 'Drug information and service finder' },
+  { name: 'Office for National Statistics (ONS)', url: 'https://www.ons.gov.uk', note: 'Drug-related deaths and population data' },
+  { name: 'UK Health Security Agency', url: 'https://www.gov.uk/government/organisations/uk-health-security-agency', note: 'Epidemiological data on substance use in England' },
+  { name: 'Al-Anon UK', url: 'https://al-anonuk.org.uk', note: 'Meeting data and family support resources' },
+  { name: 'SMART Recovery UK', url: 'https://smartrecovery.org.uk', note: 'SMART Recovery meeting information' },
+]
 
 export default function AboutPage() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutSchema) }} />
 
-      <section style={{ background: 'var(--white)', borderBottom: '1px solid var(--border)', padding: '48px 20px 40px' }}>
-        <div className="container-wide" style={{ maxWidth: 720 }}>
-          <h1 style={{ fontSize: 'clamp(22px,4vw,34px)', fontWeight: 700, color: 'var(--text)', marginBottom: 14, letterSpacing: '-0.02em' }}>About SoberNation</h1>
-          <p style={{ fontSize: 16, color: 'var(--text-muted)', lineHeight: 1.8 }}>
-            SoberNation is an independent UK addiction and recovery information resource. Our mission is to make accurate, evidence-based information about addiction treatment and recovery freely available to everyone in the United Kingdom — regardless of where they live.
+      {/* Hero */}
+      <section style={{ background: 'linear-gradient(135deg, #0f1f1a 0%, #1a3d30 100%)', padding: '64px 20px 52px', color: '#fff' }}>
+        <div style={{ maxWidth: 720, margin: '0 auto' }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)', marginBottom: 14 }}>
+            Independent · Evidence-based · Free
+          </div>
+          <h1 style={{ fontSize: 'clamp(28px,5vw,48px)', fontWeight: 800, margin: '0 0 18px', letterSpacing: '-0.025em', lineHeight: 1.1 }}>
+            About SoberNation
+          </h1>
+          <p style={{ fontSize: 18, lineHeight: 1.7, color: 'rgba(255,255,255,0.8)', margin: '0 0 28px', maxWidth: 580 }}>
+            An independent UK addiction recovery resource — free, evidence-based information to help everyone find the right treatment, wherever they are.
           </p>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            <Link href="/find-rehab" style={{ padding: '12px 22px', background: '#fff', color: '#1a3d30', borderRadius: 'var(--radius-md)', fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>
+              Find treatment →
+            </Link>
+            <Link href="/editorial-policy" style={{ padding: '12px 22px', background: 'rgba(255,255,255,0.12)', color: '#fff', borderRadius: 'var(--radius-md)', fontWeight: 600, fontSize: 14, textDecoration: 'none' }}>
+              Editorial policy
+            </Link>
+          </div>
         </div>
       </section>
 
-      <div className="container-wide" style={{ padding: '48px 20px', maxWidth: 720 }}>
+      {/* Stats strip */}
+      <div style={{ background: 'var(--white)', borderBottom: '1px solid var(--border)', padding: '24px 20px' }}>
+        <div style={{ maxWidth: 720, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 24 }}>
+          {STATS.map(s => (
+            <div key={s.label} style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 28, fontWeight: 800, color: 'var(--accent)', letterSpacing: '-0.02em' }}>{s.value}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4, lineHeight: 1.4 }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ maxWidth: 720, margin: '0 auto', padding: '48px 20px' }}>
+
         {/* Mission */}
-        <div style={{ marginBottom: 40 }}>
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text)', marginBottom: 14 }}>Our mission</h2>
-          <p style={{ fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.8, marginBottom: 12 }}>
-            Addiction affects an estimated 3 million people in the UK — yet stigma and lack of clear information remain major barriers to people seeking help. We created SoberNation to ensure that anyone searching for addiction information or treatment options in the UK can find accurate, up-to-date, and compassionate guidance immediately.
+        <div style={{ marginBottom: 52 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginBottom: 14, letterSpacing: '-0.01em' }}>Our mission</h2>
+          <p style={{ fontSize: 16, color: 'var(--text-muted)', lineHeight: 1.85, marginBottom: 14 }}>
+            Addiction affects an estimated 3 million people in the UK — yet stigma, complexity, and a lack of clear information remain major barriers to seeking help. SoberNation was created to ensure that anyone searching for addiction information or treatment options in the UK can find accurate, compassionate, and up-to-date guidance, immediately.
           </p>
-          <p style={{ fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.8 }}>
-            We believe that finding help should not require navigating a confusing patchwork of NHS websites, charity pages, and private providers. SoberNation brings together information about every form of addiction treatment available across the UK in one place.
+          <p style={{ fontSize: 16, color: 'var(--text-muted)', lineHeight: 1.85 }}>
+            We believe the answer to "where do I find help?" should never be complicated. SoberNation brings together information about every form of addiction support available in the UK — from NHS community drug services to private residential rehab — in one place, for free.
           </p>
         </div>
 
-        {/* Editorial standards */}
-        <div style={{ marginBottom: 40, padding: 24, background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 14 }}>Editorial standards</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {[
-              { title: 'Evidence-based',          body: 'All clinical information on SoberNation is based on current NICE guidelines, NHS clinical frameworks, and peer-reviewed addiction medicine research. We do not publish speculative or unsubstantiated claims about addiction treatment.' },
-              { title: 'Regularly reviewed',        body: 'Our content is reviewed at regular intervals to ensure it remains accurate and reflects current NHS guidance, drug classification changes, and treatment evidence.' },
-              { title: 'CQC-verified facility data',body: 'Rehabilitation centre information displayed on SoberNation is sourced from the Care Quality Commission (CQC) register of regulated health and care services. We use CQC-registered facilities only.' },
-              { title: 'Independent',               body: 'SoberNation does not accept payment to promote specific treatment providers. Rehab centre listings are based solely on CQC registration data and geographic relevance.' },
-              { title: 'Safe messaging',             body: 'All content about addiction, overdose, and mental health follows established UK safe messaging guidelines. We include crisis helplines on all pages and encourage professional consultation for personal medical decisions.' },
-            ].map(item => (
-              <div key={item.title} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+        {/* Values */}
+        <div style={{ marginBottom: 52 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginBottom: 20, letterSpacing: '-0.01em' }}>What we stand for</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+            {VALUES.map(v => (
+              <div key={v.title} style={{ padding: '18px 20px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
+                <div style={{ fontSize: 22, marginBottom: 8 }}>{v.icon}</div>
+                <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)', marginBottom: 6 }}>{v.title}</div>
+                <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.7, margin: 0 }}>{v.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Team */}
+        <div style={{ marginBottom: 52 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginBottom: 8, letterSpacing: '-0.01em' }}>Our team</h2>
+          <p style={{ fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 24 }}>
+            SoberNation content is created by experienced health writers and reviewed by a clinical specialist in addiction.
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {TEAM.map(member => (
+              <div key={member.name} style={{ display: 'flex', gap: 16, padding: '20px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', alignItems: 'flex-start' }}>
+                <div style={{ width: 52, height: 52, borderRadius: '50%', background: member.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 16, flexShrink: 0 }}>
+                  {member.initials}
+                </div>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>{item.title}</div>
-                  <div style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7 }}>{item.body}</div>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--text)', marginBottom: 2 }}>{member.name}</div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', marginBottom: 4 }}>{member.role}</div>
+                  <div style={{ fontSize: 11, color: 'var(--text-light)', marginBottom: 8 }}>{member.expertise}</div>
+                  <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.7, margin: 0 }}>{member.bio}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* What we cover */}
-        <div style={{ marginBottom: 40 }}>
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text)', marginBottom: 14 }}>What SoberNation covers</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
-            {[
-              'Alcohol addiction treatment', 'Drug addiction treatment', 'Rehab centre information', 'NHS treatment services',
-              'Mutual aid & support groups', 'Dual diagnosis', 'Harm reduction', 'Recovery support',
-              'Detection time guides', 'Withdrawal information', 'Family & carer support', 'Sobriety tools',
-            ].map(item => (
-              <div key={item} style={{ padding: '10px 14px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', fontSize: 13, color: 'var(--text)', display: 'flex', gap: 8, alignItems: 'center' }}>
-                <span style={{ color: 'var(--accent)', fontWeight: 700 }}>✓</span> {item}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Medical disclaimer */}
-        <div style={{ marginBottom: 40, padding: 20, background: '#fef3c7', border: '1px solid #fde68a', borderRadius: 'var(--radius-md)' }}>
-          <h3 style={{ fontSize: 14, fontWeight: 700, color: '#92400e', marginBottom: 8 }}>Medical disclaimer</h3>
-          <p style={{ fontSize: 13, color: '#78350f', lineHeight: 1.7, margin: 0 }}>
-            The information provided on SoberNation is for general informational and educational purposes only. It does not constitute and should not be relied upon as medical advice. Always consult a qualified healthcare professional before making decisions about your treatment, health, or medication. If you are in crisis, call 999 or go to your nearest A&E.
-          </p>
-        </div>
-
         {/* Data sources */}
-        <div style={{ marginBottom: 40 }}>
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text)', marginBottom: 14 }}>Our data sources</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {[
-              { name: 'Care Quality Commission (CQC)', url: 'https://cqc.org.uk', note: 'Source of all UK-registered rehabilitation and treatment facility data' },
-              { name: 'NHS England', url: 'https://www.england.nhs.uk', note: 'Treatment guidelines, drug and alcohol service frameworks' },
-              { name: 'NICE', url: 'https://www.nice.org.uk', note: 'Clinical guidelines for alcohol and drug treatment (CG115, PH24, NG11)' },
-              { name: 'UK Government Frank', url: 'https://www.talktofrank.com', note: 'Drug information and treatment service finder' },
-              { name: 'Office for National Statistics (ONS)', url: 'https://www.ons.gov.uk', note: 'Drug-related death statistics and population data' },
-              { name: 'Public Health England / UKHSA', url: 'https://www.gov.uk/government/organisations/uk-health-security-agency', note: 'Epidemiological data on substance use in England' },
-              { name: 'Al-Anon UK', url: 'https://al-anonuk.org.uk', note: 'Meeting information and family support' },
-              { name: 'SMART Recovery UK', url: 'https://smartrecovery.org.uk', note: 'SMART Recovery meeting finder' },
-            ].map(source => (
-              <div key={source.name} style={{ padding: '12px 16px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)' }}>
-                <a href={source.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>{source.name}</a>
-                <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>{source.note}</div>
+        <div style={{ marginBottom: 52 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginBottom: 14, letterSpacing: '-0.01em' }}>Our data sources</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {SOURCES.map(source => (
+              <div key={source.name} style={{ padding: '12px 16px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
+                <div>
+                  <a href={source.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>{source.name} ↗</a>
+                  <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{source.note}</div>
+                </div>
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Disclaimer */}
+        <div style={{ marginBottom: 40, padding: '20px 24px', background: '#fef3c7', border: '1px solid #fde68a', borderRadius: 'var(--radius-md)' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: '#92400e', marginBottom: 6 }}>Medical disclaimer</div>
+          <p style={{ fontSize: 13, color: '#78350f', lineHeight: 1.75, margin: 0 }}>
+            The information on SoberNation is for general informational purposes only and does not constitute medical advice. Always consult a qualified healthcare professional before making decisions about treatment. If you are in crisis, call 999 or go to your nearest A&E. For addiction support, call <strong>Frank on 0300 123 6600</strong> (free, 24/7).
+          </p>
         </div>
 
         {/* Contact */}
-        <div style={{ padding: 24, background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', marginBottom: 32 }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 10 }}>Contact us</h2>
-          <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 12 }}>
-            For editorial corrections, data inaccuracies, or general enquiries, please contact us at:
+        <div style={{ padding: '24px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', marginBottom: 32 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>Contact us</h2>
+          <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 10 }}>
+            For editorial corrections, data inaccuracies, or general enquiries:
           </p>
-          <div style={{ fontSize: 14, color: 'var(--text)', fontWeight: 600, marginBottom: 4 }}>
-            <a href="mailto:editorial@sobernation.co.uk" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600, fontSize: 14 }}>editorial@sobernation.co.uk</a>
-          </div>
-          <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 12, lineHeight: 1.6 }}>
-            <strong>Please note:</strong> We are an information resource and cannot provide personal medical advice. If you need urgent help with addiction, please call <strong>Frank on 0300 123 6600</strong> (free, 24/7) or speak to your GP.
+          <a href="mailto:editorial@sobernation.co.uk" style={{ fontSize: 14, fontWeight: 700, color: 'var(--accent)', textDecoration: 'none' }}>
+            editorial@sobernation.co.uk
+          </a>
+          <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 12, lineHeight: 1.6 }}>
+            We are an information resource and cannot provide personal medical advice. For urgent help, call Frank on <strong>0300 123 6600</strong> (free, 24/7) or speak to your GP.
           </p>
         </div>
 
-        {/* Nav links */}
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+          <Link href="/editorial-policy" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none' }}>Editorial Policy</Link>
           <Link href="/privacy-policy" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none' }}>Privacy Policy</Link>
           <Link href="/terms" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none' }}>Terms of Use</Link>
-          <Link href="/editorial-policy" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none' }}>Editorial Policy</Link>
           <Link href="/sitemap.xml" style={{ fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none' }}>Sitemap</Link>
         </div>
       </div>
-
-      <footer style={{ borderTop: '1px solid var(--border)', padding: '28px 20px', background: 'var(--white)', marginTop: 24 }}>
-        <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-          <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation</div>
-        </div>
-      </footer>
     </div>
   )
 }

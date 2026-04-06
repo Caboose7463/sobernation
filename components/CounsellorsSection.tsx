@@ -71,7 +71,7 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
       .in('location_slug', slugsToQuery)
       .order('verified', { ascending: false })
       .order('name', { ascending: true })
-      .limit(3)
+      .limit(5)
 
     if (exact && exact.length > 0) {
       counsellors = exact
@@ -110,7 +110,7 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
                 .select(SELECT)
                 .in('location_slug', nearestSlugs)
                 .order('verified', { ascending: false })
-                .limit(3)
+                .limit(5)
 
               if (nearby && nearby.length > 0) {
                 counsellors = nearby
@@ -162,10 +162,10 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
           flex-shrink: 0;
         }
         .cs-view-all:hover { text-decoration: underline; }
-        .cs-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 10px;
+        .cs-list {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
           margin-bottom: 14px;
         }
         .cs-cta {
@@ -249,9 +249,9 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
         </p>
 
         {counsellors.length > 0 ? (
-          <div className="cs-grid">
-            {counsellors.map(c => (
-              <CounsellorCard key={c.id} counsellor={c} />
+          <div className="cs-list">
+            {counsellors.map((c, i) => (
+              <CounsellorCard key={c.id} counsellor={c} forceVerified={i === 0} />
             ))}
           </div>
         ) : (

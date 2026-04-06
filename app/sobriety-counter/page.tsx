@@ -2,6 +2,38 @@
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 
+const SOBRIETY_FAQ_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'How do I calculate how many days sober I am?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Enter the date of your last drink or drug use into the SoberNation sobriety calculator. It will automatically calculate exactly how many days, weeks, months, and hours you have been sober or clean, update in real time, and show you your next recovery milestone.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'What happens to your body after 30 days sober?',
+      acceptedAnswer: { '@type': 'Answer', text: 'After 30 days without alcohol: liver function significantly improves; sleep quality deepens; anxiety and depression often substantially reduce; skin tone and hydration improve; blood pressure may normalise; brain chemistry begins to recover; and many people report significantly more energy and mental clarity. 30 days is also a key milestone in early recovery that significantly reduces relapse risk.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the pink cloud phase in sobriety?',
+      acceptedAnswer: { '@type': 'Answer', text: 'The pink cloud phase (approximately days 30–90 of sobriety) is a period of euphoria and optimism that many people experience early in recovery. The brain\'s neurochemistry is recovering and producing feel-good chemicals naturally again. While positive, it can be followed by a period of normal mood that some mistake for relapse — having support in place during this transition is important.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is 1 year sober a big deal?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Yes — one year of sobriety is a significant milestone. Research shows that people who achieve 1 year of sobriety have dramatically reduced relapse risk compared to earlier in recovery. By one year, brain chemistry has substantially normalised, sleep is largely restored, and many of the physical and psychological benefits of sobriety are fully established. AA celebrates 1-year sober with a coin ceremony for this reason.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'What are the most important sobriety milestones?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Key sobriety milestones include: 24 hours (first day committed), 72 hours (peak withdrawal passed for most), 1 week, 30 days (1 month — often celebrated in AA), 90 days (3 months), 100 days, 6 months, 1 year (most significant first-year milestone), 2 years, 3 years, 5 years, and 10 years. Each milestone represents a measurable step in brain recovery and reduced relapse risk.' },
+    },
+  ],
+}
+
 interface SobrietyResult {
   days: number
   weeks: number
@@ -106,6 +138,7 @@ export default function SobrietyCounter() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SOBRIETY_FAQ_SCHEMA) }} />
       <title>Sobriety Calculator — How Many Days Sober Am I? | SoberNation</title>
 
       {/* Hero */}

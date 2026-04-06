@@ -72,6 +72,16 @@ export default function AddictionCostCalculator() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
       <title>Addiction Cost Calculator — How Much Does Your Habit Cost? | SoberNation</title>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: [
+          { '@type': 'Question', name: 'How much does alcohol addiction cost per year in the UK?', acceptedAnswer: { '@type': 'Answer', text: 'The average cost of alcohol addiction in the UK varies significantly. Someone drinking 10 pints per day at an average pub price of £4.50 would spend approximately £16,425 per year on alcohol alone. This does not include the hidden costs: lost productivity, health problems, relationship breakdown, and legal issues. The total economic cost of alcohol harm to England has been estimated at £21 billion per year.' } },
+          { '@type': 'Question', name: 'How much does cocaine cost per year if used regularly?', acceptedAnswer: { '@type': 'Answer', text: 'At an average UK street price of £60/gram, a regular cocaine user consuming 1 gram per day would spend approximately £21,900 per year. Many heavy users consume significantly more. The financial pressure of cocaine dependency is a common driver of debt, crime, and relationship breakdown. NHS cocaine treatment is free through community drug services.' } },
+          { '@type': 'Question', name: 'Is private rehab worth the cost?', acceptedAnswer: { '@type': 'Answer', text: 'When compared to the ongoing financial cost of addiction, private residential rehabilitation often represents a clear financial case. A 28-day private rehab programme typically costs £3,000–£8,000 — equivalent to a few months of a typical drug or alcohol habit. NHS rehabilitation is entirely free. Both are significantly less than the lifetime cost of continued addiction, which can run to tens of thousands of pounds annually.' } },
+          { '@type': 'Question', name: 'What is the financial cost of heroin addiction?', acceptedAnswer: { '@type': 'Answer', text: 'Heroin typically costs £5–£12 per bag in the UK, and many users need multiple bags per day to prevent withdrawal. A person using 5 bags per day would spend approximately £14,600–£21,900 per year on heroin. Methadone and buprenorphine prescribed through NHS drug services eliminate this cost entirely while supporting recovery.' } },
+        ],
+      }) }} />
 
       {/* Hero */}
       <section style={{ background: 'var(--white)', borderBottom: '1px solid var(--border)', padding: '48px 20px 40px' }}>

@@ -9,7 +9,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Am I an Alcoholic? Free Online Alcohol Test',
     description: 'Take the clinically validated WHO AUDIT alcohol test. 10 questions, instant result. Find out if your drinking may be a problem and where to get help.',
+    images: [{ url: 'https://www.sobernation.co.uk/api/og?title=Am+I+an+Alcoholic%3F&subtitle=Free+WHO+AUDIT+Screening+Test&type=tool', width: 1200, height: 630 }],
   },
+  twitter: { card: 'summary_large_image', title: 'Am I an Alcoholic? Free WHO AUDIT Test', description: 'Take the free clinically validated alcohol screening test. Instant result.' },
 }
 
 const faqs = [
