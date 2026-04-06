@@ -32,22 +32,37 @@ function CentreRow({ centre, sourceTownSlug }: { centre: RehabCentre; sourceTown
   const slug = getCentreSlug(centre, sourceTownSlug)
   const funding = fundingLabel(centre.name, centre.serviceType)
   const type = typeLabel(centre.serviceType)
+  const initials = centre.name.split(' ').filter(Boolean).slice(0, 2).map((w: string) => w[0]).join('').toUpperCase()
 
   return (
     <Link
       href={`/centre/${slug}`}
       style={{
         display: 'flex',
-        justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '14px 0',
-        borderBottom: '1px solid var(--border)',
+        gap: 14,
+        padding: '14px 16px',
+        border: '1px solid var(--border)',
+        borderRadius: 10,
         textDecoration: 'none',
-        gap: 16,
+        background: 'var(--white)',
+        transition: 'border-color 0.15s',
       }}
     >
-      <div style={{ minWidth: 0 }}>
-        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 2, lineHeight: 1.3 }}>
+      {/* Avatar */}
+      <div style={{
+        width: 44, height: 44, borderRadius: 10, flexShrink: 0,
+        background: 'var(--accent-pale, #e6f4f1)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 14, fontWeight: 700, color: 'var(--accent, #1d6b5a)',
+        letterSpacing: '-0.5px',
+      }}>
+        {initials}
+      </div>
+
+      {/* Info */}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', lineHeight: 1.3, marginBottom: 3 }}>
           {centre.name}
         </div>
         <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
@@ -55,6 +70,7 @@ function CentreRow({ centre, sourceTownSlug }: { centre: RehabCentre; sourceTown
             .filter(Boolean).join(' · ')}
         </div>
       </div>
+
       <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', whiteSpace: 'nowrap', flexShrink: 0 }}>
         View →
       </span>
@@ -145,10 +161,12 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
       </div>
 
       {/* Featured placeholder */}
-      <FeaturedPlaceholder locationName={locationName} />
+      <div style={{ marginBottom: 8 }}>
+        <FeaturedPlaceholder locationName={locationName} />
+      </div>
 
       {/* Centre list */}
-      <div style={{ borderTop: '1px solid var(--border)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {displayed.map((centre, i) => (
           <CentreRow key={centre.cqcUrl || i} centre={centre} sourceTownSlug={result.sourceTownSlug} />
         ))}
