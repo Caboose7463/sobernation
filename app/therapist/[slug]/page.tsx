@@ -14,7 +14,8 @@ import { getLocationStats, formatStat } from '../../../lib/location-stats'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 interface Props {
   params: Promise<{ slug: string }>
