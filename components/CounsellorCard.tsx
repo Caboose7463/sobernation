@@ -5,7 +5,7 @@ import { useState } from 'react'
 // Renders an external profile photo with automatic initials fallback
 function AvatarWithFallback({ name, photoUrl }: { name: string; photoUrl: string | null }) {
   const [failed, setFailed] = useState(false)
-  const initials = name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()
+  const initials = name.split(' ').filter(Boolean).map(n => n[0]).slice(0, 2).join('').toUpperCase()
 
   if (photoUrl && !failed) {
     return (

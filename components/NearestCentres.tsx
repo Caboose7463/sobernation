@@ -39,7 +39,7 @@ function CentreCard({ centre, sourceTownSlug }: { centre: RehabCentre; sourceTow
   const private_ = isPrivate(centre.name, centre.serviceType)
   // Use the actual stored town slug — NOT the location slug — so the link resolves correctly
   const slug = getCentreSlug(centre, sourceTownSlug)
-  const initials = centre.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()
+  const initials = centre.name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase()
   const specs = centre.specialism ? centre.specialism.split('|').slice(0, 3).map(s => s.trim()).filter(Boolean) : []
 
   return (

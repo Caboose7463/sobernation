@@ -669,7 +669,7 @@ export default async function TherapistPage({ params }: Props) {
               <h2 className="tp-section-title">Other Counsellors in {locationName}</h2>
               <div className="tp-related-grid">
                 {related.map(r => {
-                  const ri = r.name.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()
+                  const ri = r.name.split(' ').filter(Boolean).map((n: string) => n[0]).slice(0, 2).join('').toUpperCase() || '??'
                   return (
                     <Link key={r.id} href={r.profile_slug ? `/therapist/${r.profile_slug}` : `/counsellors/${r.location_slug}`} className="tp-related-card">
                       {r.photo_url
