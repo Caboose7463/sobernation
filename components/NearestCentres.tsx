@@ -67,7 +67,6 @@ function CentreRow({ centre, sourceTownSlug }: { centre: RehabCentre; sourceTown
             fill
             sizes="44px"
             style={{ objectFit: 'contain', padding: 4 }}
-            onError={() => {}}
           />
         ) : initials}
       </div>
