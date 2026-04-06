@@ -37,11 +37,11 @@ export default function VerifyLandingPage() {
             Verified Listings
           </div>
 
-          <h1 style={{ fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: 20 }}>
-            Stand out where it matters most
+          <h1 style={{ fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: 20, color: '#ffffff' }}>
+            Add your listing &amp; get verified
           </h1>
-          <p style={{ fontSize: 18, opacity: 0.85, lineHeight: 1.7, marginBottom: 40, maxWidth: 520, margin: '0 auto 40px' }}>
-            Get a verified badge on your SoberNation listing. Reach thousands of people searching for addiction help across the UK.
+          <p style={{ fontSize: 18, opacity: 0.85, lineHeight: 1.7, marginBottom: 40, maxWidth: 520, margin: '0 auto 40px', color: '#ffffff' }}>
+            Claim your rehab centre or counsellor listing on SoberNation. Get a verified badge, manage your contact info, and reach thousands of people searching for help.
           </p>
 
           <Link href="/verify/onboard" style={{
@@ -56,7 +56,7 @@ export default function VerifyLandingPage() {
             boxShadow: '0 8px 32px rgba(0,0,0,0.15)',
             transition: 'transform 0.15s',
           }}>
-            Get verified — from £10/month
+            Add listing &amp; get verified — from £10/month
           </Link>
 
           <p style={{ marginTop: 16, fontSize: 13, opacity: 0.6 }}>

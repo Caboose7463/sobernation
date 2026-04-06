@@ -26,29 +26,6 @@ interface FormState {
   contactEmail: string
 }
 
-// ── UK locations (top 200 by population) ─────────────────────────────────────
-
-const UK_LOCATIONS = [
-  'london', 'birmingham', 'manchester', 'leeds', 'sheffield', 'liverpool',
-  'bristol', 'newcastle', 'nottingham', 'leicester', 'coventry', 'bradford',
-  'edinburgh', 'glasgow', 'cardiff', 'belfast', 'brighton', 'plymouth',
-  'stoke-on-trent', 'wolverhampton', 'derby', 'swansea', 'southampton',
-  'portsmouth', 'oxford', 'cambridge', 'reading', 'sunderland', 'exeter',
-  'york', 'norwich', 'peterborough', 'luton', 'northampton', 'bath',
-  'middlesbrough', 'huddersfield', 'blackpool', 'bolton', 'stockport',
-  'blackburn', 'wigan', 'burnley', 'rochdale', 'oldham', 'salford',
-  'milton-keynes', 'watford', 'ipswich', 'colchester', 'chelmsford',
-  'southend-on-sea', 'woking', 'guildford', 'slough', 'swindon',
-  'gloucester', 'cheltenham', 'worcester', 'hereford', 'shrewsbury',
-  'stafford', 'lichfield', 'warwick', 'lincoln', 'hull', 'doncaster',
-  'barnsley', 'rotherham', 'wakefield', 'harrogate', 'scarborough',
-  'chester', 'wirral', 'st-helens', 'warrington', 'crewe', 'macclesfield',
-  'carlisle', 'barrow-in-furness', 'lancaster', 'preston', 'blackburn',
-  'durham', 'darlington', 'hartlepool', 'teesside', 'gateshead',
-  'aberdeen', 'dundee', 'inverness', 'perth', 'stirling', 'falkirk',
-  'newport', 'wrexham', 'swansea', 'bangor', 'aberystwyth',
-].filter((v, i, a) => a.indexOf(v) === i)
-
 function formatSlug(slug: string) {
   return slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
 }
@@ -83,6 +60,8 @@ export default function OnboardPage() {
 
   // Location picker state
   const [locationSearch, setLocationSearch] = useState('')
+  const [locationOptions, setLocationOptions] = useState<Array<{slug: string; name: string}>>([]
+  )
   const [showLocationDrop, setShowLocationDrop] = useState(false)
   const locationRef = useRef<HTMLDivElement>(null)
 
@@ -147,17 +126,26 @@ export default function OnboardPage() {
     setShowNameDrop(false)
   }
 
+  // Fetch locations from API (searches all 3,835 UK locations)
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/listings/locations?q=${encodeURIComponent(locationSearch)}`)
+        const data = await res.json()
+        setLocationOptions((data.locations ?? []).filter((l: {slug: string}) => !form.locations.includes(l.slug)))
+      } catch { /* ignore */ }
+    }, 200)
+    return () => clearTimeout(timer)
+  }, [locationSearch, form.locations])
+
   // If type already selected from URL, start at step 2
   useEffect(() => {
     if (typeFromUrl && step === 1) setStep(2)
   }, [typeFromUrl, step])
 
-  const filteredLocations = UK_LOCATIONS.filter(l =>
-    l.includes(locationSearch.toLowerCase()) &&
-    !form.locations.includes(l)
-  ).slice(0, 8)
 
-  function addLocation(slug: string) {
+
+  function addLocation(slug: string, name?: string) {
     setForm(f => ({ ...f, locations: [...f.locations, slug] }))
     setLocationSearch('')
     setShowLocationDrop(false)
@@ -544,7 +532,7 @@ export default function OnboardPage() {
                   placeholder="Search location (e.g. Manchester, London…)"
                   style={inputStyle}
                 />
-                {showLocationDrop && filteredLocations.length > 0 && (
+                {showLocationDrop && locationOptions.length > 0 && (
                   <div style={{
                     position: 'absolute',
                     top: '100%',
@@ -557,11 +545,13 @@ export default function OnboardPage() {
                     overflow: 'hidden',
                     zIndex: 100,
                     marginTop: 4,
+                    maxHeight: 280,
+                    overflowY: 'auto',
                   }}>
-                    {filteredLocations.map(loc => (
+                    {locationOptions.map(loc => (
                       <button
-                        key={loc}
-                        onClick={() => addLocation(loc)}
+                        key={loc.slug}
+                        onClick={() => addLocation(loc.slug, loc.name)}
                         style={{
                           display: 'block',
                           width: '100%',
@@ -578,7 +568,7 @@ export default function OnboardPage() {
                         onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg)')}
                         onMouseLeave={e => (e.currentTarget.style.background = 'none')}
                       >
-                        {formatSlug(loc)}
+                        {loc.name}
                       </button>
                     ))}
                   </div>

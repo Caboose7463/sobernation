@@ -35,29 +35,37 @@ export async function GET(request: NextRequest) {
     }
 
     if (type === 'centre') {
-      // centres are stored in JSON-based rehab data, not in a simple table
-      // so we search by name using the centres table if it exists, otherwise
-      // fall back to the listing_owners table for already-claimed centres
-      const { data } = await supabase
-        .from('listing_owners')
-        .select('id, name, locations, phone, website, contact_email, centre_slug')
-        .eq('listing_type', 'centre')
-        .ilike('name', `%${q}%`)
-        .limit(8)
+      // Search the actual CQC rehabs JSON data (not listing_owners which starts empty)
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const rehabData = require('../../../../data/rehabs.json') as {
+        byTown: Record<string, { town: string; centres: Array<{ name: string; phone: string; website: string; cqcUrl: string }> }>
+      }
 
-      // Also search counsellors table for centre names (some centres are in there)
-      return NextResponse.json({
-        results: (data ?? []).map(c => ({
-          id: c.id,
-          name: c.name,
-          subtitle: c.locations?.join(', ') ?? '',
-          locationSlug: c.locations?.[0] ?? '',
-          phone: c.phone ?? '',
-          website: c.website ?? '',
-          email: c.contact_email ?? '',
-          slug: c.centre_slug ?? '',
-        }))
-      })
+      const qLower = q.toLowerCase()
+      const seen = new Set<string>()
+      const results: Array<{ id: string; name: string; subtitle: string; locationSlug: string; phone: string; website: string; email: string; slug: string }> = []
+
+      for (const [townSlug, townData] of Object.entries(rehabData.byTown)) {
+        for (const centre of townData.centres) {
+          if (centre.name.toLowerCase().includes(qLower) && !seen.has(centre.name)) {
+            seen.add(centre.name)
+            results.push({
+              id: centre.cqcUrl || `${townSlug}-${centre.name}`,
+              name: centre.name,
+              subtitle: townData.town,
+              locationSlug: townSlug,
+              phone: centre.phone ?? '',
+              website: centre.website ?? '',
+              email: '',
+              slug: townSlug,
+            })
+            if (results.length >= 10) break
+          }
+        }
+        if (results.length >= 10) break
+      }
+
+      return NextResponse.json({ results })
     }
 
     return NextResponse.json({ results: [] })
