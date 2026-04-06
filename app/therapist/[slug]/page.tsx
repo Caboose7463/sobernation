@@ -91,6 +91,24 @@ const SPEC_DETAIL: Record<string, { intro: string; approach: string; who: string
   },
 }
 
+// ── Title sanitiser ─────────────────────────────────────────────────────────
+// Scraped `title` values are frequently garbage (alt text, file names, etc.).
+// This guard returns null for anything that doesn't look like a human job title.
+const BAD_TITLE_PATTERNS = [
+  /^[A-Z0-9_]+$/,          // all-caps / snake_case (alt text tokens)
+  /_/,                     // any underscore
+  /\d{3,}/,               // long digit sequences
+  /^(alt|img|task|src|null|undefined|none|n\/a)$/i,
+]
+
+function sanitiseTitle(raw: string | null | undefined): string | null {
+  if (!raw) return null
+  const t = raw.trim()
+  if (t.length < 3 || t.length > 120) return null
+  if (BAD_TITLE_PATTERNS.some(p => p.test(t))) return null
+  return t
+}
+
 // ── Content generators ────────────────────────────────────────────────────────
 
 function generateAbout(name: string, location: string, specs: string[], title: string): string[] {
@@ -98,7 +116,8 @@ function generateAbout(name: string, location: string, specs: string[], title: s
   const specStr = specLabels.length > 1
     ? specLabels.slice(0, -1).join(', ') + ' and ' + specLabels[specLabels.length - 1]
     : specLabels[0] ?? 'addiction and substance misuse'
-  const cred = title && !title.toLowerCase().includes('registered') ? title : 'Registered Counsellor'
+  const cleanTitle = sanitiseTitle(title)
+  const cred = cleanTitle && !cleanTitle.toLowerCase().includes('registered') ? cleanTitle : 'Registered Counsellor'
 
   return [
     `${name} is a ${cred} based in ${location}, providing specialist addiction counselling to individuals and families affected by ${specStr}. With professional training in evidence-based therapeutic approaches, ${name} offers a confidential, compassionate and non-judgemental space for anyone seeking support with addiction and recovery.`,
@@ -224,6 +243,9 @@ export default async function TherapistPage({ params }: Props) {
 
   if (!c) notFound()
 
+  // Null-safe name — some scraped rows have null name
+  if (!c.name?.trim()) notFound()
+
   // Null-safe location values — some scraped rows have null location_name/slug
   const locationName: string = (c as { location_name?: string | null }).location_name ?? 'the UK'
   const locationSlug: string = (c as { location_slug?: string | null }).location_slug ?? ''
@@ -243,7 +265,8 @@ export default async function TherapistPage({ params }: Props) {
   const viewers = getLiveViewers(slug)
   const hasBACP = !!c.bacp_number
   // Guard: filter empty tokens so n[0] is never undefined
-  const initials = c.name.split(' ').filter(Boolean).map((n: string) => n[0]).slice(0, 2).join('').toUpperCase() || '??'
+  const name: string = c.name
+  const initials = name.split(' ').filter(Boolean).map((n: string) => n[0]).slice(0, 2).join('').toUpperCase() || '??'
   const nearby = getNearbyLocations(locationSlug, 6)
   const stats = getLocationStats(locationSlug)
 
@@ -258,7 +281,7 @@ export default async function TherapistPage({ params }: Props) {
       '@context': 'https://schema.org',
       '@type': ['Person', 'ProfessionalService'],
       name: c.name,
-      jobTitle: c.title ?? 'Addiction Counsellor',
+      jobTitle: sanitiseTitle(c.title) ?? 'Addiction Counsellor',
       description: `${c.name} is an addiction counsellor based in ${locationName}, specialising in ${specs.map(s => SPEC_LABELS[s] ?? s).join(', ')}.`,
       address: { '@type': 'PostalAddress', addressLocality: locationName, addressCountry: 'GB' },
       areaServed: [
@@ -428,13 +451,13 @@ export default async function TherapistPage({ params }: Props) {
           <div className="tp-hero-profile">
             {c.photo_url ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={c.photo_url} alt={`${c.name} — addiction counsellor in ${locationName}`} className="tp-avatar-lg" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
+              <img src={c.photo_url} alt={`${c.name} — addiction counsellor in ${locationName}`} className="tp-avatar-lg" />
             ) : (
               <div className="tp-avatar-lg">{initials}</div>
             )}
             <div>
               <h1 className="tp-h1">{c.name}</h1>
-              <p className="tp-subtitle">{c.title ?? 'Addiction Counsellor'} · {locationName}</p>
+              <p className="tp-subtitle">{sanitiseTitle(c.title) ?? 'Addiction Counsellor'} · {locationName}</p>
               <div className="tp-badges">
                 {c.verified
                   ? <span className="tp-badge tp-badge--verified">✓ Verified by SoberNation</span>
@@ -679,7 +702,7 @@ export default async function TherapistPage({ params }: Props) {
                         ? <img src={r.photo_url} alt={r.name} className="tp-related-avatar" style={{ objectFit: 'cover' }} />
                         : <div className="tp-related-avatar">{ri}</div>}
                       <div className="tp-related-name">{r.name}</div>
-                      <div className="tp-related-spec">{r.title ?? 'Counsellor'}</div>
+                      <div className="tp-related-spec">{sanitiseTitle(r.title) ?? 'Counsellor'}</div>
                       {r.verified && <div style={{ fontSize: 10, fontWeight: 700, color: '#166534', marginTop: 4 }}>✓ Verified</div>}
                     </Link>
                   )
@@ -809,13 +832,6 @@ export default async function TherapistPage({ params }: Props) {
     const msg = err instanceof Error ? err.message : String(err)
     const stack = err instanceof Error ? (err.stack ?? '') : ''
     console.error('[TherapistPage] CRASH slug=' + (await params).slug, msg, stack)
-    return (
-      <div style={{ padding: 40, fontFamily: 'monospace', maxWidth: 900, margin: '0 auto' }}>
-        <h1 style={{ color: '#dc2626', fontSize: 20 }}>Server Error (Debug)</h1>
-        <p style={{ color: '#6b7280', marginBottom: 16 }}>This message is only visible in debug builds.</p>
-        <pre style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: 20, whiteSpace: 'pre-wrap', wordBreak: 'break-all', fontSize: 13 }}>{msg}</pre>
-        <pre style={{ background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 8, padding: 20, whiteSpace: 'pre-wrap', wordBreak: 'break-all', fontSize: 11, marginTop: 16 }}>{stack}</pre>
-      </div>
-    )
+    notFound()
   }
 }

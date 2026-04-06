@@ -396,18 +396,24 @@ export default function HomePage() {
       </section>
 
       {/* Full service directory — all route families */}
-      <section style={{ padding: '40px 20px', background: 'var(--bg-subtle)', borderTop: '1px solid var(--border)' }}>
+      <section style={{ padding: '40px 20px 48px', background: 'var(--bg-subtle)', borderTop: '1px solid var(--border)' }}>
         <div className="container-wide">
-          <div className="label" style={{ marginBottom: 24 }}>Complete UK addiction service directory</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 28 }}>
+          <div className="label" style={{ marginBottom: 28 }}>Complete UK addiction service directory</div>
+          <style>{`
+            .dir-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px 24px; }
+            @media (max-width: 900px) { .dir-grid { grid-template-columns: repeat(3, 1fr); } }
+            @media (max-width: 640px) { .dir-grid { grid-template-columns: repeat(2, 1fr); gap: 24px 16px; } }
+            .dir-heading { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); display: inline-block; }
+            .dir-link { display: block; font-size: 13px; color: var(--text-muted); text-decoration: none; padding: 4px 0; line-height: 1.5; transition: color 0.1s; }
+            .dir-link:hover { color: var(--accent); }
+          `}</style>
+          <div className="dir-grid">
             {SERVICE_SECTIONS.map(section => (
               <div key={section.heading}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>{section.heading}</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                <div className="dir-heading">{section.heading}</div>
+                <div>
                   {section.links.map(([label, href]) => (
-                    <Link key={href} href={href} style={{ fontSize: 12, padding: '5px 11px', borderRadius: 20, border: '1px solid var(--border)', color: 'var(--text-muted)', textDecoration: 'none', background: 'var(--white)' }}>
-                      {label}
-                    </Link>
+                    <Link key={href} href={href} className="dir-link">{label}</Link>
                   ))}
                 </div>
               </div>

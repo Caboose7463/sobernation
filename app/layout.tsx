@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import './globals.css'
 import StoriesCTA from '../components/StoriesCTA'
 import CommunityCard from '../components/CommunityCard'
@@ -62,36 +63,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <head>
-        {/* Google Consent Mode v2 — default DENY before user chooses */}
-        <script
-          dangerouslySetInnerHTML={{ __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('consent', 'default', {
-              ad_storage: 'denied',
-              ad_user_data: 'denied',
-              ad_personalization: 'denied',
-              analytics_storage: 'granted',
-              wait_for_update: 500
-            });
-          `}}
-        />
-        {/* Google Analytics 4 — G-RGCKFQLVLJ */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-RGCKFQLVLJ" />
-        <script
-          dangerouslySetInnerHTML={{ __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-RGCKFQLVLJ', { page_path: window.location.pathname });
-          `}}
-        />
-        {/* Google AdSense — pub-8511236039964647 */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8511236039964647"
-          crossOrigin="anonymous"
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
@@ -101,12 +72,48 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
         />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <Nav />
         {children}
         {!hideCommunityCard && <CommunityCard />}
         <StoriesCTA />
         <CookieConsent />
+
+        {/* Google Consent Mode v2 — default DENY before user chooses */}
+        <Script id="google-consent" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', {
+              ad_storage: 'denied',
+              ad_user_data: 'denied',
+              ad_personalization: 'denied',
+              analytics_storage: 'granted',
+              wait_for_update: 500
+            });
+          `}
+        </Script>
+
+        {/* Google Analytics 4 */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-RGCKFQLVLJ"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-RGCKFQLVLJ', { page_path: window.location.pathname });
+          `}
+        </Script>
+
+        {/* Google AdSense */}
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8511236039964647"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+        />
       </body>
     </html>
   )
