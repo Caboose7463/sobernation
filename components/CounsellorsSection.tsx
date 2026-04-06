@@ -253,6 +253,40 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
             {counsellors.map((c, i) => (
               <CounsellorCard key={c.id} counsellor={c} forceVerified={i === 0} />
             ))}
+
+            {/* 6th card: Add your counsellor CTA */}
+            <a
+              href="/verify?type=counsellor"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 14,
+                padding: '14px 16px',
+                border: '1px dashed var(--border-mid)',
+                borderRadius: 10,
+                textDecoration: 'none',
+                background: 'var(--bg)',
+                transition: 'border-color 0.15s',
+              }}
+            >
+              <div style={{
+                width: 44, height: 44, borderRadius: '50%',
+                background: 'var(--accent-pale)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="16"/>
+                  <line x1="8" y1="12" x2="16" y2="12"/>
+                </svg>
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', lineHeight: 1.3, marginBottom: 2 }}>Add your counsellor listing</div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Already in our directory? Claim your listing — from £10/month</div>
+              </div>
+              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', whiteSpace: 'nowrap', flexShrink: 0 }}>Get verified →</span>
+            </a>
           </div>
         ) : (
           <p style={{ fontSize: 14, color: 'var(--text-muted)', marginBottom: 14, lineHeight: 1.6 }}>
@@ -274,7 +308,7 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
               <div className="cs-cta-text-sub">Get a verified listing — from £10/month</div>
             </div>
           </div>
-          <Link href={`/counsellors/claim?location=${locationSlug}`} className="cs-cta-btn">
+          <Link href={`/verify?type=counsellor&location=${locationSlug}`} className="cs-cta-btn">
             Add your listing →
           </Link>
         </div>

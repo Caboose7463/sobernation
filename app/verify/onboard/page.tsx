@@ -77,11 +77,22 @@ export default function OnboardPage() {
   })
 
   const [ownerId, setOwnerId] = useState<string | null>(null)
+  const [claimedListingId, setClaimedListingId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  // Location picker state
   const [locationSearch, setLocationSearch] = useState('')
   const [showLocationDrop, setShowLocationDrop] = useState(false)
   const locationRef = useRef<HTMLDivElement>(null)
+
+  // Name search state (Step 3)
+  const [nameSearch, setNameSearch] = useState('')
+  const [nameResults, setNameResults] = useState<Array<{ id: string; name: string; subtitle: string; locationSlug: string; phone: string; website: string; email: string }>>([]
+  )
+  const [showNameDrop, setShowNameDrop] = useState(false)
+  const [nameSearchLoading, setNameSearchLoading] = useState(false)
+  const nameRef = useRef<HTMLDivElement>(null)
 
   const totalSteps = 7
   const progress = ((step - 1) / (totalSteps - 1)) * 100
@@ -89,16 +100,52 @@ export default function OnboardPage() {
   const pricePerLocation = form.listingType === 'centre' ? 99 : 10
   const totalPrice = pricePerLocation * Math.max(form.locations.length, 1)
 
-  // Close location dropdown on outside click
+  // Close dropdowns on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (locationRef.current && !locationRef.current.contains(e.target as Node)) {
         setShowLocationDrop(false)
       }
+      if (nameRef.current && !nameRef.current.contains(e.target as Node)) {
+        setShowNameDrop(false)
+      }
     }
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
+
+  // Debounced name search
+  useEffect(() => {
+    if (!nameSearch || nameSearch.length < 2 || !form.listingType) {
+      setNameResults([])
+      return
+    }
+    const timer = setTimeout(async () => {
+      setNameSearchLoading(true)
+      try {
+        const res = await fetch(`/api/listings/search?q=${encodeURIComponent(nameSearch)}&type=${form.listingType}`)
+        const data = await res.json()
+        setNameResults(data.results ?? [])
+        setShowNameDrop(true)
+      } catch { /* ignore */ }
+      setNameSearchLoading(false)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [nameSearch, form.listingType])
+
+  function handleClaimExisting(result: typeof nameResults[0]) {
+    setForm(f => ({
+      ...f,
+      name: result.name,
+      phone: result.phone || f.phone,
+      website: result.website || f.website,
+      contactEmail: result.email || f.contactEmail,
+      locations: result.locationSlug ? [result.locationSlug] : f.locations,
+    }))
+    setClaimedListingId(result.id)
+    setNameSearch(result.name)
+    setShowNameDrop(false)
+  }
 
   // If type already selected from URL, start at step 2
   useEffect(() => {
@@ -369,26 +416,93 @@ export default function OnboardPage() {
             </div>
           )}
 
-          {/* ── STEP 3: Name ──────────────────────────────────────────── */}
+          {/* ── STEP 3: Name (with existing listing search) ────────── */}
           {step === 3 && (
             <div>
               <div style={stepLabelStyle}>Step 3 of 7</div>
               <h2 style={stepHeadingStyle}>
                 {form.listingType === 'centre' ? 'What is your centre called?' : 'What is your full name?'}
               </h2>
-              <p style={stepSubStyle}>This is how you'll appear on the directory.</p>
+              <p style={stepSubStyle}>
+                Start typing — if you&apos;re already in our directory, select your listing to claim it.
+              </p>
 
-              <div style={{ marginTop: 32 }}>
+              <div ref={nameRef} style={{ position: 'relative', marginTop: 32 }}>
                 <input
                   type="text"
-                  value={form.name}
-                  onChange={e => updateForm('name', e.target.value)}
+                  value={nameSearch || form.name}
+                  onChange={e => {
+                    setNameSearch(e.target.value)
+                    updateForm('name', e.target.value)
+                    setClaimedListingId(null)
+                  }}
                   placeholder={form.listingType === 'centre' ? 'e.g. The Priory Hospital' : 'e.g. Dr. Jane Smith'}
                   autoFocus
                   onKeyDown={e => e.key === 'Enter' && handleNext()}
-                  style={{ ...inputStyle, fontSize: 18, padding: '14px 16px' }}
+                  style={{ ...inputStyle, fontSize: 18, padding: '14px 16px', paddingRight: nameSearchLoading ? 44 : 16 }}
                 />
+                {nameSearchLoading && (
+                  <div style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)' }}>
+                    <div style={{ width: 18, height: 18, border: '2px solid var(--border)', borderTopColor: 'var(--accent)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+                    <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+                  </div>
+                )}
+
+                {showNameDrop && nameResults.length > 0 && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: 0,
+                    right: 0,
+                    background: '#fff',
+                    border: '1px solid var(--border)',
+                    borderRadius: 10,
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                    overflow: 'hidden',
+                    zIndex: 200,
+                    marginTop: 4,
+                  }}>
+                    <div style={{ padding: '8px 14px 6px', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-muted)', borderBottom: '1px solid var(--border)' }}>
+                      Found in our directory — click to claim
+                    </div>
+                    {nameResults.map(r => (
+                      <button
+                        key={r.id}
+                        onClick={() => handleClaimExisting(r)}
+                        style={{
+                          display: 'block', width: '100%', textAlign: 'left',
+                          padding: '12px 16px', border: 'none', background: 'none',
+                          cursor: 'pointer', borderBottom: '1px solid var(--border)',
+                          transition: 'background 0.1s',
+                        }}
+                        onMouseEnter={e => (e.currentTarget.style.background = 'var(--accent-pale)')}
+                        onMouseLeave={e => (e.currentTarget.style.background = 'none')}
+                      >
+                        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 2 }}>{r.name}</div>
+                        {r.subtitle && <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{r.subtitle}</div>}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => { setShowNameDrop(false); setNameResults([]) }}
+                      style={{
+                        display: 'block', width: '100%', textAlign: 'center',
+                        padding: '10px 16px', border: 'none', background: 'var(--bg)',
+                        cursor: 'pointer', fontSize: 12, color: 'var(--text-muted)',
+                      }}
+                    >
+                      Not in the list? Continue with your name as typed
+                    </button>
+                  </div>
+                )}
               </div>
+
+              {claimedListingId && (
+                <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 8, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 8, padding: '10px 14px' }}>
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="#16a34a"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/></svg>
+                  <span style={{ fontSize: 13, color: '#166534' }}>Great — we found your listing! Your details have been pre-filled.</span>
+                </div>
+              )}
+
               {error && <div style={errorStyle}>{error}</div>}
               <NextButton onClick={handleNext} loading={loading} />
             </div>

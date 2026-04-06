@@ -168,6 +168,44 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
         {displayed.map((centre, i) => (
           <CentreRow key={centre.cqcUrl || i} centre={centre} sourceTownSlug={result.sourceTownSlug} index={i} />
         ))}
+
+        {/* 6th card: Add your centre CTA */}
+        <Link
+          href="/verify?type=centre"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 14,
+            padding: '14px 16px',
+            border: '1px dashed var(--border-mid)',
+            borderRadius: 10,
+            textDecoration: 'none',
+            background: 'var(--bg)',
+            transition: 'border-color 0.15s, background 0.15s',
+          }}
+        >
+          <div style={{
+            width: 44, height: 44, borderRadius: 10,
+            background: 'var(--accent-pale)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="16"/>
+              <line x1="8" y1="12" x2="16" y2="12"/>
+            </svg>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', lineHeight: 1.3, marginBottom: 2 }}>
+              Add your centre
+            </div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+              Is your centre missing? Claim or add your listing — from £99/month
+            </div>
+          </div>
+          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', whiteSpace: 'nowrap', flexShrink: 0 }}>Get verified →</span>
+        </Link>
       </div>
 
       {/* Footer */}
