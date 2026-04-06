@@ -22,7 +22,7 @@ function getSupabase() {
   )
 }
 
-const SELECT = 'id, name, title, location_name, location_slug, specialisms, phone, email, website, photo_url, verified, listing_type'
+const SELECT = 'id, name, title, location_name, location_slug, specialisms, phone, email, website, photo_url, verified, listing_type, profile_slug'
 
 export default async function CounsellorsSection({ locationSlug, locationName }: Props) {
   let counsellors: Counsellor[] = []
