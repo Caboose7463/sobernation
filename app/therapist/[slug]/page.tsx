@@ -254,10 +254,10 @@ export default async function TherapistPage({ params }: Props) {
       '@type': ['Person', 'ProfessionalService'],
       name: c.name,
       jobTitle: c.title ?? 'Addiction Counsellor',
-      description: `${c.name} is an addiction counsellor based in ${c.location_name}, specialising in ${specs.map(s => SPEC_LABELS[s] ?? s).join(', ')}.`,
-      address: { '@type': 'PostalAddress', addressLocality: c.location_name, addressCountry: 'GB' },
+      description: `${c.name} is an addiction counsellor based in ${locationName}, specialising in ${specs.map(s => SPEC_LABELS[s] ?? s).join(', ')}.`,
+      address: { '@type': 'PostalAddress', addressLocality: locationName, addressCountry: 'GB' },
       areaServed: [
-        { '@type': 'City', name: c.location_name },
+        { '@type': 'City', name: locationName },
         ...nearby.slice(0, 4).map(n => ({ '@type': 'City', name: n.name })),
       ],
       priceRange: '££',
@@ -279,13 +279,13 @@ export default async function TherapistPage({ params }: Props) {
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.sobernation.co.uk' },
-        { '@type': 'ListItem', position: 2, name: `Counsellors in ${c.location_name}`, item: `https://www.sobernation.co.uk/counsellors/${c.location_slug}` },
+        { '@type': 'ListItem', position: 2, name: `Counsellors in ${locationName}`, item: `https://www.sobernation.co.uk/counsellors/${c.location_slug}` },
         { '@type': 'ListItem', position: 3, name: c.name, item: `https://www.sobernation.co.uk/therapist/${slug}` },
       ],
     },
   ]
 
-  const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(c.location_name + ' UK')}&output=embed&z=12`
+  const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(locationName + ' UK')}&output=embed&z=12`
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8f9fa' }}>
