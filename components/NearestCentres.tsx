@@ -83,26 +83,17 @@ function CentreRow({ centre, sourceTownSlug, index }: { centre: RehabCentre; sou
   const imageUrl = getCentreImage(centre.cqcUrl)
   const verified = index === 0  // only first in each list
 
+  // Verified + has website → external link
   if (verified && centre.website) {
     return (
-      <a
-        href={centre.website}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          display: 'flex', alignItems: 'center', gap: 14,
-          padding: '14px 16px', border: '1px solid var(--border)',
-          borderRadius: 10, textDecoration: 'none',
-          background: 'var(--white)', transition: 'border-color 0.15s, box-shadow 0.15s',
-        }}
+      <a href={centre.website} target="_blank" rel="noopener noreferrer"
+        style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', border: '1px solid var(--border)', borderRadius: 10, textDecoration: 'none', background: 'var(--white)', transition: 'border-color 0.15s, box-shadow 0.15s' }}
       >
         <div style={{ position: 'relative', flexShrink: 0, width: 44, height: 44 }}>
           <div style={{ width: 44, height: 44, borderRadius: 10, background: 'var(--accent-pale, #e6f4f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: 'var(--accent, #1d6b5a)', letterSpacing: '-0.5px', overflow: 'hidden', position: 'relative', border: '1px solid var(--border)' }}>
-            {imageUrl ? (
-              <Image src={imageUrl} alt={`${centre.name} logo`} fill sizes="44px" style={{ objectFit: 'contain', padding: 4 }} />
-            ) : initials}
+            {imageUrl ? <Image src={imageUrl} alt={`${centre.name} logo`} fill sizes="44px" style={{ objectFit: 'contain', padding: 4 }} /> : initials}
           </div>
-          <span style={{ position: 'absolute', bottom: -3, right: -3, width: 16, height: 16, borderRadius: '50%', background: '#1d9bf0', border: '2px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <span style={{ position: 'absolute', bottom: -3, right: -3, width: 16, height: 16, borderRadius: '50%', background: '#1d9bf0', border: '2px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><polyline points="2,5 4.2,7.5 8,3" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </span>
         </div>
@@ -115,21 +106,37 @@ function CentreRow({ centre, sourceTownSlug, index }: { centre: RehabCentre; sou
     )
   }
 
+  // Verified but no website → internal profile, still shows Verified badge
+  if (verified) {
+    return (
+      <Link href={`/centre/${slug}`}
+        style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', border: '1px solid var(--border)', borderRadius: 10, textDecoration: 'none', background: 'var(--white)', transition: 'border-color 0.15s, box-shadow 0.15s' }}
+      >
+        <div style={{ position: 'relative', flexShrink: 0, width: 44, height: 44 }}>
+          <div style={{ width: 44, height: 44, borderRadius: 10, background: 'var(--accent-pale, #e6f4f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: 'var(--accent, #1d6b5a)', letterSpacing: '-0.5px', overflow: 'hidden', position: 'relative', border: '1px solid var(--border)' }}>
+            {imageUrl ? <Image src={imageUrl} alt={`${centre.name} logo`} fill sizes="44px" style={{ objectFit: 'contain', padding: 4 }} /> : initials}
+          </div>
+          <span style={{ position: 'absolute', bottom: -3, right: -3, width: 16, height: 16, borderRadius: '50%', background: '#1d9bf0', border: '2px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><polyline points="2,5 4.2,7.5 8,3" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </span>
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', lineHeight: 1.3, marginBottom: 3 }}>{centre.name}</div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{[type, funding, centre.address ? centre.address.split(',')[0] : null].filter(Boolean).join(' · ')}</div>
+        </div>
+        <span style={{ fontSize: 12, fontWeight: 700, color: '#16a34a', whiteSpace: 'nowrap', flexShrink: 0 }}>Verified</span>
+      </Link>
+    )
+  }
+
+  // Not verified → internal profile
   return (
-    <Link
-      href={`/centre/${slug}`}
-      style={{
-        display: 'flex', alignItems: 'center', gap: 14,
-        padding: '14px 16px', border: '1px solid var(--border)',
-        borderRadius: 10, textDecoration: 'none',
-        background: 'var(--white)', transition: 'border-color 0.15s, box-shadow 0.15s',
-      }}
+    <Link href={`/centre/${slug}`}
+      style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', border: '1px solid var(--border)', borderRadius: 10, textDecoration: 'none', background: 'var(--white)', transition: 'border-color 0.15s, box-shadow 0.15s' }}
     >
       <div style={{ position: 'relative', flexShrink: 0, width: 44, height: 44 }}>
         <div style={{ width: 44, height: 44, borderRadius: 10, background: 'var(--accent-pale, #e6f4f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: 'var(--accent, #1d6b5a)', letterSpacing: '-0.5px', overflow: 'hidden', position: 'relative', border: '1px solid var(--border)' }}>
-          {imageUrl ? (
-            <Image src={imageUrl} alt={`${centre.name} logo`} fill sizes="44px" style={{ objectFit: 'contain', padding: 4 }} />
-          ) : initials}
+          {imageUrl ? <Image src={imageUrl} alt={`${centre.name} logo`} fill sizes="44px" style={{ objectFit: 'contain', padding: 4 }} /> : initials}
         </div>
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
@@ -175,47 +182,32 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
           <FoldedCompetitors centres={displayed.slice(1)} sourceTownSlug={result.sourceTownSlug} type="centre" />
         )}
 
-        {/* 6th card: Add your centre CTA */}
+        {/* 6th card: Add your centre CTA — dashed border style */}
         <Link
           href="/verify?type=centre"
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 14,
+            display: 'flex', alignItems: 'center', gap: 14,
             padding: '14px 16px',
-            border: 'none',
-            borderRadius: 10,
-            textDecoration: 'none',
-            background: 'linear-gradient(135deg, #0f4c38, #1a6b5a)',
-            transition: 'opacity 0.15s',
+            border: '1px dashed var(--border-mid)',
+            borderRadius: 10, textDecoration: 'none',
+            background: 'var(--bg)', transition: 'border-color 0.15s',
           }}
         >
-          <div style={{
-            width: 44, height: 44, borderRadius: 10,
-            background: 'rgba(255,255,255,0.15)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexShrink: 0,
-          }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="8" x2="12" y2="16"/>
-              <line x1="8" y1="12" x2="16" y2="12"/>
+          <div style={{ width: 44, height: 44, borderRadius: 10, background: 'var(--accent-pale)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
             </svg>
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 14, fontWeight: 600, color: '#fff', lineHeight: 1.3, marginBottom: 2 }}>
-              Add your centre
-            </div>
-            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)' }}>
-              Missing from our directory? Add or claim your listing
-            </div>
+            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', lineHeight: 1.3, marginBottom: 2 }}>Add your centre</div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Missing from our directory? Add or claim your listing — from £99/month</div>
           </div>
-          <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', whiteSpace: 'nowrap', flexShrink: 0, background: 'rgba(255,255,255,0.15)', padding: '4px 10px', borderRadius: 6 }}>Get verified →</span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', whiteSpace: 'nowrap', flexShrink: 0 }}>Get verified →</span>
         </Link>
       </div>
 
       {/* Footer */}
-      <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+      <div style={{ marginTop: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
         {total > limit && (
           <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>Showing {limit} of {total}</span>
         )}
@@ -229,9 +221,9 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
 
       {/* Frank NHS fallback */}
       <div style={{
-        marginTop: 20, padding: '14px 16px',
+        marginTop: 32, padding: '16px 18px',
         background: 'var(--accent-pale)', border: '1px solid #c8e6df',
-        borderRadius: 6,
+        borderRadius: 8,
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         flexWrap: 'wrap', gap: 12,
       }}>
