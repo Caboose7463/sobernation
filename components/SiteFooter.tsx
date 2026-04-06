@@ -3,12 +3,21 @@
  * Shared footer with rich links, used across all pages via layout.tsx
  */
 import Link from 'next/link'
+import NewsletterSignup from './NewsletterSignup'
 
 export default function SiteFooter() {
   const year = new Date().getFullYear()
 
   return (
     <footer style={{ background: '#111827', color: '#9ca3af', marginTop: 'auto' }}>
+
+      {/* Newsletter strip */}
+      <div style={{ background: '#1f2937', borderBottom: '1px solid #374151' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 24px' }}>
+          <NewsletterSignup variant="banner" source="footer" />
+        </div>
+      </div>
+
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '56px 24px 32px', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '36px 24px' }}>
 
         {/* Brand */}

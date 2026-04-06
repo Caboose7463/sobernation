@@ -26,14 +26,40 @@ export default function AmIAnAlcoholicPage() {
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(faqs)) }} />
 
-      <section style={{ background: 'var(--white)', borderBottom: '1px solid var(--border)', padding: '48px 20px 40px' }}>
-        <div className="container-wide" style={{ maxWidth: 720 }}>
+      <style>{`
+        .audit-hero { background: var(--white); border-bottom: 1px solid var(--border); padding: 40px 20px 32px; }
+        .audit-grid {
+          display: grid;
+          grid-template-columns: 1fr 300px;
+          gap: 40px;
+          align-items: start;
+          padding: 40px 20px 64px;
+          max-width: 1060px;
+          margin: 0 auto;
+        }
+        .audit-sidebar { display: flex; flex-direction: column; gap: 16px; }
+        .audit-faqs { max-width: 720px; margin: 0 auto; padding: 0 20px 64px; }
+        @media (max-width: 768px) {
+          .audit-grid {
+            grid-template-columns: 1fr;
+            gap: 24px;
+            padding: 24px 16px 48px;
+          }
+          .audit-sidebar { order: 2; }
+          .audit-quiz-col { order: 1; }
+          .audit-faqs { padding: 0 16px 48px; }
+        }
+      `}</style>
+
+      {/* Hero */}
+      <section className="audit-hero">
+        <div style={{ maxWidth: 720, margin: '0 auto' }}>
           <div className="label" style={{ marginBottom: 12 }}>Alcohol Screening Test · WHO AUDIT</div>
-          <h1 style={{ fontSize: 'clamp(24px,4vw,38px)', fontWeight: 700, color: 'var(--text)', marginBottom: 16, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
+          <h1 style={{ fontSize: 'clamp(22px, 4vw, 36px)', fontWeight: 700, color: 'var(--text)', marginBottom: 14, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
             Am I an Alcoholic?
           </h1>
-          <p style={{ fontSize: 16, color: 'var(--text-muted)', lineHeight: 1.8, maxWidth: 600 }}>
-            Take the free <strong>WHO AUDIT</strong> (Alcohol Use Disorders Identification Test) — the clinically validated 10-question screening tool used by GPs and healthcare professionals worldwide. Your result is instant, private, and free. It takes about 2 minutes.
+          <p style={{ fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.8, maxWidth: 600 }}>
+            Take the free <strong>WHO AUDIT</strong> — the clinically validated 10-question screening tool used by GPs worldwide. Instant result, private, and free. Takes about 2 minutes.
           </p>
           <div style={{ marginTop: 12, padding: '10px 14px', background: '#fef3c7', borderRadius: 'var(--radius-sm)', fontSize: 13, color: '#92400e', display: 'inline-block' }}>
             Note: If you drink daily and want to stop, <strong>speak to a doctor first</strong> — stopping suddenly can be dangerous.
@@ -41,78 +67,69 @@ export default function AmIAnAlcoholicPage() {
         </div>
       </section>
 
-      <div className="container-wide" style={{ padding: '40px 20px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr minmax(260px, 320px)', gap: 40, alignItems: 'start' }}>
+      {/* Main grid */}
+      <div className="audit-grid">
+        <div className="audit-quiz-col">
           <AlcoholicQuiz />
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div style={{ padding: 20, background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
-              <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 12 }}>AUDIT score guide</h3>
-              {[
-                { score: '0–7', level: 'Low risk', colour: '#16a34a' },
-                { score: '8–15', level: 'Hazardous drinking', colour: '#d97706' },
-                { score: '16–19', level: 'Harmful drinking', colour: '#ea580c' },
-                { score: '20–40', level: 'Possible dependency', colour: '#dc2626' },
-              ].map((r, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', borderBottom: i < 3 ? '1px solid var(--border)' : 'none' }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: r.colour, flexShrink: 0 }} />
-                  <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', minWidth: 40 }}>{r.score}</div>
-                  <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>{r.level}</div>
-                </div>
-              ))}
-            </div>
-
-            <div style={{ padding: 20, background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
-              <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 12 }}>Related tools &amp; resources</h3>
-              {[
-                ['Alcohol units calculator', '/alcohol-units-calculator'],
-                ['Sobriety counter', '/sobriety-counter'],
-                ['Alcohol withdrawal timeline', '/withdrawal-timeline'],
-                ['Signs of alcoholism', '/signs-of-alcoholism'],
-                ['How to stop drinking', '/how-to-stop-drinking'],
-                ['Alcohol withdrawal symptoms', '/alcohol-withdrawal-symptoms'],
-                ['Find alcohol rehab', '/alcohol-rehab/london'],
-                ['AA meetings near you', '/aa-meetings/london'],
-              ].map(([label, href]) => (
-                <Link key={href} href={href} style={{ display: 'block', fontSize: 13, color: 'var(--accent)', textDecoration: 'none', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
-                  {label} →
-                </Link>
-              ))}
-            </div>
-
-            <div style={{ padding: 16, background: 'var(--crisis)', borderRadius: 'var(--radius-md)' }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 6 }}>Need to talk?</div>
-              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.85)', marginBottom: 12, lineHeight: 1.6 }}>Frank's helpline is free, confidential, and available 24 hours a day.</div>
-              <a href="tel:03001236600" style={{ display: 'block', textAlign: 'center', padding: '10px 16px', background: '#fff', color: 'var(--crisis)', borderRadius: 'var(--radius-sm)', fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>
-                0300 123 6600
-              </a>
-            </div>
-          </div>
         </div>
 
-        <div style={{ maxWidth: 720, marginTop: 56 }}>
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text)', marginBottom: 20 }}>Frequently asked questions</h2>
-          {faqs.map((faq, i) => (
-            <details key={i} style={{ borderTop: i === 0 ? '1px solid var(--border)' : 'none', borderBottom: '1px solid var(--border)' }}>
-              <summary style={{ padding: '16px 0', fontSize: 15, fontWeight: 600, color: 'var(--text)', cursor: 'pointer', listStyle: 'none', display: 'flex', justifyContent: 'space-between' }}>
-                {faq.question}<span style={{ fontSize: 18, color: 'var(--text-light)', marginLeft: 12 }}>+</span>
-              </summary>
-              <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.75, paddingBottom: 16, margin: 0 }}>{faq.answer}</p>
-            </details>
-          ))}
-        </div>
-      </div>
-
-      <footer style={{ borderTop: '1px solid var(--border)', padding: '28px 20px', background: 'var(--white)', marginTop: 48 }}>
-        <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-          <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation</div>
-          <div style={{ display: 'flex', gap: 20 }}>
-            {[['Alcohol help', '/alcohol-addiction/london'], ['Alcohol rehab', '/alcohol-rehab/london'], ['How to stop drinking', '/how-to-stop-drinking'], ['Signs of alcoholism', '/signs-of-alcoholism'], ['About', '/about'], ['Privacy', '/privacy-policy']].map(([l, h]) => (
-              <Link key={h} href={h} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{l}</Link>
+        <aside className="audit-sidebar">
+          <div style={{ padding: 20, background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
+            <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 12 }}>AUDIT score guide</h3>
+            {[
+              { score: '0–7',   level: 'Low risk',            colour: '#16a34a' },
+              { score: '8–15',  level: 'Hazardous drinking',  colour: '#d97706' },
+              { score: '16–19', level: 'Harmful drinking',    colour: '#ea580c' },
+              { score: '20–40', level: 'Possible dependency', colour: '#dc2626' },
+            ].map((r, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', borderBottom: i < 3 ? '1px solid var(--border)' : 'none' }}>
+                <div style={{ width: 8, height: 8, borderRadius: '50%', background: r.colour, flexShrink: 0 }} />
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)', minWidth: 44 }}>{r.score}</div>
+                <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>{r.level}</div>
+              </div>
             ))}
           </div>
-        </div>
-      </footer>
+
+          <div style={{ padding: 20, background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
+            <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 12 }}>Related tools & resources</h3>
+            {[
+              ['Alcohol units calculator',    '/alcohol-units-calculator'],
+              ['Sobriety counter',            '/sobriety-counter'],
+              ['Withdrawal timeline',         '/withdrawal-timeline'],
+              ['Signs of alcoholism',         '/signs-of-alcoholism'],
+              ['How to stop drinking',        '/how-to-stop-drinking'],
+              ['Alcohol withdrawal symptoms', '/alcohol-withdrawal-symptoms'],
+              ['Find alcohol rehab',          '/alcohol-rehab/london'],
+              ['AA meetings near you',        '/aa-meetings/london'],
+            ].map(([label, href]) => (
+              <Link key={href} href={href} style={{ display: 'block', fontSize: 13, color: 'var(--accent)', textDecoration: 'none', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
+                {label} →
+              </Link>
+            ))}
+          </div>
+
+          <div style={{ padding: 16, background: 'var(--crisis)', borderRadius: 'var(--radius-md)' }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 6 }}>Need to talk now?</div>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.85)', marginBottom: 12, lineHeight: 1.6 }}>Frank is free, confidential and available 24/7.</div>
+            <a href="tel:03001236600" style={{ display: 'block', textAlign: 'center', padding: '10px 16px', background: '#fff', color: 'var(--crisis)', borderRadius: 'var(--radius-sm)', fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>
+              Call 0300 123 6600
+            </a>
+          </div>
+        </aside>
+      </div>
+
+      {/* FAQs */}
+      <div className="audit-faqs">
+        <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text)', marginBottom: 20 }}>Frequently asked questions</h2>
+        {faqs.map((faq, i) => (
+          <details key={i} style={{ borderTop: i === 0 ? '1px solid var(--border)' : 'none', borderBottom: '1px solid var(--border)' }}>
+            <summary style={{ padding: '16px 0', fontSize: 15, fontWeight: 600, color: 'var(--text)', cursor: 'pointer', listStyle: 'none', display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+              {faq.question}<span style={{ fontSize: 18, color: 'var(--text-light)', flexShrink: 0 }}>+</span>
+            </summary>
+            <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.75, paddingBottom: 16, margin: 0 }}>{faq.answer}</p>
+          </details>
+        ))}
+      </div>
     </div>
   )
 }

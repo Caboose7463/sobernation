@@ -66,6 +66,9 @@ export default function Nav() {
   const [open, setOpen] = useState(false)           // hamburger
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const searchInputRef = useRef<HTMLInputElement>(null)
   const navRef = useRef<HTMLElement>(null)
 
   // Close dropdown on outside click
@@ -80,11 +83,26 @@ export default function Nav() {
     return () => document.removeEventListener('mousedown', onClickOutside)
   }, [])
 
+  // Focus search input when overlay opens
+  useEffect(() => {
+    if (searchOpen) setTimeout(() => searchInputRef.current?.focus(), 50)
+  }, [searchOpen])
+
+  function handleSearchSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    const q = searchQuery.trim()
+    if (!q) return
+    setSearchOpen(false)
+    setSearchQuery('')
+    window.location.href = `/search?q=${encodeURIComponent(q)}`
+  }
+
   // Close menu on route change
   useEffect(() => {
     setOpen(false)
     setActiveDropdown(null)
     setMobileExpanded(null)
+    setSearchOpen(false)
   }, [pathname])
 
   return (
@@ -119,17 +137,28 @@ export default function Nav() {
           flex-shrink: 0;
         }
         .sn-nav__logo-mark {
-          width: 28px;
-          height: 28px;
-          border-radius: 50%;
-          background: var(--accent);
           display: flex;
           align-items: center;
-          justify-content: center;
-          color: #fff;
-          font-size: 13px;
-          font-weight: 700;
           flex-shrink: 0;
+        }
+        .sn-nav__logo-text {
+          display: flex;
+          flex-direction: column;
+          line-height: 1;
+        }
+        .sn-nav__logo-name {
+          font-size: 16px;
+          font-weight: 800;
+          color: #1a2e26;
+          letter-spacing: -0.02em;
+        }
+        .sn-nav__logo-sub {
+          font-size: 8px;
+          font-weight: 600;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #4a9068;
+          margin-top: 1px;
         }
         /* Desktop links */
         .sn-nav__links {
@@ -217,9 +246,98 @@ export default function Nav() {
         .sn-nav__right {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 8px;
           flex-shrink: 0;
         }
+        /* Search icon button */
+        .sn-nav__search-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 34px;
+          height: 34px;
+          border: 1px solid var(--border);
+          border-radius: var(--radius-sm);
+          background: none;
+          cursor: pointer;
+          color: var(--text-muted);
+          flex-shrink: 0;
+          transition: border-color 0.12s, color 0.12s, background 0.12s;
+        }
+        .sn-nav__search-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-pale); }
+        /* Search overlay */
+        .sn-search-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 500;
+          background: rgba(0,0,0,0.45);
+          display: flex;
+          align-items: flex-start;
+          padding-top: 80px;
+          animation: sn-overlay-in 0.15s ease;
+        }
+        @keyframes sn-overlay-in {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        .sn-search-box {
+          background: var(--white);
+          width: 100%;
+          max-width: 640px;
+          margin: 0 auto;
+          border-radius: var(--radius-lg);
+          box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+          overflow: hidden;
+          animation: sn-box-in 0.15s ease;
+        }
+        @keyframes sn-box-in {
+          from { opacity: 0; transform: translateY(-8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .sn-search-form {
+          display: flex;
+          align-items: center;
+          gap: 0;
+          border-bottom: 1px solid var(--border);
+        }
+        .sn-search-input {
+          flex: 1;
+          padding: 18px 20px;
+          border: none;
+          outline: none;
+          font-size: 16px;
+          color: var(--text);
+          background: transparent;
+        }
+        .sn-search-submit {
+          padding: 0 20px;
+          height: 58px;
+          background: var(--accent);
+          color: #fff;
+          border: none;
+          font-size: 13px;
+          font-weight: 700;
+          cursor: pointer;
+          flex-shrink: 0;
+          letter-spacing: 0.02em;
+        }
+        .sn-search-hints {
+          padding: 12px 20px;
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        .sn-search-hint {
+          font-size: 12px;
+          color: var(--text-muted);
+          padding: 4px 10px;
+          border-radius: 20px;
+          border: 1px solid var(--border);
+          cursor: pointer;
+          text-decoration: none;
+          transition: border-color 0.1s;
+        }
+        .sn-search-hint:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
         .sn-nav__cta {
           font-size: 13px;
           background: var(--crisis);
@@ -335,8 +453,27 @@ export default function Nav() {
         <div className="sn-nav__inner">
           {/* Logo */}
           <Link href="/" className="sn-nav__logo">
-            <span className="sn-nav__logo-mark">S</span>
-            SoberNation
+            <span className="sn-nav__logo-mark">
+              <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Leaf shape */}
+                <path d="M15 2C10 2 3 8 3 16C3 24 9 31 15 32C21 31 27 24 27 16C27 8 20 2 15 2Z" fill="#4a9068"/>
+                <path d="M15 2C10 2 3 8 3 16C3 24 9 31 15 32C21 31 27 24 27 16C27 8 20 2 15 2Z" fill="url(#leafGrad)"/>
+                {/* Vein highlight */}
+                <path d="M15 5C15 5 15 18 15 31" stroke="rgba(255,255,255,0.45)" strokeWidth="1.5" strokeLinecap="round"/>
+                <path d="M15 10C15 10 10 13 7 18" stroke="rgba(255,255,255,0.25)" strokeWidth="1" strokeLinecap="round"/>
+                <path d="M15 15C15 15 20 17 23 21" stroke="rgba(255,255,255,0.25)" strokeWidth="1" strokeLinecap="round"/>
+                <defs>
+                  <linearGradient id="leafGrad" x1="15" y1="2" x2="15" y2="32" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#5aab7e"/>
+                    <stop offset="1" stopColor="#2d6b48"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </span>
+            <span className="sn-nav__logo-text">
+              <span className="sn-nav__logo-name">SoberNation</span>
+              <span className="sn-nav__logo-sub">Health &amp; Wellbeing</span>
+            </span>
           </Link>
 
           {/* Desktop nav items */}
@@ -368,8 +505,20 @@ export default function Nav() {
             ))}
           </div>
 
-          {/* Right: CTA + burger */}
+          {/* Right: search icon + CTA + burger */}
           <div className="sn-nav__right">
+            {/* Search icon — desktop + mobile */}
+            <button
+              className="sn-nav__search-btn"
+              onClick={() => { setSearchOpen(true); setOpen(false) }}
+              aria-label="Search"
+              title="Search"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="7" />
+                <line x1="17" y1="17" x2="22" y2="22" />
+              </svg>
+            </button>
             <a href="tel:03001236600" className="sn-nav__cta">
               Help: 0300 123 6600
             </a>
@@ -388,6 +537,28 @@ export default function Nav() {
 
         {/* Mobile drawer */}
         <div className={`sn-nav__mobile${open ? ' sn-nav__mobile--open' : ''}`}>
+          {/* Mobile search bar */}
+          <div style={{ padding: '12px 20px', borderBottom: '1px solid var(--border)' }}>
+            <form
+              onSubmit={handleSearchSubmit}
+              style={{ display: 'flex', gap: 0, border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}
+            >
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="Search the site…"
+                autoComplete="off"
+                style={{ flex: 1, padding: '10px 14px', border: 'none', outline: 'none', fontSize: 14, background: 'var(--bg-subtle)' }}
+              />
+              <button
+                type="submit"
+                style={{ padding: '0 14px', background: 'var(--accent)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600 }}
+              >
+                Go
+              </button>
+            </form>
+          </div>
           {NAV_ITEMS.map(item => (
             <div key={item.label} className="sn-nav__mobile-section">
               <button
@@ -418,6 +589,39 @@ export default function Nav() {
           </div>
         </div>
       </nav>
+
+      {/* Full-screen search overlay */}
+      {searchOpen && (
+        <div className="sn-search-overlay" onClick={e => { if (e.target === e.currentTarget) setSearchOpen(false) }}>
+          <div className="sn-search-box">
+            <form className="sn-search-form" onSubmit={handleSearchSubmit}>
+              <input
+                ref={searchInputRef}
+                className="sn-search-input"
+                type="search"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="Search locations, guides, tools…"
+                autoComplete="off"
+              />
+              <button type="submit" className="sn-search-submit">Search</button>
+            </form>
+            <div className="sn-search-hints">
+              <span style={{ fontSize: 12, color: 'var(--text-light)', marginRight: 4 }}>Try:</span>
+              {['London rehab', 'signs of alcoholism', 'AA meetings', 'sobriety counter', 'alcohol withdrawal'].map(hint => (
+                <a
+                  key={hint}
+                  href={`/search?q=${encodeURIComponent(hint)}`}
+                  className="sn-search-hint"
+                  onClick={() => setSearchOpen(false)}
+                >
+                  {hint}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }

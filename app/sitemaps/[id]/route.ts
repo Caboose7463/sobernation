@@ -125,6 +125,15 @@ export async function GET(
       { url: `${BASE}/what-is-methadone`, lastmod: now, changefreq: 'monthly', priority: 0.88 },
       { url: `${BASE}/signs-of-alcoholism`, lastmod: now, changefreq: 'monthly', priority: 0.90 },
       { url: `${BASE}/signs-of-drug-addiction`, lastmod: now, changefreq: 'monthly', priority: 0.88 },
+      // New pillar & gap-fill pages from sprint
+      { url: `${BASE}/alcohol-addiction-treatment`, lastmod: now, changefreq: 'monthly', priority: 0.94 },
+      { url: `${BASE}/how-to-help-someone-with-addiction`, lastmod: now, changefreq: 'monthly', priority: 0.90 },
+      { url: `${BASE}/online-aa-meetings`, lastmod: now, changefreq: 'weekly', priority: 0.88 },
+      { url: `${BASE}/suboxone-vs-methadone`, lastmod: now, changefreq: 'monthly', priority: 0.85 },
+      { url: `${BASE}/find-rehab`, lastmod: now, changefreq: 'weekly', priority: 0.92 },
+      { url: `${BASE}/community`, lastmod: now, changefreq: 'daily', priority: 0.85 },
+      { url: `${BASE}/articles`, lastmod: now, changefreq: 'daily', priority: 0.90 },
+      { url: `${BASE}/search`, lastmod: now, changefreq: 'monthly', priority: 0.60 },
       ...drugs.map(d => ({
         url: `${BASE}/how-long-does-${d}-stay-in-your-system`,
         lastmod: now,
@@ -134,6 +143,8 @@ export async function GET(
       { url: `${BASE}/about`, lastmod: now, changefreq: 'yearly', priority: 0.70 },
       { url: `${BASE}/editorial-policy`, lastmod: now, changefreq: 'yearly', priority: 0.65 },
       { url: `${BASE}/privacy-policy`, lastmod: now, changefreq: 'yearly', priority: 0.60 },
+      { url: `${BASE}/cookie-policy`, lastmod: now, changefreq: 'yearly', priority: 0.55 },
+      { url: `${BASE}/contact`, lastmod: now, changefreq: 'yearly', priority: 0.60 },
       { url: `${BASE}/terms`, lastmod: now, changefreq: 'yearly', priority: 0.60 },
     ]
   } else if (id === 1) {

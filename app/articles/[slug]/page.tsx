@@ -9,6 +9,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import ArticleCard from '../../../components/ArticleCard'
+import AuthorBio from '../../../components/AuthorBio'
+import MedicalReview from '../../../components/MedicalReview'
+import NewsletterSignup from '../../../components/NewsletterSignup'
 
 export const revalidate = 3600
 
@@ -106,42 +109,40 @@ export default async function ArticlePage({ params }: Props) {
       />
 
       <style>{`
-        .ap-hero { position: relative; height: 400px; background: #1e293b; overflow: hidden; }
-        @media (max-width: 640px) { .ap-hero { height: 240px; } }
-        .ap-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.65)); z-index: 1; }
-        .ap-hero-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 32px 20px; z-index: 2; max-width: 820px; margin: 0 auto; }
-        .ap-bc { font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 12px; display: flex; gap: 6px; align-items: center; }
-        .ap-bc a { color: rgba(255,255,255,0.7); text-decoration: none; }
-        .ap-bc a:hover { color: #fff; }
-        .ap-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: var(--accent); color: #fff; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
-        .ap-title { font-size: clamp(22px, 4vw, 36px); font-weight: 800; color: #fff; letter-spacing: -0.02em; line-height: 1.2; margin: 0; }
-        .ap-no-image .ap-hero { height: auto; background: var(--white); border-bottom: 1px solid var(--border); }
-        .ap-no-image .ap-hero-overlay { display: none; }
-        .ap-no-image .ap-hero-content { position: static; padding: 48px 20px 32px; }
-        .ap-no-image .ap-title { color: var(--text); }
-        .ap-no-image .ap-tag { background: var(--accent); }
-        .ap-no-image .ap-bc a, .ap-no-image .ap-bc { color: var(--text-muted); }
+        .ap-hero { position: relative; height: 420px; background: #0f1f1a; overflow: hidden; }
+        @media (max-width: 640px) { .ap-hero { height: 280px; } }
+        .ap-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.75) 100%); z-index: 1; }
+        .ap-hero-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 40px 20px; z-index: 2; max-width: 820px; margin: 0 auto; }
+        .ap-bc { font-size: 12px; color: rgba(255,255,255,0.75); margin-bottom: 14px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+        .ap-bc a { color: rgba(255,255,255,0.75) !important; text-decoration: none; }
+        .ap-bc a:hover { color: #fff !important; }
+        .ap-bc span { color: rgba(255,255,255,0.55); }
+        .ap-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; background: rgba(255,255,255,0.15); color: #fff !important; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; backdrop-filter: blur(4px); }
+        .ap-title { font-size: clamp(22px, 4vw, 38px); font-weight: 800; color: #fff !important; letter-spacing: -0.02em; line-height: 1.2; margin: 0; text-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+        .ap-no-image .ap-hero { background: linear-gradient(135deg, #0f1f1a 0%, #1a3d30 100%); }
+        .ap-no-image .ap-hero-overlay { background: none; }
+        .ap-no-image .ap-hero-content { position: absolute; }
         .ap-body { max-width: 820px; margin: 0 auto; padding: 40px 20px 80px; }
-        .ap-meta { display: flex; align-items: center; gap: 14px; margin-bottom: 36px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+        .ap-meta { display: flex; align-items: center; gap: 14px; margin-bottom: 36px; padding-bottom: 20px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
         .ap-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0; }
         .ap-meta-text { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
         .ap-meta-name { font-weight: 700; color: var(--text); }
         .ap-content h2 { font-size: 22px; font-weight: 700; color: var(--text); margin: 36px 0 14px; letter-spacing: -0.01em; padding-top: 8px; border-top: 1px solid var(--border); }
         .ap-content h3 { font-size: 18px; font-weight: 700; color: var(--text); margin: 28px 0 10px; }
-        .ap-content p { font-size: 16px; color: var(--text-muted); line-height: 1.85; margin: 0 0 20px; }
+        .ap-content p { font-size: 16px; color: #374151; line-height: 1.85; margin: 0 0 20px; }
         .ap-content ul { margin: 0 0 20px; padding-left: 24px; }
-        .ap-content li { font-size: 16px; color: var(--text-muted); line-height: 1.75; margin-bottom: 8px; }
+        .ap-content li { font-size: 16px; color: #374151; line-height: 1.75; margin-bottom: 8px; }
         .ap-content strong { color: var(--text); font-weight: 700; }
         .ap-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); }
         .ap-tag-chip { font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 20px; background: var(--accent-pale); color: var(--accent); text-decoration: none; }
-        .ap-cta { margin-top: 40px; padding: 24px 28px; background: linear-gradient(135deg, #1d4ed8, #2563eb); border-radius: 14px; color: #fff; }
-        .ap-cta h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
-        .ap-cta p { font-size: 14px; opacity: 0.9; margin-bottom: 16px; line-height: 1.6; }
-        .ap-cta-btn { display: inline-block; background: #fff; color: #1d4ed8; font-size: 14px; font-weight: 700; padding: 10px 22px; border-radius: 8px; text-decoration: none; }
+        .ap-cta { margin-top: 40px; padding: 24px 28px; background: linear-gradient(135deg, #1a6b5a, #2d8a72); border-radius: 14px; color: #fff; }
+        .ap-cta h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; color: #fff; }
+        .ap-cta p { font-size: 14px; opacity: 0.9; margin-bottom: 16px; line-height: 1.6; color: #fff; }
+        .ap-cta-btn { display: inline-block; background: #fff; color: #1a6b5a; font-size: 14px; font-weight: 700; padding: 10px 22px; border-radius: 8px; text-decoration: none; }
         .ap-related { margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--border); }
         .ap-related-title { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 20px; }
         .ap-related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-        @media (max-width: 640px) { .ap-related-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 640px) { .ap-related-grid { grid-template-columns: 1fr; } .ap-body { padding: 24px 16px 60px; } }
       `}</style>
 
       {/* Hero */}
@@ -177,6 +178,9 @@ export default async function ArticlePage({ params }: Props) {
             <div className="ap-meta-name">{a.author_name} · SoberNation</div>
             <div>{formatDate(a.published_at)} · {a.read_time_mins} min read</div>
           </div>
+          <div style={{ marginLeft: 'auto' }}>
+            <MedicalReview reviewer="Dr. Sarah Dawson" date={a.published_at} />
+          </div>
         </div>
 
         {/* Article content */}
@@ -201,6 +205,16 @@ export default async function ArticlePage({ params }: Props) {
           <h3>Ready to take the first step?</h3>
           <p>Find CQC-registered rehab centres and verified addiction counsellors near you — free, confidential, no waiting list for information.</p>
           <Link href="/find-rehab" className="ap-cta-btn">Find help near you →</Link>
+        </div>
+
+        {/* Newsletter signup */}
+        <div style={{ marginTop: 32 }}>
+          <NewsletterSignup variant="inline" source="article" />
+        </div>
+
+        {/* Author bio */}
+        <div style={{ marginTop: 32 }}>
+          <AuthorBio author={a.author_name} date={a.published_at} />
         </div>
 
         {/* Related articles */}
