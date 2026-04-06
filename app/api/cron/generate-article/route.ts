@@ -24,16 +24,16 @@ Always end articles on a hopeful, empowering note. Never be preachy or clinical.
 const USER_PROMPT = (title: string, keywords: string[], location: string | null) => `
 Write a comprehensive, SEO-optimised article for SoberNation with the title: "${title}"
 
-${location ? `This article is specifically about addiction and recovery resources in ${location}, UK.` : ''}
+${location ? `This article is SPECIFICALLY about addiction and recovery resources in ${location}, UK. The location_slugs field MUST include "${location}".` : ''}
 ${keywords.length ? `Key topics to cover: ${keywords.join(', ')}` : ''}
 
-Return ONLY valid JSON in this exact format:
+Return ONLY valid JSON in this exact format (no markdown, no code fences, just raw JSON):
 {
   "title": "The article title (can slightly refine from the brief)",
   "excerpt": "2 sentences, compelling, summarises the article",
   "content": "Full article in markdown (800-1200 words). Use ## for H2 subheadings. Include a mix of paragraphs, bullet points, and a practical tips section. End with a 'Getting Help' or 'Next Steps' section.",
-  "tags": ["array", "of", "3-6", "lowercase", "topic", "tags"],
-  "location_slugs": ["only-if-location-specific-slug", "e.g-london"],
+  "tags": ["array", "of", "3-6", "lowercase", "topic", "tags", "${location ? location : 'recovery'}"],
+  "location_slugs": ${location ? `["${location}"]` : '[]'},
   "faq": [
     {"q": "Question?", "a": "Answer in 2-3 sentences."},
     {"q": "Question?", "a": "Answer."},

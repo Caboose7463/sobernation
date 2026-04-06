@@ -201,10 +201,14 @@ export default function HomePage() {
 
           <button
             onClick={() => {
-              if (!navigator.geolocation) return
-              navigator.geolocation.getCurrentPosition(pos => {
-                router.push(`/help/near-me?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}`)
-              })
+              if (!navigator.geolocation) {
+                window.location.href = '/find-rehab'
+                return
+              }
+              navigator.geolocation.getCurrentPosition(
+                pos => { window.location.href = `/find-rehab?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}` },
+                () => { window.location.href = '/find-rehab' }
+              )
             }}
             style={{ display: 'flex', alignItems: 'center', gap: 5, margin: '12px auto 0', background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 13, cursor: 'pointer' }}
           >

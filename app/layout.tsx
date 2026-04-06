@@ -5,6 +5,7 @@ import StoriesCTA from '../components/StoriesCTA'
 import CommunityCard from '../components/CommunityCard'
 import Nav from '../components/Nav'
 import CookieConsent from '../components/CookieConsent'
+import SiteFooter from '../components/SiteFooter'
 import { headers } from 'next/headers'
 
 export const metadata: Metadata = {
@@ -77,6 +78,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {children}
         {!hideCommunityCard && <CommunityCard />}
         <StoriesCTA />
+        <SiteFooter />
         <CookieConsent />
 
         {/* Google Consent Mode v2 — default DENY before user chooses */}

@@ -39,6 +39,13 @@ html {
 
 body {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main content grows to push footer down */
+body > nav + * {
+  flex: 1;
 }
 
 h1, h2, h3, h4, h5, h6 {

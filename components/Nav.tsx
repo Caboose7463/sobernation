@@ -48,6 +48,17 @@ const NAV_ITEMS = [
       { label: 'Drug detection times', href: '/how-long-does-cocaine-stay-in-your-system', desc: 'How long drugs stay in system' },
     ],
   },
+  {
+    label: 'News',
+    href: '/articles',
+    links: [
+      { label: 'All articles', href: '/articles', desc: 'Recovery news & guides' },
+      { label: 'Sobriety milestones', href: '/articles?tag=milestone', desc: 'What to expect at each stage' },
+      { label: 'Substance guides', href: '/articles?tag=substance', desc: 'Drug & alcohol deep dives' },
+      { label: 'Recovery guides', href: '/articles?tag=guide', desc: 'Practical recovery advice' },
+      { label: 'UK statistics', href: '/articles?tag=stats', desc: 'Data & research' },
+    ],
+  },
 ]
 
 export default function Nav() {
