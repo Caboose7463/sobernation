@@ -217,7 +217,7 @@ export default async function CentreProfilePage({ params }: Props) {
         .cp-tab { font-size: 13px; font-weight: 600; color: var(--text-muted); padding: 14px 18px; text-decoration: none; border-bottom: 2px solid transparent; white-space: nowrap; transition: color 0.12s, border-color 0.12s; }
         .cp-tab:hover { color: var(--accent); border-bottom-color: var(--accent); }
         .cp-wrap { max-width: 1100px; margin: 0 auto; padding: 32px 20px 64px; display: grid; grid-template-columns: 1fr 300px; gap: 28px; align-items: start; }
-        @media (max-width: 880px) { .cp-wrap { grid-template-columns: 1fr; } .cp-sidebar { order: -1; } }
+        @media (max-width: 880px) { .cp-wrap { grid-template-columns: 1fr; } .cp-sidebar { position: static; order: 2; } }
         .cp-section { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 26px 28px; margin-bottom: 16px; }
         .cp-section-title { font-size: 19px; font-weight: 700; color: var(--text); margin-bottom: 16px; letter-spacing: -0.01em; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
         .cp-body { font-size: 15px; color: var(--text-muted); line-height: 1.85; }
