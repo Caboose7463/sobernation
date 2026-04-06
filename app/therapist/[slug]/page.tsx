@@ -222,13 +222,17 @@ export default async function TherapistPage({ params }: Props) {
 
   if (!c) notFound()
 
+  // Null-safe location values — some scraped rows have null location_name/slug
+  const locationName: string = (c as { location_name?: string | null }).location_name ?? 'the UK'
+  const locationSlug: string = (c as { location_slug?: string | null }).location_slug ?? ''
+
   // Increment view count async (fire-and-forget)
   void supabase.from('counsellors').update({ view_count: (c.view_count ?? 0) + 1 }).eq('id', c.id)
 
   const { data: related } = await supabase
     .from('counsellors')
     .select('id, name, title, location_slug, location_name, specialisms, profile_slug, verified, photo_url')
-    .eq('location_slug', c.location_slug)
+    .eq('location_slug', locationSlug)
     .neq('id', c.id)
     .order('verified', { ascending: false })
     .limit(4)
@@ -238,9 +242,8 @@ export default async function TherapistPage({ params }: Props) {
   const hasBACP = !!c.bacp_number
   // Guard: filter empty tokens so n[0] is never undefined
   const initials = c.name.split(' ').filter(Boolean).map((n: string) => n[0]).slice(0, 2).join('').toUpperCase() || '??'
-  const locationName: string = c.location_name ?? 'the UK'
-  const nearby = getNearbyLocations(c.location_slug, 6)
-  const stats = getLocationStats(c.location_slug)
+  const nearby = getNearbyLocations(locationSlug, 6)
+  const stats = getLocationStats(locationSlug)
 
   const aboutParas = generateAbout(c.name, locationName, specs, c.title ?? '')
   const approachParas = generateApproach(c.name, locationName, specs)
@@ -279,7 +282,7 @@ export default async function TherapistPage({ params }: Props) {
       '@type': 'BreadcrumbList',
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.sobernation.co.uk' },
-        { '@type': 'ListItem', position: 2, name: `Counsellors in ${locationName}`, item: `https://www.sobernation.co.uk/counsellors/${c.location_slug}` },
+        { '@type': 'ListItem', position: 2, name: `Counsellors in ${locationName}`, item: `https://www.sobernation.co.uk/counsellors/${locationSlug}` },
         { '@type': 'ListItem', position: 3, name: c.name, item: `https://www.sobernation.co.uk/therapist/${slug}` },
       ],
     },
@@ -416,20 +419,20 @@ export default async function TherapistPage({ params }: Props) {
         <div className="tp-hero-inner">
           <nav className="tp-bc">
             <Link href="/">Home</Link>{' / '}
-            <Link href={`/counsellors/${c.location_slug}`}>Counsellors in {c.location_name}</Link>{' / '}
+            <Link href={`/counsellors/${locationSlug}`}>Counsellors in {locationName}</Link>{' / '}
             <span>{c.name}</span>
           </nav>
 
           <div className="tp-hero-profile">
             {c.photo_url ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={c.photo_url} alt={`${c.name} — addiction counsellor in ${c.location_name}`} className="tp-avatar-lg" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
+              <img src={c.photo_url} alt={`${c.name} — addiction counsellor in ${locationName}`} className="tp-avatar-lg" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
             ) : (
               <div className="tp-avatar-lg">{initials}</div>
             )}
             <div>
               <h1 className="tp-h1">{c.name}</h1>
-              <p className="tp-subtitle">{c.title ?? 'Addiction Counsellor'} · {c.location_name}</p>
+              <p className="tp-subtitle">{c.title ?? 'Addiction Counsellor'} · {locationName}</p>
               <div className="tp-badges">
                 {c.verified
                   ? <span className="tp-badge tp-badge--verified">✓ Verified by SoberNation</span>
@@ -486,7 +489,7 @@ export default async function TherapistPage({ params }: Props) {
             {/* Local addiction stats */}
             {stats && (
               <div style={{ marginTop: 20, background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '14px 16px' }}>
-                <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: '#166534', marginBottom: 10 }}>Addiction in {c.location_name} — At a Glance</div>
+                <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: '#166534', marginBottom: 10 }}>Addiction in {locationName} — At a Glance</div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 12 }}>
                   {[{
                     value: formatStat(stats.inDrugTreatment),
@@ -554,7 +557,7 @@ export default async function TherapistPage({ params }: Props) {
                   return (
                     <div key={s} style={{ marginBottom: 28, paddingBottom: 28, borderBottom: '1px solid var(--border)' }}>
                       <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', marginBottom: 10 }}>
-                        {SPEC_LABELS[s]} Counselling in {c.location_name}
+                        {SPEC_LABELS[s]} Counselling in {locationName}
                       </h3>
                       <div className="tp-body-text">
                         <p><strong>About this specialism:</strong> {detail.intro}</p>
@@ -612,12 +615,12 @@ export default async function TherapistPage({ params }: Props) {
 
           {/* Location */}
           <section id="location" className="tp-section">
-            <h2 className="tp-section-title">Serving Clients in {c.location_name}</h2>
+            <h2 className="tp-section-title">Serving Clients in {locationName}</h2>
             <div className="tp-body-text">
-              <p>{c.name} provides addiction counselling to clients in {c.location_name} and the surrounding area. Sessions may be available in person or online, depending on the client&apos;s circumstances and preference. Online therapy via video call has been shown to be as effective as face-to-face sessions for addiction counselling, and allows clients to work with {c.name} from the comfort of their own home.</p>
-              <p>If you are based outside {c.location_name} and are looking for a specialist addiction counsellor, SoberNation lists qualified professionals across the UK. You can also <Link href={`/counsellors/${c.location_slug}`} style={{ color: 'var(--accent)' }}>browse all counsellors in {c.location_name}</Link>.</p>
+              <p>{c.name} provides addiction counselling to clients in {locationName} and the surrounding area. Sessions may be available in person or online, depending on the client&apos;s circumstances and preference. Online therapy via video call has been shown to be as effective as face-to-face sessions for addiction counselling, and allows clients to work with {c.name} from the comfort of their own home.</p>
+              <p>If you are based outside {locationName} and are looking for a specialist addiction counsellor, SoberNation lists qualified professionals across the UK. You can also <Link href={`/counsellors/${locationSlug}`} style={{ color: 'var(--accent)' }}>browse all counsellors in {locationName}</Link>.</p>
             </div>
-            <iframe className="tp-map" src={mapSrc} allowFullScreen loading="lazy" title={`Map of ${c.location_name}`} referrerPolicy="no-referrer-when-downgrade" />
+            <iframe className="tp-map" src={mapSrc} allowFullScreen loading="lazy" title={`Map of ${locationName}`} referrerPolicy="no-referrer-when-downgrade" />
 
             {/* Nearby areas */}
             {nearby.length > 0 && (
@@ -635,11 +638,11 @@ export default async function TherapistPage({ params }: Props) {
             )}
 
             <div style={{ marginTop: 14, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-              <Link href={`/counsellors/${c.location_slug}`} style={{ fontSize: 13, color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
-                All counsellors in {c.location_name} →
+              <Link href={`/counsellors/${locationSlug}`} style={{ fontSize: 13, color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
+                All counsellors in {locationName} →
               </Link>
-              <Link href={`/rehab/${c.location_slug}`} style={{ fontSize: 13, color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
-                Rehab centres in {c.location_name} →
+              <Link href={`/rehab/${locationSlug}`} style={{ fontSize: 13, color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
+                Rehab centres in {locationName} →
               </Link>
             </div>
           </section>
@@ -663,7 +666,7 @@ export default async function TherapistPage({ params }: Props) {
           {/* Related */}
           {related && related.length > 0 && (
             <section className="tp-section">
-              <h2 className="tp-section-title">Other Counsellors in {c.location_name}</h2>
+              <h2 className="tp-section-title">Other Counsellors in {locationName}</h2>
               <div className="tp-related-grid">
                 {related.map(r => {
                   const ri = r.name.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()
@@ -695,7 +698,7 @@ export default async function TherapistPage({ params }: Props) {
                   : initials}
               </div>
               <div className="tp-sidebar-name">{c.name}</div>
-              <div className="tp-sidebar-loc">{c.location_name}</div>
+              <div className="tp-sidebar-loc">{locationName}</div>
             </div>
             <div className="tp-sidebar-body">
               <div className="tp-sidebar-viewers">
@@ -748,7 +751,7 @@ export default async function TherapistPage({ params }: Props) {
                     </div>
                   </div>
                   <Link
-                    href={`/counsellors/claim?id=${c.id}&name=${encodeURIComponent(c.name)}&location=${c.location_slug}`}
+                    href={`/counsellors/claim?id=${c.id}&name=${encodeURIComponent(c.name)}&location=${locationSlug}`}
                     className="tp-claim-btn"
                   >
                     {c.verified ? 'Manage listing' : 'Claim this profile'}
@@ -785,8 +788,8 @@ export default async function TherapistPage({ params }: Props) {
               <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--text-light)', marginBottom: 12 }}>Useful Links</div>
               {[
                 { href: `https://www.bacp.co.uk/search/`, label: 'BACP Find a Therapist →', ext: true },
-                { href: `/counsellors/${c.location_slug}`, label: `All counsellors in ${c.location_name} →`, ext: false },
-                { href: `/rehab/${c.location_slug}`, label: `Rehab centres in ${c.location_name} →`, ext: false },
+                { href: `/counsellors/${locationSlug}`, label: `All counsellors in ${locationName} →`, ext: false },
+                { href: `/rehab/${locationSlug}`, label: `Rehab centres in ${locationName} →`, ext: false },
                 { href: `https://www.talktofrank.com`, label: 'Frank helpline →', ext: true },
               ].map(link => (
                 <a key={link.href} href={link.href} target={link.ext ? '_blank' : undefined} rel={link.ext ? 'noopener noreferrer' : undefined}
