@@ -184,16 +184,18 @@ export interface CentreWithSlug extends RehabCentre {
   townName: string
 }
 
-/** Find a single centre by its slug, searching all towns */
-export function getCentreBySlug(slug: string): CentreWithSlug | null {
-  for (const [townSlug, townData] of Object.entries(rehabData.byTown)) {
-    for (const centre of townData.centres) {
-      if (toCentreSlug(centre.name, townSlug) === slug) {
-        return { ...centre, slug, townSlug, townName: townData.town }
-      }
-    }
+/** Pre-built slug → centre map for O(1) lookup (built once at module load) */
+const _centreBySlug: Map<string, CentreWithSlug> = new Map()
+for (const [townSlug, townData] of Object.entries(rehabData.byTown)) {
+  for (const centre of townData.centres) {
+    const slug = toCentreSlug(centre.name, townSlug)
+    _centreBySlug.set(slug, { ...centre, slug, townSlug, townName: townData.town })
   }
-  return null
+}
+
+/** Find a single centre by its slug — O(1) lookup */
+export function getCentreBySlug(slug: string): CentreWithSlug | null {
+  return _centreBySlug.get(slug) ?? null
 }
 
 /** Returns all centre slugs (for sitemap generation) */

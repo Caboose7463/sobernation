@@ -136,7 +136,7 @@ export default async function CentreProfilePage({ params }: Props) {
   const type = serviceLabel(centre.serviceType)
   const viewers = getLiveViewers(slug)
   const specList = centre.specialism ? centre.specialism.split('|').map(s => s.trim()).filter(Boolean) : []
-  const initials = centre.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()
+  const initials = centre.name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase() || '??'
 
   const about = generateAbout(centre.name, town, centre.serviceType, specList, private_)
   const treatments = generateTreatments(specList, centre.name, town)
