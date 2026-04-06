@@ -328,7 +328,7 @@ export default async function TherapistPage({ params }: Props) {
         .tp-hero { background: var(--white); border-bottom: 1px solid var(--border); padding: 32px 20px 0; }
         .tp-hero-inner { max-width: 1100px; margin: 0 auto; }
         .tp-body-wrap { max-width: 1100px; margin: 0 auto; padding: 32px 20px 64px; display: grid; grid-template-columns: 1fr 300px; gap: 28px; align-items: start; }
-        @media (max-width: 880px) { .tp-body-wrap { grid-template-columns: 1fr; } .tp-sidebar { order: -1; } }
+        @media (max-width: 880px) { .tp-body-wrap { grid-template-columns: 1fr; } .tp-sidebar { position: static; order: 2; } }
 
         /* Breadcrumb */
         .tp-bc { font-size: 12px; color: var(--text-light); margin-bottom: 20px; }
