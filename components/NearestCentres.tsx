@@ -1,11 +1,13 @@
+'use client'
+
 /**
  * NearestCentres — shows CQC-registered rehab/drug services on every location page.
  * - Blue verified tick on avatar overlay for CQC-registered centres
- * - 'Verified' / 'Not Verified' replaces 'View →' button
- * - Fallback orange warning box removed
+ * - Verified = first card always; unverified competitors folded behind toggle
  */
 
 import Link from 'next/link'
+import { useState } from 'react'
 import type { RehabsResult, RehabCentre } from '../lib/rehabs'
 import { getCorrectCentreSlug, getCentreImage } from '../lib/rehabs'
 import Image from 'next/image'
@@ -15,6 +17,46 @@ interface Props {
   locationName: string
   locationSlug: string
   limit?: number
+}
+
+// ── FoldedCompetitors ─ hides unverified listings behind a toggle ─────
+
+function FoldedCompetitors({ centres, sourceTownSlug, type }: {
+  centres: RehabCentre[]; sourceTownSlug: string; type: 'centre'
+}) {
+  const [open, setOpen] = useState(false)
+  if (!centres.length) return null
+  return (
+    <div>
+      {/* Toggle button */}
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '10px 14px', borderRadius: 8,
+          border: '1px dashed var(--border-mid)', background: 'var(--bg)',
+          cursor: 'pointer', fontSize: 13, color: 'var(--text-muted)', fontWeight: 500,
+          transition: 'background 0.15s',
+        }}
+      >
+        <span>
+          <svg style={{ verticalAlign: 'middle', marginRight: 6 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          {open ? 'Hide' : `View ${centres.length} other ${type === 'centre' ? 'centres' : 'counsellors'} (unverified)`}
+        </span>
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
+          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd"/>
+        </svg>
+      </button>
+      {/* Folded content */}
+      {open && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8, paddingTop: 4, borderTop: '1px solid var(--border)', opacity: 0.7 }}>
+          {centres.map((centre, i) => (
+            <CentreRow key={centre.cqcUrl || i} centre={centre} sourceTownSlug={sourceTownSlug} index={i + 1} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
 }
 
 function fundingLabel(name: string, serviceType: string): string {
@@ -121,11 +163,17 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
         </p>
       </div>
 
-      {/* Centre list */}
+      {/* Centre list — verified at top, competitors folded */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {displayed.map((centre, i) => (
+        {/* Verified card always visible */}
+        {displayed.slice(0, 1).map((centre, i) => (
           <CentreRow key={centre.cqcUrl || i} centre={centre} sourceTownSlug={result.sourceTownSlug} index={i} />
         ))}
+
+        {/* Unverified competitors — folded */}
+        {displayed.length > 1 && (
+          <FoldedCompetitors centres={displayed.slice(1)} sourceTownSlug={result.sourceTownSlug} type="centre" />
+        )}
 
         {/* 6th card: Add your centre CTA */}
         <Link

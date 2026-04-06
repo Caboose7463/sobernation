@@ -1,14 +1,16 @@
 /**
  * CounsellorsSection — shown on location pages BELOW rehab centres.
- * 
- * Shows up to 3 addiction counsellors for a given location.
- * Falls back to nearest city with counsellors if none found locally.
- * Paid CTA for counsellors to add their listing.
+ *
+ * Shows up to 5 addiction counsellors for a given location.
+ * Verified counsellor always shown first; unverified fold behind a toggle.
  */
 
 import { createClient } from '@supabase/supabase-js'
 import Link from 'next/link'
 import CounsellorCard, { type Counsellor } from './CounsellorCard'
+import FoldedCounsellors from './FoldedCounsellors'
+
+// ── FoldedCounsellors is in its own client component file ────────────────
 
 interface Props {
   locationSlug: string
@@ -250,9 +252,13 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
 
         {counsellors.length > 0 ? (
           <div className="cs-list">
-            {counsellors.map((c, i) => (
-              <CounsellorCard key={c.id} counsellor={c} forceVerified={i === 0} />
-            ))}
+            {/* Verified counsellor always shown first */}
+            <CounsellorCard key={counsellors[0].id} counsellor={counsellors[0]} forceVerified={true} />
+
+            {/* Unverified competitors folded */}
+            {counsellors.length > 1 && (
+              <FoldedCounsellors counsellors={counsellors.slice(1)} />
+            )}
 
             {/* 6th card: Add your counsellor CTA */}
             <a

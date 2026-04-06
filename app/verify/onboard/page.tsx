@@ -102,39 +102,79 @@ function EstimatedClicks({ locations, listingType }: { locations: string[]; list
   const totalHi = perLoc.reduce((a, l) => a + l.hi, 0)
   const totalS = perLoc.reduce((a, l) => a + l.s, 0)
 
+  // Enquiry conversion: ~3–5% of profile views become actual enquiries
+  const enqLo = Math.max(1, Math.round(totalLo * 0.03))
+  const enqHi = Math.max(1, Math.round(totalHi * 0.05))
+
+  // Value per admission
+  const admissionValue = listingType === 'centre' ? 8000 : 600
+  const admissionLabel = listingType === 'centre' ? '£8,000+' : '£600+'
+  const monthlyPrice = listingType === 'centre' ? 99 : 10
+  const totalLocCount = locations.length
+  const totalMonthlyPrice = monthlyPrice * Math.max(totalLocCount, 1)
+  // Days for ROI: 1 patient / 30 days * monthly cost
+  const roiDays = Math.round((totalMonthlyPrice / admissionValue) * 30)
+
   return (
     <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: 14, overflow: 'hidden', marginBottom: 20 }}>
-      <div style={{ background: 'linear-gradient(135deg, #0f4c38, #1a6b5a)', padding: '16px 18px', color: '#fff' }}>
-        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.7, marginBottom: 4 }}>
-          Estimated monthly reach
+      {/* Header — enquiries front and centre */}
+      <div style={{ background: 'linear-gradient(135deg, #0f4c38, #1a6b5a)', padding: '18px 20px', color: '#fff' }}>
+        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.7, marginBottom: 8 }}>
+          Your estimated monthly reach
         </div>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-          <span style={{ fontSize: 36, fontWeight: 700, lineHeight: 1 }}>{totalLo.toLocaleString()}–{totalHi.toLocaleString()}</span>
-          <span style={{ fontSize: 14, opacity: 0.8 }}>profile views/month</span>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div>
+            <div style={{ fontSize: 11, opacity: 0.65, marginBottom: 2 }}>Profile views</div>
+            <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1 }}>{totalLo.toLocaleString()}–{totalHi.toLocaleString()}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 11, opacity: 0.65, marginBottom: 2 }}>Estimated enquiries</div>
+            <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1, color: '#4ade80' }}>{enqLo}–{enqHi}<span style={{ fontSize: 14, fontWeight: 500, opacity: 0.8 }}>/month</span></div>
+          </div>
         </div>
-        <div style={{ fontSize: 12, opacity: 0.65, marginTop: 4 }}>
-          Based on {totalS.toLocaleString()} monthly searches · verified #1 position
+        <div style={{ fontSize: 11, opacity: 0.55, marginTop: 8 }}>
+          Based on {totalS.toLocaleString()} monthly searches · verified #1 position · 3–5% enquiry rate
         </div>
       </div>
-      {perLoc.map((loc, i) => (
-        <div key={loc.name} style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          padding: '11px 18px', borderTop: '1px solid var(--border)',
-          background: i % 2 === 0 ? '#fff' : 'var(--bg)',
-        }}>
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 500 }}>{loc.name}</div>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{loc.s.toLocaleString()} searches/month</div>
+
+      {/* ROI callout */}
+      <div style={{ background: 'var(--accent-pale)', borderBottom: '1px solid #c8e6df', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: 14 }}>
+        <div style={{ fontSize: 24, lineHeight: 1 }}>💰</div>
+        <div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)', marginBottom: 2 }}>
+            1 admission = {admissionLabel} revenue
           </div>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)' }}>{loc.lo}–{loc.hi}</div>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>est. clicks/mo</div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5 }}>
+            Your subscription pays for itself in approximately <strong style={{ color: 'var(--text)' }}>{roiDays} {roiDays === 1 ? 'day' : 'days'}</strong> of a single new {listingType === 'centre' ? 'admission' : 'client engagement'}.
           </div>
         </div>
-      ))}
+      </div>
+
+      {/* Per-location breakdown */}
+      {perLoc.map((loc, i) => {
+        const locEnqLo = Math.max(1, Math.round(loc.lo * 0.03))
+        const locEnqHi = Math.max(1, Math.round(loc.hi * 0.05))
+        return (
+          <div key={loc.name} style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            padding: '11px 18px', borderTop: '1px solid var(--border)',
+            background: i % 2 === 0 ? '#fff' : 'var(--bg)',
+          }}>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 500 }}>{loc.name}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{loc.s.toLocaleString()} searches/month · {loc.lo}–{loc.hi} views</div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)' }}>{locEnqLo}–{locEnqHi} enquiries</div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>est. per month</div>
+            </div>
+          </div>
+        )
+      })}
+
       <div style={{ padding: '10px 18px', background: 'var(--bg)', borderTop: '1px solid var(--border)' }}>
         <p style={{ fontSize: 11, color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>
-          Estimates based on organic search volume. Verified listings appear first and receive significantly more clicks than unverified results.
+          Estimates based on organic search volume and industry conversion rates. Verified listings appear first and receive 2–3× more clicks than unverified results.
         </p>
       </div>
     </div>
