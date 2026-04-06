@@ -8,6 +8,16 @@ const nextConfig: NextConfig = {
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
 
+  // Allow images from Vercel Blob (scraped centre logos) and any external domain
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: '**.vercel-storage.com' },
+      { protocol: 'https', hostname: '**.public.blob.vercel-storage.com' },
+      // Allow any https image for og:image fallbacks (centre websites)
+      { protocol: 'https', hostname: '**' },
+    ],
+  },
+
   // Map /sitemap.xml to our explicit route handler (avoids dot-in-dirname issues)
   async rewrites() {
     return [

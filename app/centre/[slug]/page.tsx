@@ -4,12 +4,13 @@
  * 2-column sticky sidebar, 10+ content sections, full schema markup.
  */
 import { notFound } from 'next/navigation'
-import { getCentreBySlug } from '../../../lib/rehabs'
+import { getCentreBySlug, getCentreImage } from '../../../lib/rehabs'
 import { getLiveViewers } from '../../../lib/profile-slugs'
 import { getNearbyLocations } from '../../../lib/nearby-locations'
 import { getLocationStats, formatStat } from '../../../lib/location-stats'
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export const revalidate = 3600
 
@@ -278,7 +279,18 @@ export default async function CentreProfilePage({ params }: Props) {
             <span>{centre.name}</span>
           </nav>
           <div className="cp-hero-row">
-            <div className="cp-logo">{initials}</div>
+            <div className="cp-logo" style={{ position: 'relative', overflow: 'hidden', background: 'var(--white)' }}>
+              {getCentreImage(centre.cqcUrl) ? (
+                <Image
+                  src={getCentreImage(centre.cqcUrl)!}
+                  alt={`${centre.name} logo`}
+                  fill
+                  sizes="80px"
+                  style={{ objectFit: 'contain', padding: 8 }}
+                  priority
+                />
+              ) : initials}
+            </div>
             <div>
               <h1 className="cp-h1">{centre.name}</h1>
               <p className="cp-sub">{type} Treatment Centre · {town}{centre.postcode ? ` · ${centre.postcode}` : ''}</p>

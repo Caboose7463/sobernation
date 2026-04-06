@@ -4,7 +4,8 @@
 
 import Link from 'next/link'
 import type { RehabsResult, RehabCentre } from '../lib/rehabs'
-import { getCorrectCentreSlug } from '../lib/rehabs'
+import { getCorrectCentreSlug, getCentreImage } from '../lib/rehabs'
+import Image from 'next/image'
 
 interface Props {
   result: RehabsResult
@@ -33,6 +34,7 @@ function CentreRow({ centre, sourceTownSlug }: { centre: RehabCentre; sourceTown
   const funding = fundingLabel(centre.name, centre.serviceType)
   const type = typeLabel(centre.serviceType)
   const initials = centre.name.split(' ').filter(Boolean).slice(0, 2).map((w: string) => w[0]).join('').toUpperCase()
+  const imageUrl = getCentreImage(centre.cqcUrl)
 
   return (
     <Link
@@ -46,18 +48,28 @@ function CentreRow({ centre, sourceTownSlug }: { centre: RehabCentre; sourceTown
         borderRadius: 10,
         textDecoration: 'none',
         background: 'var(--white)',
-        transition: 'border-color 0.15s',
+        transition: 'border-color 0.15s, box-shadow 0.15s',
       }}
     >
-      {/* Avatar */}
+      {/* Logo / Avatar */}
       <div style={{
         width: 44, height: 44, borderRadius: 10, flexShrink: 0,
         background: 'var(--accent-pale, #e6f4f1)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: 14, fontWeight: 700, color: 'var(--accent, #1d6b5a)',
-        letterSpacing: '-0.5px',
+        letterSpacing: '-0.5px', overflow: 'hidden', position: 'relative',
+        border: '1px solid var(--border)',
       }}>
-        {initials}
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt={`${centre.name} logo`}
+            fill
+            sizes="44px"
+            style={{ objectFit: 'contain', padding: 4 }}
+            onError={() => {}}
+          />
+        ) : initials}
       </div>
 
       {/* Info */}

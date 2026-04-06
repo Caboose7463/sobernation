@@ -234,3 +234,22 @@ export function getAllCentreSlugs(): string[] {
 export function getCentreSlug(centre: RehabCentre, townSlug: string): string {
   return toCentreSlug(centre.name, townSlug)
 }
+
+// ── Centre image lookup ───────────────────────────────────────────────────────
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const _centreImages: Record<string, string | null> = (() => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require('../data/centre-images.json') as Record<string, string | null>
+  } catch {
+    return {}
+  }
+})()
+
+/**
+ * Returns the scraped image URL for a centre, or null if none found yet.
+ * Images are keyed by CQC URL in data/centre-images.json.
+ */
+export function getCentreImage(cqcUrl: string): string | null {
+  return _centreImages[cqcUrl] ?? null
+}
