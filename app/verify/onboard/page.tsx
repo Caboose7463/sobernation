@@ -331,16 +331,12 @@ export default function OnboardPage() {
 
   return (
     <main style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', flexDirection: 'column' }}>
-      {/* Progress bar */}
-      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 3, background: 'var(--border)', zIndex: 100 }}>
-        <div style={{ height: '100%', background: 'var(--accent)', width: `${progress}%`, transition: 'width 0.4s ease' }} />
-      </div>
-
-      {/* Top bar */}
+      {/* Sticky header with integrated progress bar */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '16px 24px', borderBottom: '1px solid var(--border)',
+        padding: '14px 24px', borderBottom: '1px solid var(--border)',
         background: '#fff', position: 'sticky', top: 0, zIndex: 50,
+        outline: 'none',
       }}>
         <Link href="/verify" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2.5">
@@ -348,12 +344,22 @@ export default function OnboardPage() {
           </svg>
           <span style={{ fontWeight: 700, color: 'var(--text)', fontSize: 14 }}>SoberNation</span>
         </Link>
-        <div style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 500 }}>Step {step} of {totalSteps}</div>
-        {step > 1 && (
-          <button onClick={() => goTo(step - 1, 'back')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
+
+        {/* Progress bar + step label, centered */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, flex: 1, padding: '0 24px' }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.04em' }}>Step {step} of {totalSteps}</div>
+          <div style={{ width: '100%', maxWidth: 200, height: 4, background: 'var(--border)', borderRadius: 2, overflow: 'hidden' }}>
+            <div style={{ height: '100%', background: 'var(--accent)', width: `${progress}%`, transition: 'width 0.4s ease', borderRadius: 2 }} />
+          </div>
+        </div>
+
+        {step > 1 ? (
+          <button onClick={() => goTo(step - 1, 'back')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4, padding: 0 }}>
             <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd"/></svg>
             Back
           </button>
+        ) : (
+          <div style={{ width: 50 }} />
         )}
       </div>
 

@@ -41,102 +41,60 @@ function CentreRow({ centre, sourceTownSlug, index }: { centre: RehabCentre; sou
   const imageUrl = getCentreImage(centre.cqcUrl)
   const verified = index === 0  // only first in each list
 
+  if (verified && centre.website) {
+    return (
+      <a
+        href={centre.website}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          display: 'flex', alignItems: 'center', gap: 14,
+          padding: '14px 16px', border: '1px solid var(--border)',
+          borderRadius: 10, textDecoration: 'none',
+          background: 'var(--white)', transition: 'border-color 0.15s, box-shadow 0.15s',
+        }}
+      >
+        <div style={{ position: 'relative', flexShrink: 0, width: 44, height: 44 }}>
+          <div style={{ width: 44, height: 44, borderRadius: 10, background: 'var(--accent-pale, #e6f4f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: 'var(--accent, #1d6b5a)', letterSpacing: '-0.5px', overflow: 'hidden', position: 'relative', border: '1px solid var(--border)' }}>
+            {imageUrl ? (
+              <Image src={imageUrl} alt={`${centre.name} logo`} fill sizes="44px" style={{ objectFit: 'contain', padding: 4 }} />
+            ) : initials}
+          </div>
+          <span style={{ position: 'absolute', bottom: -3, right: -3, width: 16, height: 16, borderRadius: '50%', background: '#1d9bf0', border: '2px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><polyline points="2,5 4.2,7.5 8,3" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </span>
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', lineHeight: 1.3, marginBottom: 3 }}>{centre.name}</div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{[type, funding, centre.address ? centre.address.split(',')[0] : null].filter(Boolean).join(' · ')}</div>
+        </div>
+        <span style={{ fontSize: 12, fontWeight: 700, color: '#16a34a', whiteSpace: 'nowrap', flexShrink: 0 }}>Verified ↗</span>
+      </a>
+    )
+  }
+
   return (
     <Link
       href={`/centre/${slug}`}
       style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 14,
-        padding: '14px 16px',
-        border: '1px solid var(--border)',
-        borderRadius: 10,
-        textDecoration: 'none',
-        background: 'var(--white)',
-        transition: 'border-color 0.15s, box-shadow 0.15s',
+        display: 'flex', alignItems: 'center', gap: 14,
+        padding: '14px 16px', border: '1px solid var(--border)',
+        borderRadius: 10, textDecoration: 'none',
+        background: 'var(--white)', transition: 'border-color 0.15s, box-shadow 0.15s',
       }}
     >
-      {/* Logo / Avatar with blue verified tick overlay */}
-      <div style={{
-        position: 'relative',
-        flexShrink: 0,
-        width: 44,
-        height: 44,
-      }}>
-        <div style={{
-          width: 44, height: 44, borderRadius: 10,
-          background: 'var(--accent-pale, #e6f4f1)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 14, fontWeight: 700, color: 'var(--accent, #1d6b5a)',
-          letterSpacing: '-0.5px', overflow: 'hidden', position: 'relative',
-          border: '1px solid var(--border)',
-        }}>
+      <div style={{ position: 'relative', flexShrink: 0, width: 44, height: 44 }}>
+        <div style={{ width: 44, height: 44, borderRadius: 10, background: 'var(--accent-pale, #e6f4f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: 'var(--accent, #1d6b5a)', letterSpacing: '-0.5px', overflow: 'hidden', position: 'relative', border: '1px solid var(--border)' }}>
           {imageUrl ? (
-            <Image
-              src={imageUrl}
-              alt={`${centre.name} logo`}
-              fill
-              sizes="44px"
-              style={{ objectFit: 'contain', padding: 4 }}
-            />
+            <Image src={imageUrl} alt={`${centre.name} logo`} fill sizes="44px" style={{ objectFit: 'contain', padding: 4 }} />
           ) : initials}
         </div>
-        {/* Blue verified tick — bottom-right of avatar */}
-        {verified && (
-          <span style={{
-            position: 'absolute',
-            bottom: -3,
-            right: -3,
-            width: 16,
-            height: 16,
-            borderRadius: '50%',
-            background: '#1d9bf0',
-            border: '2px solid #fff',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-          }}>
-            <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
-              <polyline points="2,5 4.2,7.5 8,3" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </span>
-        )}
       </div>
-
-      {/* Info */}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', lineHeight: 1.3, marginBottom: 3 }}>
-          {centre.name}
-        </div>
-        <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-          {[type, funding, centre.address ? centre.address.split(',')[0] : null]
-            .filter(Boolean).join(' · ')}
-        </div>
+        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', lineHeight: 1.3, marginBottom: 3 }}>{centre.name}</div>
+        <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{[type, funding, centre.address ? centre.address.split(',')[0] : null].filter(Boolean).join(' · ')}</div>
       </div>
-
-      {/* Verified / Not Verified — plain text, no pill */}
-      {verified ? (
-        <span style={{
-          fontSize: 12,
-          fontWeight: 700,
-          color: '#16a34a',
-          whiteSpace: 'nowrap',
-          flexShrink: 0,
-        }}>
-          Verified
-        </span>
-      ) : (
-        <span style={{
-          fontSize: 12,
-          fontWeight: 400,
-          color: '#9ca3af',
-          whiteSpace: 'nowrap',
-          flexShrink: 0,
-        }}>
-          Not Verified
-        </span>
-      )}
+      <span style={{ fontSize: 12, fontWeight: 400, color: '#9ca3af', whiteSpace: 'nowrap', flexShrink: 0 }}>Not Verified</span>
     </Link>
   )
 }

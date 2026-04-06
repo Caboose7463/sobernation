@@ -114,65 +114,44 @@ export default function CounsellorCard({ counsellor, forceVerified = false }: Pr
     specialisms.map(s => SPECIALISM_LABELS[s] ?? s).join(', ') || null,
   ].filter(Boolean).join(' · ')
   const verified = counsellor.verified || forceVerified
+  const website = counsellor.website
 
-  return (
-    <Link
-      href={profileHref}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 14,
-        padding: '14px 16px',
-        border: '1px solid var(--border)',
-        borderRadius: 10,
-        textDecoration: 'none',
-        background: 'var(--white)',
-        transition: 'border-color 0.15s, box-shadow 0.15s',
-        color: 'inherit',
-      }}
-    >
-      {/* Avatar with blue tick overlay */}
-      <AvatarWithFallback
-        name={counsellor.name}
-        photoUrl={counsellor.photo_url ?? null}
-        verified={verified}
-      />
+  const cardStyle = {
+    display: 'flex', alignItems: 'center', gap: 14,
+    padding: '14px 16px', border: '1px solid var(--border)',
+    borderRadius: 10, textDecoration: 'none',
+    background: 'var(--white)', transition: 'border-color 0.15s, box-shadow 0.15s',
+    color: 'inherit',
+  } as React.CSSProperties
 
-      {/* Info */}
+  const inner = (
+    <>
+      <AvatarWithFallback name={counsellor.name} photoUrl={counsellor.photo_url ?? null} verified={verified} />
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', lineHeight: 1.3, marginBottom: 3 }}>
-          {counsellor.name}
-        </div>
-        {subtitle && (
-          <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.4 }}>
-            {subtitle}
-          </div>
-        )}
+        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', lineHeight: 1.3, marginBottom: 3 }}>{counsellor.name}</div>
+        {subtitle && <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.4 }}>{subtitle}</div>}
       </div>
-
-      {/* Verified / Not Verified — plain text, no pill */}
       {verified ? (
-        <span style={{
-          fontSize: 12,
-          fontWeight: 700,
-          color: '#16a34a',
-          whiteSpace: 'nowrap',
-          flexShrink: 0,
-        }}>
-          Verified
+        <span style={{ fontSize: 12, fontWeight: 700, color: '#16a34a', whiteSpace: 'nowrap', flexShrink: 0 }}>
+          Verified{website ? ' ↗' : ''}
         </span>
       ) : (
-        <span style={{
-          fontSize: 12,
-          fontWeight: 400,
-          color: '#9ca3af',
-          whiteSpace: 'nowrap',
-          flexShrink: 0,
-        }}>
-          Not Verified
-        </span>
+        <span style={{ fontSize: 12, fontWeight: 400, color: '#9ca3af', whiteSpace: 'nowrap', flexShrink: 0 }}>Not Verified</span>
       )}
+    </>
+  )
 
+  if (verified && website) {
+    return (
+      <a href={website} target="_blank" rel="noopener noreferrer" style={cardStyle}>
+        {inner}
+      </a>
+    )
+  }
+
+  return (
+    <Link href={profileHref} style={cardStyle}>
+      {inner}
     </Link>
   )
 }
