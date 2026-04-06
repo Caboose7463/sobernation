@@ -1,202 +1,148 @@
-/**
- * POST /api/stripe/webhook
- * 
- * Handles Stripe webhook events for counsellor/centre verification.
- * 
- * Events handled:
- * - checkout.session.completed     → mark as verified + notify admin
- * - customer.subscription.deleted   → remove verified status immediately
- * - invoice.payment_failed          → flag as past_due (grace period: 7 days, then revoke)
- * - invoice.payment_succeeded       → restore if previously past_due
- */
-
 import { NextRequest, NextResponse } from 'next/server'
-import Stripe from 'stripe'
-import { createClient } from '@supabase/supabase-js'
+import { stripe } from '@/lib/stripe'
+import { createServiceClient } from '@/lib/supabase-server'
+import { Resend } from 'resend'
 
-export const runtime = 'nodejs'
+const resend = new Resend(process.env.RESEND_API_KEY)
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-03-31.basil',
-})
+export async function POST(request: NextRequest) {
+  const sig = request.headers.get('stripe-signature')
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
-function getSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
-}
-
-/**
- * Send a plain email notification to the admin.
- * Uses fetch to call an email endpoint if configured, otherwise logs.
- * To enable real emails: set ADMIN_EMAIL and optionally RESEND_API_KEY in env vars.
- */
-async function notifyAdmin(subject: string, body: string) {
-  const adminEmail = process.env.ADMIN_EMAIL || 'editorial@sobernation.co.uk'
-  const resendKey = process.env.RESEND_API_KEY
-
-  if (!resendKey) {
-    // No email provider configured — log to console (visible in Vercel logs)
-    console.log(`📧 ADMIN NOTIFICATION → ${adminEmail}`)
-    console.log(`Subject: ${subject}`)
-    console.log(`Body: ${body}`)
-    return
-  }
+  let event
 
   try {
-    await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${resendKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: 'SoberNation <notifications@sobernation.co.uk>',
-        to: adminEmail,
-        subject,
-        text: body,
-      }),
-    })
+    const body = await request.text()
+    event = stripe.webhooks.constructEvent(body, sig!, webhookSecret)
   } catch (err) {
-    console.error('Failed to send admin email:', err)
-  }
-}
-
-export async function POST(req: NextRequest) {
-  const body = await req.text()
-  const sig = req.headers.get('stripe-signature')
-
-  if (!sig) {
-    return NextResponse.json({ error: 'No signature' }, { status: 400 })
-  }
-
-  let event: Stripe.Event
-
-  try {
-    event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET!)
-  } catch (err) {
-    console.error('Webhook signature error:', err)
+    console.error('[stripe/webhook] signature verification failed:', err)
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 
-  const supabase = getSupabase()
+  const supabase = createServiceClient()
 
-  switch (event.type) {
+  try {
+    switch (event.type) {
+      case 'checkout.session.completed': {
+        const session = event.data.object as import('stripe').Stripe.Checkout.Session
+        // Metadata is passed on the subscription via subscription_data.metadata at creation,
+        // but on the session object after checkout it lives in session.metadata
+        const meta = (session.metadata ?? {}) as Record<string, string>
+        const ownerId = meta.owner_id
+        const locations = meta.locations ? meta.locations.split(',') : []
+        const customerId = session.customer as string
+        const subscriptionId = session.subscription as string
 
-    case 'checkout.session.completed': {
-      const session = event.data.object as Stripe.Checkout.Session
-      const counsellorId = session.metadata?.counsellor_id
-      if (!counsellorId) break
+        if (!ownerId) break
 
-      const { data: record } = await supabase
-        .from('counsellors')
-        .update({
-          verified: true,
-          stripe_customer_id: session.customer as string,
-          stripe_subscription_id: session.subscription as string,
-          subscription_status: 'active',
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', counsellorId)
-        .select('name, location_name, listing_type, email')
-        .single()
-
-      console.log(`✅ Verified ${session.metadata?.listing_type}: ${session.metadata?.counsellor_name} (${counsellorId})`)
-
-      // Notify admin
-      const listingType = session.metadata?.listing_type || 'counsellor'
-      const name = record?.name || session.metadata?.counsellor_name || 'Unknown'
-      const location = record?.location_name || session.metadata?.location_slug || 'Unknown'
-      const email = record?.email || session.customer_email || 'Unknown'
-      const price = listingType === 'counsellor' ? '£10/month' : '£30/month'
-
-      await notifyAdmin(
-        `New verified listing: ${name} (${location})`,
-        `A new ${listingType} listing has been verified on SoberNation.\n\n` +
-        `Name: ${name}\nLocation: ${location}\nEmail: ${email}\nPlan: ${price}\n\n` +
-        `View in Supabase: https://app.supabase.com`
-      )
-      break
-    }
-
-    case 'customer.subscription.deleted': {
-      const sub = event.data.object as Stripe.Subscription
-      const counsellorId = sub.metadata?.counsellor_id
-      if (!counsellorId) break
-
-      await supabase
-        .from('counsellors')
-        .update({
-          verified: false,
-          subscription_status: 'cancelled',
-          stripe_subscription_id: null,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', counsellorId)
-
-      console.log(`🔴 Subscription cancelled — removed verification for ${counsellorId}`)
-      break
-    }
-
-    case 'invoice.payment_failed': {
-      const invoice = event.data.object as Stripe.Invoice & { subscription?: string | { id: string } }
-      const sub = invoice.subscription
-      const subId = typeof sub === 'string' ? sub : sub?.id
-      if (!subId) break
-
-      // Check attempt count — after 3 failures, revoke verification
-      const attemptCount = invoice.attempt_count || 1
-
-      if (attemptCount >= 3) {
-        // Revoke verification after 3 failed payment attempts
+        // Auto-approve: payment received → fully active + verified
         await supabase
-          .from('counsellors')
+          .from('listing_owners')
           .update({
-            verified: false,
-            subscription_status: 'past_due',
+            stripe_customer_id: customerId,
+            stripe_subscription_id: subscriptionId,
+            subscription_status: 'active',
+            verified: true,
+            admin_approved: true,
+            locations,
             updated_at: new Date().toISOString(),
           })
-          .eq('stripe_subscription_id', subId)
+          .eq('id', ownerId)
 
-        console.log(`🟡 Verification revoked after ${attemptCount} failed payments for sub ${subId}`)
-      } else {
-        // Grace period — still past_due but verified badge remains
-        await supabase
-          .from('counsellors')
-          .update({
-            subscription_status: 'past_due',
-            updated_at: new Date().toISOString(),
+        // Send approval email
+        const { data: owner } = await supabase
+          .from('listing_owners')
+          .select('name, email, listing_type')
+          .eq('id', ownerId)
+          .single()
+
+        if (owner) {
+          await resend.emails.send({
+            from: process.env.RESEND_FROM_EMAIL!,
+            to: owner.email,
+            subject: 'Your SoberNation listing is now verified!',
+            html: `
+              <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto;">
+                <h2 style="color: #1a6b5a;">Your listing is live!</h2>
+                <p>Hi ${owner.name},</p>
+                <p>Your payment was successful and your SoberNation listing is now <strong>verified</strong>. Your verified badge is live on the directory.</p>
+                <p><a href="https://www.sobernation.co.uk/dashboard" style="background: #1a6b5a; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block; margin-top: 16px;">View your dashboard</a></p>
+                <p style="color: #6b7280; font-size: 13px; margin-top: 32px;">Questions? Reply to this email and we'll help.</p>
+              </div>
+            `,
           })
-          .eq('stripe_subscription_id', subId)
-
-        console.log(`🟡 Payment failed (attempt ${attemptCount}) for sub ${subId} — still verified`)
+        }
+        break
       }
-      break
+
+      case 'invoice.payment_succeeded': {
+        const invoice = event.data.object as import('stripe').Stripe.Invoice
+        const customerId = invoice.customer as string
+
+        await supabase
+          .from('listing_owners')
+          .update({ subscription_status: 'active', updated_at: new Date().toISOString() })
+          .eq('stripe_customer_id', customerId)
+        break
+      }
+
+      case 'invoice.payment_failed': {
+        const invoice = event.data.object as import('stripe').Stripe.Invoice
+        const customerId = invoice.customer as string
+
+        await supabase
+          .from('listing_owners')
+          .update({ subscription_status: 'past_due', updated_at: new Date().toISOString() })
+          .eq('stripe_customer_id', customerId)
+
+        // Notify the owner
+        const { data: owner } = await supabase
+          .from('listing_owners')
+          .select('name, email')
+          .eq('stripe_customer_id', customerId)
+          .single()
+
+        if (owner) {
+          await resend.emails.send({
+            from: process.env.RESEND_FROM_EMAIL!,
+            to: owner.email,
+            subject: 'Action required — payment failed for your SoberNation listing',
+            html: `
+              <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto;">
+                <h2 style="color: #c0392b;">Payment failed</h2>
+                <p>Hi ${owner.name},</p>
+                <p>We couldn't process your latest payment. Please update your billing details to keep your verified listing active.</p>
+                <p><a href="https://www.sobernation.co.uk/dashboard/invoices" style="background: #1a6b5a; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block; margin-top: 16px;">Update billing</a></p>
+              </div>
+            `,
+          })
+        }
+        break
+      }
+
+      case 'customer.subscription.deleted': {
+        const subscription = event.data.object as import('stripe').Stripe.Subscription
+        const customerId = subscription.customer as string
+
+        await supabase
+          .from('listing_owners')
+          .update({
+            subscription_status: 'cancelled',
+            verified: false,
+            admin_approved: false,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('stripe_customer_id', customerId)
+        break
+      }
+
+      default:
+        console.log(`[stripe/webhook] Unhandled event: ${event.type}`)
     }
 
-    case 'invoice.payment_succeeded': {
-      const invoice2 = event.data.object as Stripe.Invoice & { subscription?: string | { id: string } }
-      const sub2 = invoice2.subscription
-      const subId2 = typeof sub2 === 'string' ? sub2 : sub2?.id
-      if (!subId2) break
-
-      await supabase
-        .from('counsellors')
-        .update({
-          verified: true,
-          subscription_status: 'active',
-          updated_at: new Date().toISOString(),
-        })
-        .eq('stripe_subscription_id', subId2)
-        .eq('subscription_status', 'past_due') // Only restore if it was past_due
-
-      break
-    }
-
-    default:
-      // Ignore other events
+    return NextResponse.json({ received: true })
+  } catch (err) {
+    console.error('[stripe/webhook] handler error:', err)
+    return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 })
   }
-
-  return NextResponse.json({ received: true })
 }
