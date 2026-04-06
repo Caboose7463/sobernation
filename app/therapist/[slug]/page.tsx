@@ -192,13 +192,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!data) return {}
   const s1 = data.specialisms?.[0] ? SPEC_LABELS[data.specialisms[0]] : 'Addiction'
   const s2 = data.specialisms?.[1] ? SPEC_LABELS[data.specialisms[1]] : null
+  const loc = data.location_name ?? 'the UK'
 
   return {
-    title: `${data.name} | ${s1} Counsellor in ${data.location_name} | SoberNation`,
-    description: `${data.name} is a${data.bacp_number ? ' BACP-registered' : ''} addiction counsellor in ${data.location_name} specialising in ${s1}${s2 ? ` and ${s2}` : ''}. View their profile, qualifications, FAQs and contact details on SoberNation.`,
+    title: `${data.name} | ${s1} Counsellor in ${loc} | SoberNation`,
+    description: `${data.name} is a${data.bacp_number ? ' BACP-registered' : ''} addiction counsellor in ${loc} specialising in ${s1}${s2 ? ` and ${s2}` : ''}. View their profile, qualifications, FAQs and contact details on SoberNation.`,
     openGraph: {
-      title: `${data.name} | ${s1} Counsellor — ${data.location_name}`,
-      description: `Professional addiction counselling in ${data.location_name}. Specialising in ${s1}${s2 ? ` and ${s2}` : ''}.`,
+      title: `${data.name} | ${s1} Counsellor — ${loc}`,
+      description: `Professional addiction counselling in ${loc}. Specialising in ${s1}${s2 ? ` and ${s2}` : ''}.`,
       type: 'profile',
     },
     alternates: {
@@ -235,14 +236,16 @@ export default async function TherapistPage({ params }: Props) {
   const specs: string[] = c.specialisms ?? []
   const viewers = getLiveViewers(slug)
   const hasBACP = !!c.bacp_number
-  const initials = c.name.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()
+  // Guard: filter empty tokens so n[0] is never undefined
+  const initials = c.name.split(' ').filter(Boolean).map((n: string) => n[0]).slice(0, 2).join('').toUpperCase() || '??'
+  const locationName: string = c.location_name ?? 'the UK'
   const nearby = getNearbyLocations(c.location_slug, 6)
   const stats = getLocationStats(c.location_slug)
 
-  const aboutParas = generateAbout(c.name, c.location_name, specs, c.title ?? '')
-  const approachParas = generateApproach(c.name, c.location_name, specs)
+  const aboutParas = generateAbout(c.name, locationName, specs, c.title ?? '')
+  const approachParas = generateApproach(c.name, locationName, specs)
   const expectParas = generateWhatToExpect(c.name)
-  const faqs = generateFAQs(c.name, c.location_name, specs, hasBACP)
+  const faqs = generateFAQs(c.name, locationName, specs, hasBACP)
 
   // Schema.org
   const schemas = [
