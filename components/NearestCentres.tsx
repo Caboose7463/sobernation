@@ -4,7 +4,7 @@
 
 import Link from 'next/link'
 import type { RehabsResult, RehabCentre } from '../lib/rehabs'
-import { getCentreSlug } from '../lib/rehabs'
+import { getCorrectCentreSlug } from '../lib/rehabs'
 
 interface Props {
   result: RehabsResult
@@ -29,7 +29,7 @@ function typeLabel(serviceType: string): string {
 }
 
 function CentreRow({ centre, sourceTownSlug }: { centre: RehabCentre; sourceTownSlug: string }) {
-  const slug = getCentreSlug(centre, sourceTownSlug)
+  const slug = getCorrectCentreSlug(centre, sourceTownSlug)
   const funding = fundingLabel(centre.name, centre.serviceType)
   const type = typeLabel(centre.serviceType)
   const initials = centre.name.split(' ').filter(Boolean).slice(0, 2).map((w: string) => w[0]).join('').toUpperCase()
@@ -78,50 +78,6 @@ function CentreRow({ centre, sourceTownSlug }: { centre: RehabCentre; sourceTown
   )
 }
 
-function FeaturedPlaceholder({ locationName }: { locationName: string }) {
-  return (
-    <div style={{
-      padding: '14px 16px',
-      border: '1px solid var(--border)',
-      borderLeft: '3px solid var(--accent)',
-      borderRadius: 8,
-      marginBottom: 8,
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      gap: 16,
-      background: 'var(--white)',
-    }}>
-      <div>
-        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--text-light)', marginBottom: 4 }}>
-          Featured listing
-        </div>
-        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 2 }}>
-          Your centre in {locationName}
-        </div>
-        <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-          Appear at the top of this page for people seeking help near you
-        </div>
-      </div>
-      <Link
-        href="/counsellors/claim?type=centre"
-        style={{
-          fontSize: 12, fontWeight: 700,
-          color: 'var(--accent)',
-          border: '1.5px solid var(--accent)',
-          borderRadius: 6,
-          padding: '7px 14px',
-          textDecoration: 'none',
-          whiteSpace: 'nowrap',
-          flexShrink: 0,
-        }}
-      >
-        Get featured →
-      </Link>
-    </div>
-  )
-}
-
 export default function NearestCentres({ result, locationName, locationSlug, limit = 8 }: Props) {
   const displayed = result.centres.slice(0, limit)
   const total = result.centres.length
@@ -158,11 +114,6 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
             {total} CQC-registered services in {locationName}.
           </p>
         )}
-      </div>
-
-      {/* Featured placeholder */}
-      <div style={{ marginBottom: 8 }}>
-        <FeaturedPlaceholder locationName={locationName} />
       </div>
 
       {/* Centre list */}

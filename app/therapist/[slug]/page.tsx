@@ -456,12 +456,24 @@ export default async function TherapistPage({ params }: Props) {
               <div className="tp-avatar-lg">{initials}</div>
             )}
             <div>
-              <h1 className="tp-h1">{c.name}</h1>
+              <h1 className="tp-h1">
+                {c.name}
+                <span
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    width: 22, height: 22, borderRadius: '50%', verticalAlign: 'middle',
+                    background: c.verified ? '#1d9bf0' : '#d1d5db',
+                    marginLeft: 8, flexShrink: 0,
+                  }}
+                  title={c.verified ? 'Verified by SoberNation' : 'Listing not yet verified'}
+                >
+                  <svg width="12" height="12" viewBox="0 0 10 10" fill="none">
+                    <polyline points="2,5 4.2,7.5 8,3" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </span>
+              </h1>
               <p className="tp-subtitle">{sanitiseTitle(c.title) ?? 'Addiction Counsellor'} · {locationName}</p>
               <div className="tp-badges">
-                {c.verified
-                  ? <span className="tp-badge tp-badge--verified">✓ Verified by SoberNation</span>
-                  : <span className="tp-badge tp-badge--unverified">Unverified listing</span>}
                 {hasBACP && <span className="tp-badge tp-badge--bacp">BACP Registered</span>}
                 {specs.slice(0, 3).map(s => (
                   <span key={s} className="tp-badge tp-badge--spec">{SPEC_LABELS[s] ?? s}</span>
@@ -739,8 +751,8 @@ export default async function TherapistPage({ params }: Props) {
                 </div>
               )}
 
-              {/* Contact / Claim */}
-              {c.verified && (c.phone?.trim() || c.email?.trim() || c.website?.trim()) ? (
+              {/* Contact info — always visible */}
+              {(c.phone?.trim() || c.email?.trim() || c.website?.trim()) ? (
                 <>
                   {c.phone?.trim() && (
                     <a href={`tel:${c.phone.replace(/\s/g,'')}`} className="tp-contact-real tp-contact-phone">
@@ -759,30 +771,12 @@ export default async function TherapistPage({ params }: Props) {
                   )}
                 </>
               ) : (
-                <>
-                  <div className="tp-contact-blurred">
-                    <div>
-                      <div className="tp-contact-row">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.33A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.81a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 21.73 16"/></svg>
-                        <span className="tp-contact-val">07### ######</span>
-                      </div>
-                      <div className="tp-contact-row">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                        <span className="tp-contact-val">••••@••••.co.uk</span>
-                      </div>
-                    </div>
-                    <div className="tp-contact-overlay">
-                      <div className="tp-contact-overlay-text">Contact details visible for verified listings only</div>
-                    </div>
-                  </div>
-                  <Link
-                    href={`/counsellors/claim?id=${c.id}&name=${encodeURIComponent(c.name)}&location=${locationSlug}`}
-                    className="tp-claim-btn"
-                  >
-                    {c.verified ? 'Manage listing' : 'Claim this profile'}
-                  </Link>
-                  <div className="tp-claim-sub">From £10/month · Cancel anytime</div>
-                </>
+                <Link
+                  href={`/counsellors/claim?id=${c.id}&name=${encodeURIComponent(c.name)}&location=${locationSlug}`}
+                  className="tp-claim-btn"
+                >
+                  Claim this profile
+                </Link>
               )}
 
               {/* Trust */}

@@ -97,7 +97,7 @@ export default function CounsellorCard({ counsellor }: Props) {
           transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
           text-decoration: none;
           color: inherit;
-          opacity: ${counsellor.verified ? '1' : '0.85'};
+          opacity: 1;
           cursor: pointer;
         }
         .cc:hover {
@@ -112,6 +112,7 @@ export default function CounsellorCard({ counsellor }: Props) {
           justify-content: space-between;
           align-items: flex-start;
           gap: 12px;
+          position: relative;
         }
         .cc__avatar {
           width: 44px;
@@ -150,13 +151,17 @@ export default function CounsellorCard({ counsellor }: Props) {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 16px;
-          height: 16px;
-          background: #1d9bf0;
+          width: 18px;
+          height: 18px;
           border-radius: 50%;
           flex-shrink: 0;
+          position: absolute;
+          top: 0;
+          right: 0;
         }
-        .cc__tick svg { width: 9px; height: 9px; }
+        .cc__tick--verified { background: #1d9bf0; }
+        .cc__tick--unverified { background: #d1d5db; }
+        .cc__tick svg { width: 10px; height: 10px; }
         .cc__title {
           font-size: 12px;
           color: var(--text-muted);
@@ -219,16 +224,18 @@ export default function CounsellorCard({ counsellor }: Props) {
           <div className="cc__info">
             <div className="cc__name">
               {counsellor.name}
-              {counsellor.verified && (
-                <span className="cc__tick" title="Verified by SoberNation">
-                  <svg viewBox="0 0 10 10" fill="none">
-                    <polyline points="2,5 4.2,7.5 8,3" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </span>
-              )}
             </div>
             {(() => { const t = cleanTitle(counsellor.title); return t !== 'Registered Counsellor' ? <div className="cc__title">{t}</div> : null })()}
           </div>
+          {/* Verification tick — top right */}
+          <span
+            className={`cc__tick ${counsellor.verified ? 'cc__tick--verified' : 'cc__tick--unverified'}`}
+            title={counsellor.verified ? 'Verified by SoberNation' : 'Listing not yet verified'}
+          >
+            <svg viewBox="0 0 10 10" fill="none">
+              <polyline points="2,5 4.2,7.5 8,3" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </span>
         </div>
 
         {specialisms.length > 0 && (
@@ -242,16 +249,6 @@ export default function CounsellorCard({ counsellor }: Props) {
         )}
 
         <div className="cc__footer">
-          {counsellor.verified ? (
-            <div className="cc__verified-label">
-              <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
-                <polyline points="2,5 4.2,7.5 8,3" stroke="#166534" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              Verified by SoberNation
-            </div>
-          ) : (
-            <div className="cc__unverified-badge">Unverified listing</div>
-          )}
           <span className="cc__cta">View profile →</span>
         </div>
       </Link>

@@ -5,7 +5,7 @@
  */
 import { notFound } from 'next/navigation'
 import { getLocation } from '../../../lib/locations'
-import { getRehabsForLocation, getCentreSlug } from '../../../lib/rehabs'
+import { getRehabsForLocation, getCorrectCentreSlug } from '../../../lib/rehabs'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import type { RehabCentre } from '../../../lib/rehabs'
@@ -45,7 +45,7 @@ function isPrivate(name: string, serviceType: string): boolean {
 function CentreCard({ centre, townSlug }: { centre: RehabCentre; townSlug: string }) {
   const badge = serviceTypeLabel(centre.serviceType)
   const private_ = isPrivate(centre.name, centre.serviceType)
-  const slug = getCentreSlug(centre, townSlug)
+  const slug = getCorrectCentreSlug(centre, townSlug)
   const initials = centre.name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase()
   const specs = centre.specialism ? centre.specialism.split('|').slice(0, 2).map(s => s.trim()).filter(Boolean) : []
 

@@ -186,16 +186,37 @@ export interface CentreWithSlug extends RehabCentre {
 
 /** Pre-built slug → centre map for O(1) lookup (built once at module load) */
 const _centreBySlug: Map<string, CentreWithSlug> = new Map()
+/** Pre-built cqcUrl → centre map — resolves canonical slugs for aggregated cities */
+const _centreByUrl: Map<string, CentreWithSlug> = new Map()
 for (const [townSlug, townData] of Object.entries(rehabData.byTown)) {
   for (const centre of townData.centres) {
     const slug = toCentreSlug(centre.name, townSlug)
-    _centreBySlug.set(slug, { ...centre, slug, townSlug, townName: townData.town })
+    const withSlug: CentreWithSlug = { ...centre, slug, townSlug, townName: townData.town }
+    _centreBySlug.set(slug, withSlug)
+    if (centre.cqcUrl) _centreByUrl.set(centre.cqcUrl, withSlug)
   }
 }
 
 /** Find a single centre by its slug — O(1) lookup */
 export function getCentreBySlug(slug: string): CentreWithSlug | null {
   return _centreBySlug.get(slug) ?? null
+}
+
+/** Find a centre by its CQC URL — resolves canonical slug even for aggregated cities */
+export function getCentreByUrl(url: string): CentreWithSlug | null {
+  return _centreByUrl.get(url) ?? null
+}
+
+/**
+ * Get the correct slug for linking — uses cqcUrl lookup first to handle borough
+ * aggregation (e.g. London centres stored under borough slugs, not 'london').
+ */
+export function getCorrectCentreSlug(centre: RehabCentre, fallbackTownSlug: string): string {
+  if (centre.cqcUrl) {
+    const found = _centreByUrl.get(centre.cqcUrl)
+    if (found) return found.slug
+  }
+  return toCentreSlug(centre.name, fallbackTownSlug)
 }
 
 /** Returns all centre slugs (for sitemap generation) */

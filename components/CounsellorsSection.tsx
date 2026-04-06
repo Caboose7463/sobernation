@@ -214,6 +214,10 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
           </p>
         )}
 
+        <p style={{ fontSize: 12, color: 'var(--text-light)', margin: '0 0 14px', lineHeight: 1.5 }}>
+          Blue tick listings have been identity-checked and verified by SoberNation.
+        </p>
+
         {counsellors.length > 0 ? (
           <div className="cs-grid">
             {counsellors.map(c => (
