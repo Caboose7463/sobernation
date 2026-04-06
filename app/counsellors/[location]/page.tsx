@@ -20,6 +20,26 @@ function getSupabase() {
   )
 }
 
+const CITY_SLUGS: Record<string, string[]> = {
+  london: [
+    'london', 'battersea', 'fulham', 'brent', 'croydon', 'city-of-westminster',
+    'barking', 'becontree', 'edmonton', 'barnet', 'camden', 'hackney', 'hammersmith',
+    'haringey', 'islington', 'kensington', 'lambeth', 'lewisham', 'newham',
+    'southwark', 'tower-hamlets', 'waltham-forest', 'wandsworth', 'westminster',
+    'enfield', 'enfield-town', 'greenwich', 'havering', 'hillingdon', 'hounslow',
+    'kingston', 'merton', 'redbridge', 'richmond', 'sutton', 'dagenham',
+  ],
+  manchester: ['manchester', 'salford', 'stockport', 'oldham', 'rochdale', 'bolton', 'bury', 'wigan', 'tameside', 'trafford'],
+  birmingham: ['birmingham', 'sandwell', 'walsall', 'wolverhampton', 'coventry', 'solihull'],
+  leeds: ['leeds', 'bradford', 'wakefield', 'calderdale', 'kirklees'],
+  liverpool: ['liverpool', 'knowsley', 'sefton', 'st-helens', 'wirral'],
+  sheffield: ['sheffield', 'barnsley', 'doncaster', 'rotherham'],
+  bristol: ['bristol', 'bath', 'north-somerset', 'south-gloucestershire'],
+  edinburgh: ['edinburgh', 'glasgow', 'east-kilbride'],
+  newcastle: ['newcastle', 'gateshead', 'sunderland'],
+}
+function expandSlugs(slug: string): string[] { return CITY_SLUGS[slug] ?? [slug] }
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { location } = await params
   const loc = getLocation(location)
@@ -38,10 +58,12 @@ export default async function CounsellorsLocationPage({ params }: Props) {
 
   const supabase = getSupabase()
 
+  const slugsToQuery = expandSlugs(location)
+
   const { data: counsellors, error } = await supabase
     .from('counsellors')
     .select('id, name, title, location_name, location_slug, specialisms, phone, email, website, photo_url, verified, listing_type, profile_slug')
-    .eq('location_slug', location)
+    .in('location_slug', slugsToQuery)
     .order('verified', { ascending: false })
     .order('name', { ascending: true })
     .limit(50)

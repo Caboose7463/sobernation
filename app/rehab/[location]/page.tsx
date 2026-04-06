@@ -12,6 +12,9 @@ import FaqBlock from '../../../components/FaqBlock'
 import Breadcrumb from '../../../components/Breadcrumb'
 import LastReviewed from '../../../components/LastReviewed'
 import CounsellorsSection from '../../../components/CounsellorsSection'
+import ArticleCard from '../../../components/ArticleCard'
+import { getSupabase } from '../../../lib/articles'
+import type { Article } from '../../../lib/articles'
 
 export const dynamicParams = true
 export const revalidate = 604800 // ISR: regenerate after 7 days
@@ -82,6 +85,17 @@ export default async function RehabLocationPage(
   if (!loc) notFound()
   const rehabsResult = getRehabsForLocation(location, loc.name)
   const faqs = buildFaqs(loc.name)
+
+  // Fetch articles tagged with this location
+  const supabase = getSupabase()
+  const { data: locationArticles } = await supabase
+    .from('articles')
+    .select('*')
+    .eq('status', 'published')
+    .contains('location_slugs', [location])
+    .order('published_at', { ascending: false })
+    .limit(3)
+  const articles = (locationArticles ?? []) as Article[]
 
   const breadcrumbs = [
     { name: 'Home', href: '/' },
@@ -207,6 +221,25 @@ export default async function RehabLocationPage(
                 </Link>
               ))}
             </div>
+
+            {/* Location articles */}
+            {articles.length > 0 && (
+              <div style={{ marginBottom: 40 }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 16, gap: 12, flexWrap: 'wrap' }}>
+                  <h2 style={{ fontSize: 17, fontWeight: 700, color: 'var(--text)', margin: 0 }}>
+                    Latest guides for {loc.name}
+                  </h2>
+                  <Link href={`/articles?tag=${location}`} style={{ fontSize: 13, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}>
+                    See all →
+                  </Link>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {articles.map(a => (
+                    <ArticleCard key={a.id} article={a} compact />
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* FAQ */}
             <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 16 }}>

@@ -24,18 +24,51 @@ function getSupabase() {
 
 const SELECT = 'id, name, title, location_name, location_slug, specialisms, phone, email, website, photo_url, verified, listing_type, profile_slug'
 
+/**
+ * For major cities, counsellors are stored under borough/district slugs.
+ * When querying for e.g. 'london', we expand to all known sub-area slugs.
+ */
+const CITY_SLUGS: Record<string, string[]> = {
+  london: [
+    'london', 'battersea', 'fulham', 'brent', 'croydon', 'city-of-westminster',
+    'barking', 'becontree', 'edmonton', 'barnet', 'camden', 'hackney', 'hammersmith',
+    'haringey', 'islington', 'kensington', 'lambeth', 'lewisham', 'newham',
+    'southwark', 'tower-hamlets', 'waltham-forest', 'wandsworth', 'westminster',
+    'enfield', 'enfield-town', 'greenwich', 'havering', 'hillingdon', 'hounslow',
+    'kingston', 'merton', 'redbridge', 'richmond', 'sutton', 'dagenham',
+  ],
+  manchester: [
+    'manchester', 'salford', 'stockport', 'oldham', 'rochdale', 'bolton', 'bury', 'wigan', 'tameside', 'trafford',
+  ],
+  birmingham: [
+    'birmingham', 'sandwell', 'walsall', 'wolverhampton', 'coventry', 'solihull',
+  ],
+  leeds: ['leeds', 'bradford', 'wakefield', 'calderdale', 'kirklees'],
+  liverpool: ['liverpool', 'knowsley', 'sefton', 'st-helens', 'wirral'],
+  sheffield: ['sheffield', 'barnsley', 'doncaster', 'rotherham'],
+  bristol: ['bristol', 'bath', 'north-somerset', 'south-gloucestershire'],
+  edinburgh: ['edinburgh', 'glasgow', 'east-kilbride'],
+  newcastle: ['newcastle', 'gateshead', 'sunderland'],
+}
+
+/** Expand a city slug into all its sub-area slugs for querying */
+function expandSlugs(slug: string): string[] {
+  return CITY_SLUGS[slug] ?? [slug]
+}
+
 export default async function CounsellorsSection({ locationSlug, locationName }: Props) {
   let counsellors: Counsellor[] = []
   let nearbyCity: string | null = null
 
   try {
     const supabase = getSupabase()
+    const slugsToQuery = expandSlugs(locationSlug)
 
-    // 1. Try exact location match
+    // 1. Try exact location match (or aggregated city match)
     const { data: exact } = await supabase
       .from('counsellors')
       .select(SELECT)
-      .eq('location_slug', locationSlug)
+      .in('location_slug', slugsToQuery)
       .order('verified', { ascending: false })
       .order('name', { ascending: true })
       .limit(3)
@@ -43,27 +76,23 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
     if (exact && exact.length > 0) {
       counsellors = exact
     } else {
-      // 2. Proximity fallback — find any seeded city and show those
-      // Get all distinct location_slugs that have counsellors
+      // 2. Proximity fallback — find nearest seeded city
       const { data: seeded } = await supabase
         .from('counsellors')
         .select('location_slug, location_name')
-        .neq('location_slug', locationSlug)
+        .not('location_slug', 'in', `(${slugsToQuery.join(',')})`)
         .limit(1000)
 
       if (seeded && seeded.length > 0) {
-        // Use locations.json to find nearest by lat/lng
         try {
           // eslint-disable-next-line @typescript-eslint/no-require-imports
           const locData = require('../data/locations.json') as { locations: Array<{ slug: string; lat: number; lng: number }> }
           const current = locData.locations.find(l => l.slug === locationSlug)
 
           if (current) {
-            // Build set of seeded slugs with their location data
             const seededSlugs = [...new Set(seeded.map(s => s.location_slug))]
             const seededWithCoords = locData.locations.filter(l => seededSlugs.includes(l.slug))
 
-            // Find closest
             let nearest = seededWithCoords[0]
             let minDist = Infinity
             for (const loc of seededWithCoords) {
@@ -75,10 +104,11 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
             }
 
             if (nearest) {
+              const nearestSlugs = expandSlugs(nearest.slug)
               const { data: nearby } = await supabase
                 .from('counsellors')
                 .select(SELECT)
-                .eq('location_slug', nearest.slug)
+                .in('location_slug', nearestSlugs)
                 .order('verified', { ascending: false })
                 .limit(3)
 
