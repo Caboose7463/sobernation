@@ -7,7 +7,7 @@ import NearestCentres from '../../../components/NearestCentres'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
-export const revalidate = 3600 // 1 hour ISR
+export const dynamic = 'force-dynamic'
 
 interface Props {
   params: Promise<{ location: string }>

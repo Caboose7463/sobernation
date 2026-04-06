@@ -160,7 +160,7 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
           <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>Showing {limit} of {total}</span>
         )}
         <Link
-          href={`/centres/${result.sourceTownSlug}`}
+          href={`/centres/${locationSlug}`}
           style={{ fontSize: 13, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}
         >
           View all {total} centres →
