@@ -13,6 +13,7 @@ import { getNearbyLocations } from '../../../lib/nearby-locations'
 import { getLocationStats, formatStat } from '../../../lib/location-stats'
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -450,8 +451,7 @@ export default async function TherapistPage({ params }: Props) {
 
           <div className="tp-hero-profile">
             {c.photo_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={c.photo_url} alt={`${c.name} — addiction counsellor in ${locationName}`} className="tp-avatar-lg" />
+              <Image src={c.photo_url} alt={`${c.name} — addiction counsellor in ${locationName}`} className="tp-avatar-lg" width={88} height={88} style={{ objectFit: 'cover' }} />
             ) : (
               <div className="tp-avatar-lg">{initials}</div>
             )}
@@ -710,8 +710,7 @@ export default async function TherapistPage({ params }: Props) {
                   return (
                     <Link key={r.id} href={r.profile_slug ? `/therapist/${r.profile_slug}` : `/counsellors/${r.location_slug}`} className="tp-related-card">
                       {r.photo_url
-                        // eslint-disable-next-line @next/next/no-img-element
-                        ? <img src={r.photo_url} alt={r.name} className="tp-related-avatar" style={{ objectFit: 'cover' }} />
+                        ? <Image src={r.photo_url} alt={r.name} className="tp-related-avatar" width={40} height={40} style={{ objectFit: 'cover' }} />
                         : <div className="tp-related-avatar">{ri}</div>}
                       <div className="tp-related-name">{r.name}</div>
                       <div className="tp-related-spec">{sanitiseTitle(r.title) ?? 'Counsellor'}</div>
@@ -730,8 +729,7 @@ export default async function TherapistPage({ params }: Props) {
             <div className="tp-sidebar-head">
               <div className="tp-sidebar-avatar">
                 {c.photo_url
-                  // eslint-disable-next-line @next/next/no-img-element
-                  ? <img src={c.photo_url} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                  ? <Image src={c.photo_url} alt={c.name} width={64} height={64} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
                   : initials}
               </div>
               <div className="tp-sidebar-name">{c.name}</div>

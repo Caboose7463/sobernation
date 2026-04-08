@@ -252,16 +252,7 @@ export default async function RehabLocationPage(
         </div>
       </div>
 
-      <footer style={{ borderTop: '1px solid var(--border)', padding: '28px 20px', background: 'var(--white)', marginTop: 48 }}>
-        <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-          <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation · CQC data: Open Government Licence</div>
-          <div style={{ display: 'flex', gap: 20 }}>
-            {[['About', '/about'], ['Editorial policy', '/editorial-policy'], ['Privacy', '/privacy-policy']].map(([label, href]) => (
-              <Link key={href} href={href} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{label}</Link>
-            ))}
-          </div>
-        </div>
-      </footer>
+      {/* Global SiteFooter rendered by layout.tsx */}
     </div>
   )
 }

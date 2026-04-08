@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import type { Metadata } from 'next'
 import { getStoryBySlug, getApprovedStories, getInitials } from '../../../lib/stories'
 
@@ -75,8 +76,7 @@ export default async function StoryPage(
             {/* Avatar */}
             <div style={{ width: 80, height: 80, borderRadius: '50%', overflow: 'hidden', marginBottom: 20, border: '3px solid var(--accent-pale)' }}>
               {story.imageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={story.imageUrl} alt={story.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <Image src={story.imageUrl} alt={story.name} width={80} height={80} style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
               ) : (
                 <div style={{
                   width: '100%', height: '100%',
@@ -152,8 +152,7 @@ export default async function StoryPage(
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
                       <div style={{ width: 40, height: 40, borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}>
                         {r.imageUrl ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={r.imageUrl} alt={r.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <Image src={r.imageUrl} alt={r.name} width={40} height={40} style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
                         ) : (
                           <div style={{ width: '100%', height: '100%', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 14, fontWeight: 700 }}>
                             {getInitials(r.name)}
@@ -174,17 +173,7 @@ export default async function StoryPage(
         </section>
       )}
 
-      {/* Footer */}
-      <footer style={{ borderTop: '1px solid var(--border)', padding: '28px 20px', background: 'var(--white)' }}>
-        <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-          <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation</div>
-          <div style={{ display: 'flex', gap: 20 }}>
-            {[['Home', '/'], ['All Stories', '/sober-stories'], ['Share', '/sober-stories/share']].map(([label, href]) => (
-              <Link key={href} href={href} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{label}</Link>
-            ))}
-          </div>
-        </div>
-      </footer>
+      {/* Global SiteFooter rendered by layout.tsx */}
     </div>
   )
 }

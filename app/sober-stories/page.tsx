@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import type { Metadata } from 'next'
 import { getApprovedStories, getInitials, excerptStory } from '../../lib/stories'
 
@@ -104,8 +105,7 @@ export default async function SoberStoriesPage() {
                     {/* Avatar / photo */}
                     <div style={{ height: 180, background: 'var(--bg-subtle)', overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
                       {story.imageUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={story.imageUrl} alt={story.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <Image src={story.imageUrl} alt={story.name} fill sizes="400px" style={{ objectFit: 'cover' }} />
                       ) : (
                         <div style={{
                           width: '100%', height: '100%',
@@ -118,6 +118,7 @@ export default async function SoberStoriesPage() {
                           {getInitials(story.name)}
                         </div>
                       )}
+
                       {/* Days sober badge */}
                       <div style={{
                         position: 'absolute', bottom: 10, right: 10,
@@ -173,17 +174,7 @@ export default async function SoberStoriesPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer style={{ borderTop: '1px solid var(--border)', padding: '28px 20px', background: 'var(--white)' }}>
-        <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-          <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation</div>
-          <div style={{ display: 'flex', gap: 20 }}>
-            {[['Home', '/'], ['Privacy', '/privacy-policy'], ['About', '/about']].map(([label, href]) => (
-              <Link key={href} href={href} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{label}</Link>
-            ))}
-          </div>
-        </div>
-      </footer>
+      {/* Global SiteFooter rendered by layout.tsx */}
     </div>
   )
 }
