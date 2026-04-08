@@ -106,7 +106,13 @@ export default function RehabTypePage({
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 12, marginBottom: 32 }}>
               {config.keyFacts.map((f, i) => (
                 <div key={i} style={{ padding: 16, background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
-                  <div style={{ fontSize: 20, marginBottom: 6 }}>{f.icon}</div>
+                  {/* Always render a clean SVG tick — never show '??' strings */}
+                  <div style={{ marginBottom: 8 }}>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                      <circle cx="10" cy="10" r="10" fill="#ecfdf5" />
+                      <polyline points="5.5,10.5 8.5,13.5 14.5,7.5" stroke="#16a34a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
                   <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>{f.label}</div>
                   <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', lineHeight: 1.4 }}>{f.value}</div>
                 </div>
@@ -184,16 +190,7 @@ export default function RehabTypePage({
         </div>
       </div>
 
-      <footer style={{ borderTop: '1px solid var(--border)', padding: '28px 20px', background: 'var(--white)', marginTop: 48 }}>
-        <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-          <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation</div>
-          <div style={{ display: 'flex', gap: 20 }}>
-            {[['About', '/about'], ['Editorial policy', '/editorial-policy'], ['Privacy', '/privacy-policy'], ['Find rehab', `/rehab/${locationSlug}`]].map(([l, h]) => (
-              <Link key={h} href={h} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{l}</Link>
-            ))}
-          </div>
-        </div>
-      </footer>
+      {/* No local footer here — layout.tsx renders the global SiteFooter */}
     </div>
   )
 }

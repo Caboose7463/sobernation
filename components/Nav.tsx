@@ -505,14 +505,6 @@ export default function Nav() {
             ))}
           </div>
 
-          {/* Contact — plain link, no dropdown */}
-          <Link
-            href="/contact"
-            className="sn-nav__btn"
-            style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}
-          >
-            Contact
-          </Link>
 
           {/* Right: search icon + CTA + burger */}
           <div className="sn-nav__right">
