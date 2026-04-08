@@ -5,6 +5,24 @@ import { createClient } from '@supabase/supabase-js'
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  // ── Return 410 Gone for old WordPress URLs ────────────────────────────────
+  // 410 = "permanently gone" — tells Google to deindex faster than 404
+  const WORDPRESS_PATHS = [
+    '/sample-page', '/wp-admin', '/wp-login.php', '/wp-content',
+    '/wp-includes', '/xmlrpc.php', '/feed',
+  ]
+  const WORDPRESS_PATTERNS = [/^\/2024\//, /^\/2025\/\d{2}\/\d{2}\//]
+  const isWordPressUrl =
+    WORDPRESS_PATHS.some(p => pathname === p || pathname.startsWith(p + '/')) ||
+    WORDPRESS_PATTERNS.some(re => re.test(pathname))
+
+  if (isWordPressUrl) {
+    return new NextResponse('Gone', {
+      status: 410,
+      headers: { 'Content-Type': 'text/plain' },
+    })
+  }
+
   // ── Protect /dashboard/* routes ──────────────────────────────────────────
   if (pathname.startsWith('/dashboard')) {
     const token = request.cookies.get('sb-access-token')?.value
@@ -38,5 +56,17 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*'],
+  matcher: [
+    '/dashboard/:path*',
+    '/sample-page/:path*',
+    '/sample-page',
+    '/2024/:path*',
+    '/wp-admin/:path*',
+    '/wp-login.php',
+    '/wp-content/:path*',
+    '/wp-includes/:path*',
+    '/xmlrpc.php',
+    '/feed',
+    '/feed/:path*',
+  ],
 }
