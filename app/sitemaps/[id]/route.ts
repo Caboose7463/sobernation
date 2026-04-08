@@ -130,7 +130,7 @@ export async function GET(
       { url: `${BASE}/how-to-help-someone-with-addiction`, lastmod: now, changefreq: 'monthly', priority: 0.90 },
       { url: `${BASE}/online-aa-meetings`, lastmod: now, changefreq: 'weekly', priority: 0.88 },
       { url: `${BASE}/suboxone-vs-methadone`, lastmod: now, changefreq: 'monthly', priority: 0.85 },
-      { url: `${BASE}/find-rehab`, lastmod: now, changefreq: 'weekly', priority: 0.92 },
+      { url: `${BASE}/find-my-rehab`, lastmod: now, changefreq: 'weekly', priority: 0.92 },
       { url: `${BASE}/community`, lastmod: now, changefreq: 'daily', priority: 0.85 },
       { url: `${BASE}/articles`, lastmod: now, changefreq: 'daily', priority: 0.90 },
       { url: `${BASE}/search`, lastmod: now, changefreq: 'monthly', priority: 0.60 },

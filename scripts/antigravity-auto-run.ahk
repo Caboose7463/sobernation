@@ -1,33 +1,32 @@
 ; ============================================================
-; Antigravity Auto-Runner
-; Watches the Antigravity window for a "Run" button and clicks it
-; 
+; Antigravity Auto-Runner  (fixed version)
+; Automatically clicks the "Run" button in Antigravity/Cursor
+;
 ; HOW TO USE:
 ;   1. Install AutoHotkey v2 from https://www.autohotkey.com/
-;   2. Double-click this file to run it
+;   2. Double-click this file — it starts immediately (ON by default)
 ;   3. Ctrl+Shift+R  →  toggle on/off
-;   4. A tray icon shows status (right-click to exit)
+;   4. Right-click the tray icon → Exit to quit
 ;
 ; ============================================================
 
 #Requires AutoHotkey v2.0
 #SingleInstance Force
 
-; ── Config ────────────────────────────────────────────────────────────────────
-POLL_MS      := 800          ; how often to scan (milliseconds)
-WIN_TITLE    := "Antigravity" ; partial window title to match
-BTN_TEXT     := "Run"         ; button text to look for
-
-; ── State ─────────────────────────────────────────────────────────────────────
-global isActive := false
+POLL_MS   := 600
+global isActive  := true   ; starts ON immediately
 global clickCount := 0
-global timerFn := ScanAndClick
+global timerFn   := ScanAndClick
 
-; ── Tray setup ─────────────────────────────────────────────────────────────────
-TraySetIcon(A_AhkPath, 2)
-A_IconTip := "Antigravity Auto-Runner (OFF)"
+; ── Tray ──────────────────────────────────────────────────────
+TraySetIcon(A_AhkPath, 1)
+A_IconTip := "Auto-Runner ON — Ctrl+Shift+R to pause"
+TrayTip("Auto-Runner ON", "Will auto-click Run in Antigravity/Cursor`nCtrl+Shift+R to pause", 2)
 
-; ── Keyboard shortcut: Ctrl+Shift+R ───────────────────────────────────────────
+; Start scanning immediately
+SetTimer(timerFn, POLL_MS)
+
+; ── Toggle hotkey: Ctrl+Shift+R ───────────────────────────────
 ^+r:: ToggleRunner()
 
 ToggleRunner() {
@@ -36,64 +35,63 @@ ToggleRunner() {
     if isActive {
         SetTimer(timerFn, POLL_MS)
         TraySetIcon(A_AhkPath, 1)
-        A_IconTip := "Antigravity Auto-Runner (ON) — Ctrl+Shift+R to stop"
-        TrayTip("Auto-Runner ON", "Will auto-click Run buttons in Antigravity`nCtrl+Shift+R to stop", 2)
+        A_IconTip := "Auto-Runner ON — Ctrl+Shift+R to pause"
+        TrayTip("Auto-Runner ON", "", 1)
     } else {
         SetTimer(timerFn, 0)
         TraySetIcon(A_AhkPath, 2)
-        A_IconTip := "Antigravity Auto-Runner (OFF)"
-        TrayTip("Auto-Runner OFF", "Clicked " clickCount " button(s) this session", 2)
+        A_IconTip := "Auto-Runner PAUSED — Ctrl+Shift+R to resume"
+        TrayTip("Auto-Runner PAUSED", "Clicked " clickCount " buttons this session", 2)
     }
 }
 
 ScanAndClick() {
-    global WIN_TITLE, BTN_TEXT, clickCount
+    global clickCount
 
-    ; Find the Antigravity window
-    hwnd := WinExist("ahk_exe antigravity.exe")
-    if !hwnd
-        hwnd := WinExist(WIN_TITLE " ahk_class")
-    if !hwnd
-        hwnd := WinExist(WIN_TITLE)
-    if !hwnd
-        return  ; window not found, skip
-
-    ; Try to find a button with "Run" text using UI Automation
-    try {
-        ; Use ControlGetHwnd to find button by text
-        btnHwnd := ControlGetHwnd("Button1", "ahk_id " hwnd)
-        loop {
-            if !btnHwnd
-                break
-            txt := ControlGetText("ahk_id " btnHwnd)
-            if InStr(txt, "Run") {
-                ControlClick("ahk_id " btnHwnd)
-                clickCount++
-                TrayTip("Clicked Run #" clickCount, "", 1)
-                return
-            }
+    ; ── 1. Try to find the window ──────────────────────────────
+    hwnd := 0
+    for title in ["Antigravity", "Cursor", "sobernation"] {
+        hwnd := WinExist(title)
+        if hwnd
             break
-        }
     }
+    if !hwnd
+        return
 
-    ; Fallback: enumerate all controls and find one containing "Run"
+    ; ── 2. Try UI Automation: enumerate controls for "Run" text ─
     try {
         controls := WinGetControls("ahk_id " hwnd)
         for ctrl in controls {
             try {
                 txt := ControlGetText(ctrl, "ahk_id " hwnd)
-                if InStr(txt, "Run") && !InStr(txt, "Running") {
+                if InStr(txt, "Run") && !InStr(txt, "Running") && !InStr(txt, "npm") {
                     ControlClick(ctrl, "ahk_id " hwnd)
                     clickCount++
-                    UpdateTray()
+                    A_IconTip := "Auto-Runner ON ×" clickCount
                     return
                 }
             }
         }
     }
-}
 
-UpdateTray() {
-    global clickCount
-    A_IconTip := "Antigravity Auto-Runner (ON) ×" clickCount
+    ; ── 3. Fallback: look for the blue Run button by pixel colour
+    ; The button is a vivid blue — search visible screen area
+    try {
+        CoordMode("Pixel", "Screen")
+        ; Try multiple shades of the blue button
+        for col in [0x2563EB, 0x1D4ED8, 0x1E6FD9, 0x3B82F6] {
+            if PixelSearch(&px, &py, 0, 0, A_ScreenWidth, A_ScreenHeight, col, 8) {
+                Click(px, py)
+                clickCount++
+                A_IconTip := "Auto-Runner ON ×" clickCount
+                return
+            }
+        }
+    }
+
+    ; ── 4. Last resort: send Alt+Enter to the window ─────────
+    try {
+        WinActivate("ahk_id " hwnd)
+        Send("!{Enter}")
+    }
 }

@@ -49,8 +49,8 @@ const nextConfig: NextConfig = {
       { source: '/liverpool', destination: '/rehab/liverpool', permanent: true },
       { source: '/bristol', destination: '/rehab/bristol', permanent: true },
       { source: '/edinburgh', destination: '/rehab/edinburgh', permanent: true },
-      // find-rehab (old slug) → find-my-rehab (new page)
-      { source: '/find-rehab', destination: '/find-my-rehab', permanent: false },
+      // find-rehab (old slug) → find-my-rehab (new page) — must be permanent (301) for Google to index destination
+      { source: '/find-rehab', destination: '/find-my-rehab', permanent: true },
     ]
   },
 };
