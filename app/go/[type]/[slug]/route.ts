@@ -11,7 +11,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { processClick } from '../../../lib/ads'
+import { processClick } from '../../../../lib/ads'
 
 export const dynamic = 'force-dynamic'
 
