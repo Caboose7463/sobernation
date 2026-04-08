@@ -127,7 +127,7 @@ export default function SiteFooter() {
               ['/am-i-an-alcoholic', 'Am I an alcoholic?'],
               ['/alcohol-units-calculator', 'Units calculator'],
               ['/addiction-cost-calculator', 'Cost calculator'],
-              ['/find-rehab', 'Find rehab near me'],
+              ['/find-my-rehab', 'Find rehab near me'],
             ].map(([href, label]) => (
               <Link key={href} href={href} style={{ fontSize: 13, color: '#9ca3af', textDecoration: 'none' }} className="footer-link">{label}</Link>
             ))}
