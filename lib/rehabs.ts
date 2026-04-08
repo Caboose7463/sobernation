@@ -63,6 +63,49 @@ const CITY_TO_BOROUGHS: Record<string, string[]> = {
   bournemouth: ['poole','christchurch-and-poole','dorset-and-poole'],
 }
 
+
+// ── Location coordinates (lazy-loaded from locations data for Haversine) ──────
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const _locCoords: Record<string, { lat: number; lng: number; name: string }> = (() => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const locs = require('../lib/locations') as { LOCATIONS: { slug: string; name: string; lat: number; lng: number }[] }
+    const map: Record<string, { lat: number; lng: number; name: string }> = {}
+    for (const l of locs.LOCATIONS) map[l.slug] = { lat: l.lat, lng: l.lng, name: l.name }
+    return map
+  } catch { return {} }
+})()
+
+function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6371
+  const dLat = (lat2 - lat1) * Math.PI / 180
+  const dLng = (lng2 - lng1) * Math.PI / 180
+  const a = Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+}
+
+/**
+ * For towns with no proximity.json entry, find the nearest rehab-data town
+ * using Haversine distance on LOCATIONS coordinates.
+ */
+function findNearestByHaversine(slug: string): { slug: string; name: string; distanceKm: number } | null {
+  const origin = _locCoords[slug]
+  if (!origin) return null
+  const towns = Object.keys(rehabData.byTown)
+  let best: { slug: string; name: string; distanceKm: number } | null = null
+  for (const t of towns) {
+    if (t === slug) continue
+    const coords = _locCoords[t]
+    if (!coords) continue
+    const dist = haversineKm(origin.lat, origin.lng, coords.lat, coords.lng)
+    if (!best || dist < best.distanceKm) {
+      best = { slug: t, name: coords.name, distanceKm: Math.round(dist) }
+    }
+  }
+  return best
+}
+
 function collectCentres(slug: string): RehabCentre[] {
   const direct = rehabData.byTown[slug]?.centres ?? []
   const boroughSlugs = CITY_TO_BOROUGHS[slug] ?? []
@@ -77,6 +120,7 @@ function collectCentres(slug: string): RehabCentre[] {
   }
   return all
 }
+
 
 export interface RehabsResult {
   centres: RehabCentre[]
@@ -95,40 +139,74 @@ export interface RehabsResult {
  * 
  * Returns real CQC centres for the exact location if available.
  * Falls back to the pre-computed nearest CQC town otherwise.
- * Always returns at least some centres for every UK location.
+ * Triggers fallback when fewer than 3 direct centres — sparse data
+ * (e.g. Salisbury = 2 centres) gets supplemented by the nearest town.
  */
 export function getRehabsForLocation(slug: string, locationName: string): RehabsResult {
   // 1. Try direct / borough-aggregated match
   const direct = collectCentres(slug)
-  if (direct.length > 0) {
+
+  // If we have 3+ centres, great — return them directly
+  if (direct.length >= 3) {
     return { centres: direct, isFallback: false, sourceArea: locationName, sourceTownSlug: slug, distanceKm: 0 }
   }
 
-  // 2. Proximity fallback — pre-computed nearest CQC town
+  // 2. Proximity fallback — for 0-2 direct centres, supplement from nearest town
   const prox = proximityData[slug]
   if (prox) {
     const fallbackCentres = collectCentres(prox.nearestSlug)
     if (fallbackCentres.length > 0) {
+      // If we had some direct centres, prepend them to the fallback list
+      const combined = [
+        ...direct,
+        ...fallbackCentres.filter(c => !direct.some(d => d.cqcUrl === c.cqcUrl)),
+      ]
       return {
-        centres: fallbackCentres,
-        isFallback: true,
-        sourceArea: prox.nearestName,
-        sourceTownSlug: prox.nearestSlug,
-        distanceKm: prox.distanceKm,
+        centres: combined,
+        isFallback: direct.length === 0,
+        sourceArea: direct.length > 0 ? locationName : prox.nearestName,
+        sourceTownSlug: direct.length > 0 ? slug : prox.nearestSlug,
+        distanceKm: direct.length > 0 ? 0 : prox.distanceKm,
       }
     }
   }
 
-  // 3. Last resort — return London centres (always have data)
-  const london = collectCentres('london')
+  // 3. Live Haversine fallback for towns with no proximity entry.
+  //    Find the nearest town in rehabs.json by straight-line distance.
+  const liveResult = findNearestByHaversine(slug)
+  if (liveResult) {
+    const fallbackCentres = collectCentres(liveResult.slug)
+    if (fallbackCentres.length > 0) {
+      const combined = [
+        ...direct,
+        ...fallbackCentres.filter(c => !direct.some(d => d.cqcUrl === c.cqcUrl)),
+      ]
+      return {
+        centres: combined,
+        isFallback: direct.length === 0,
+        sourceArea: direct.length > 0 ? locationName : liveResult.name,
+        sourceTownSlug: direct.length > 0 ? slug : liveResult.slug,
+        distanceKm: direct.length > 0 ? 0 : liveResult.distanceKm,
+      }
+    }
+  }
+
+  // 4. Return whatever direct we have (may be 0-2), or empty
+  if (direct.length > 0) {
+    return { centres: direct, isFallback: false, sourceArea: locationName, sourceTownSlug: slug, distanceKm: 0 }
+  }
+
+  // 5. Last resort — return Southampton/London centres
+  const lastResort = collectCentres('southampton')
   return {
-    centres: london.slice(0, 5),
+    centres: lastResort.slice(0, 6),
     isFallback: true,
-    sourceArea: 'London',
-    sourceTownSlug: 'london',
+    sourceArea: 'Southampton',
+    sourceTownSlug: 'southampton',
     distanceKm: 999,
   }
 }
+
 
 /**
  * Direct lookup — exact slug only, no fallback.

@@ -38379,16 +38379,17 @@ export function getLocationSlugs(): string[] {
   return LOCATIONS.map(l => l.slug)
 }
 
-// Returns slugs for all towns that have real rehab data in rehabs.json
-// Used by generateStaticParams across all [location] page routes
+// Returns slugs for ALL UK towns — every location in the dataset gets a page.
+// Pages not pre-built are rendered on demand via dynamicParams = true (ISR).
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export function getTopLocationSlugs(): string[] {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const rehabData = require('../data/rehabs.json') as { byTown: Record<string, unknown> }
   const withData = new Set(Object.keys(rehabData.byTown))
-  // Return all locations that either have direct data or are in our known list
+  // Pre-build: towns with direct data, or population >= 1000 (covers every meaningful UK town)
+  // Smaller villages are still served on demand via dynamicParams = true
   return LOCATIONS
-    .filter(l => withData.has(l.slug) || l.population >= 10000)
+    .filter(l => withData.has(l.slug) || l.population >= 1000)
     .map(l => l.slug)
 }
 

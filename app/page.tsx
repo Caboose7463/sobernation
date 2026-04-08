@@ -478,19 +478,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer style={{ borderTop: '1px solid var(--border)', padding: '32px 20px', background: 'var(--white)' }}>
-        <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
-          <div style={{ fontSize: 12, color: 'var(--text-light)' }}>
-            © {new Date().getFullYear()} SoberNation — UK alcohol &amp; drug recovery hub
-          </div>
-          <div style={{ display: 'flex', gap: 20 }}>
-            {[['About', '/about'], ['Editorial policy', '/editorial-policy'], ['Privacy', '/privacy-policy'], ['Terms', '/terms']].map(([label, href]) => (
-              <Link key={href} href={href} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{label}</Link>
-            ))}
-          </div>
-        </div>
-      </footer>
+
+      {/* Footer is rendered globally by layout.tsx — do not duplicate here */}
 
     </div>
   )
