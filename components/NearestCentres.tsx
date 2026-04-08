@@ -51,18 +51,32 @@ function CentreRow({ centre, sourceTownSlug, verified }: { centre: RehabCentre; 
         transition: 'border-color 0.15s',
       }}
     >
-      {/* Avatar */}
-      <div style={{
-        width: 40, height: 40, borderRadius: 8, flexShrink: 0,
-        background: 'var(--accent-pale)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 13, fontWeight: 700, color: 'var(--accent)',
-        border: '1px solid var(--border)',
-        overflow: 'hidden', position: 'relative',
-      }}>
-        {imageUrl
-          ? <Image src={imageUrl} alt={centre.name} fill sizes="40px" style={{ objectFit: 'contain', padding: 3 }} />
-          : initials}
+      {/* Avatar with blue tick overlay */}
+      <div style={{ position: 'relative', flexShrink: 0, width: 40, height: 40 }}>
+        <div style={{
+          width: 40, height: 40, borderRadius: 8,
+          background: 'var(--accent-pale)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 13, fontWeight: 700, color: 'var(--accent)',
+          border: '1px solid var(--border)',
+          overflow: 'hidden', position: 'relative',
+        }}>
+          {imageUrl
+            ? <Image src={imageUrl} alt={centre.name} fill sizes="40px" style={{ objectFit: 'contain', padding: 3 }} />
+            : initials}
+        </div>
+        {verified && (
+          <span style={{
+            position: 'absolute', bottom: -2, right: -2,
+            width: 16, height: 16, borderRadius: '50%',
+            background: '#1d9bf0', border: '2px solid #fff',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
+              <polyline points="2,5 4.2,7.5 8,3" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </span>
+        )}
       </div>
 
       {/* Info */}
@@ -76,8 +90,7 @@ function CentreRow({ centre, sourceTownSlug, verified }: { centre: RehabCentre; 
       </div>
 
       {verified ? (
-        <span style={{ fontSize: 12, fontWeight: 700, color: '#1d9bf0', whiteSpace: 'nowrap', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="#1d9bf0"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+        <span style={{ fontSize: 12, fontWeight: 600, color: '#1d9bf0', whiteSpace: 'nowrap', flexShrink: 0 }}>
           Verified
         </span>
       ) : (
