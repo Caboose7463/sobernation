@@ -86,7 +86,7 @@ const SECTIONS = [
   },
   {
     title: 'Corrections policy',
-    body: 'We take accuracy seriously and correct errors promptly. If you believe any content on SoberNation is factually inaccurate — including clinical claims, facility information, or statistics — please contact editorial@sobernation.co.uk with the specific claim, the page URL, and your proposed correction. We will review all correction requests within 5 working days and, if the claim is found to be inaccurate, correct it and note the correction at the bottom of the affected page.',
+    body: 'We take accuracy seriously and correct errors promptly. If you believe any content on SoberNation is factually inaccurate — including clinical claims, facility information, or statistics — please contact info@sobernation.co.uk with the specific claim, the page URL, and your proposed correction. We will review all correction requests within 5 working days and, if the claim is found to be inaccurate, correct it and note the correction at the bottom of the affected page.',
   },
   {
     title: 'Independence and commercial relationships',
@@ -177,11 +177,22 @@ export default function EditorialPolicyPage() {
         <div style={{ padding: '24px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', marginTop: 8 }}>
           <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>Editorial contact</h2>
           <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 12 }}>
-            For corrections, factual queries, or editorial enquiries:
+            For corrections, factual queries, or editorial enquiries, please contact us using any of the methods below.
           </p>
-          <a href="mailto:editorial@sobernation.co.uk" style={{ fontSize: 14, fontWeight: 700, color: 'var(--accent)', textDecoration: 'none' }}>
-            editorial@sobernation.co.uk
-          </a>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>
+              <strong style={{ color: 'var(--text)' }}>Email:</strong>{' '}
+              <a href="mailto:info@sobernation.co.uk" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 700 }}>info@sobernation.co.uk</a>
+            </div>
+            <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>
+              <strong style={{ color: 'var(--text)' }}>Phone:</strong>{' '}
+              <a href="tel:02046344476" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 700 }}>020 4634 4476</a>
+              <span style={{ fontSize: 12, marginLeft: 6 }}>Monday–Friday, 9am–5pm</span>
+            </div>
+            <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>
+              <strong style={{ color: 'var(--text)' }}>Post:</strong> Office 1, 1 Coldbath Square, London, EC1R 5HL
+            </div>
+          </div>
         </div>
 
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 32 }}>

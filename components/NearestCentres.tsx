@@ -1,62 +1,22 @@
-'use client'
-
 /**
- * NearestCentres — shows CQC-registered rehab/drug services on every location page.
- * - Blue verified tick on avatar overlay for CQC-registered centres
- * - Verified = first card always; unverified competitors folded behind toggle
+ * NearestCentres — shows CQC-registered rehab centres on location pages.
+ *
+ * Sponsored slots (from the auction engine) appear above this section.
+ * This component renders only the organic flat list — no verified labels,
+ * no ranking manipulation, no fold. Just a clean directory.
  */
 
 import Link from 'next/link'
-import { useState } from 'react'
+import Image from 'next/image'
 import type { RehabsResult, RehabCentre } from '../lib/rehabs'
 import { getCorrectCentreSlug, getCentreImage } from '../lib/rehabs'
-import Image from 'next/image'
+import SponsoredSlots from './SponsoredSlots'
 
 interface Props {
   result: RehabsResult
   locationName: string
   locationSlug: string
   limit?: number
-}
-
-// ── FoldedCompetitors ─ hides unverified listings behind a toggle ─────
-
-function FoldedCompetitors({ centres, sourceTownSlug, type }: {
-  centres: RehabCentre[]; sourceTownSlug: string; type: 'centre'
-}) {
-  const [open, setOpen] = useState(false)
-  if (!centres.length) return null
-  return (
-    <div>
-      {/* Toggle button */}
-      <button
-        onClick={() => setOpen(o => !o)}
-        style={{
-          width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '10px 14px', borderRadius: 8,
-          border: '1px dashed var(--border-mid)', background: 'var(--bg)',
-          cursor: 'pointer', fontSize: 13, color: 'var(--text-muted)', fontWeight: 500,
-          transition: 'background 0.15s',
-        }}
-      >
-        <span>
-          <svg style={{ verticalAlign: 'middle', marginRight: 6 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-          {open ? 'Hide' : `View ${centres.length} other ${type === 'centre' ? 'centres' : 'counsellors'} (unverified)`}
-        </span>
-        <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
-          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd"/>
-        </svg>
-      </button>
-      {/* Folded content */}
-      {open && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8, paddingTop: 4, borderTop: '1px solid var(--border)', opacity: 0.7 }}>
-          {centres.map((centre, i) => (
-            <CentreRow key={centre.cqcUrl || i} centre={centre} sourceTownSlug={sourceTownSlug} index={i + 1} />
-          ))}
-        </div>
-      )}
-    </div>
-  )
 }
 
 function fundingLabel(name: string, serviceType: string): string {
@@ -74,81 +34,56 @@ function typeLabel(serviceType: string): string {
   return 'Addiction Service'
 }
 
-// Only the first centre per list is shown as verified
-function CentreRow({ centre, sourceTownSlug, index }: { centre: RehabCentre; sourceTownSlug: string; index: number }) {
+// Clean organic listing card — no verified badges, no ranking logic
+function CentreRow({ centre, sourceTownSlug }: { centre: RehabCentre; sourceTownSlug: string }) {
   const slug = getCorrectCentreSlug(centre, sourceTownSlug)
   const funding = fundingLabel(centre.name, centre.serviceType)
   const type = typeLabel(centre.serviceType)
   const initials = centre.name.split(' ').filter(Boolean).slice(0, 2).map((w: string) => w[0]).join('').toUpperCase()
   const imageUrl = getCentreImage(centre.cqcUrl)
-  const verified = index === 0  // only first in each list
 
-  // Verified + has website → external link
-  if (verified && centre.website) {
-    return (
-      <a href={centre.website} target="_blank" rel="noopener noreferrer"
-        style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', border: '1px solid var(--border)', borderRadius: 10, textDecoration: 'none', background: 'var(--white)', transition: 'border-color 0.15s, box-shadow 0.15s' }}
-      >
-        <div style={{ position: 'relative', flexShrink: 0, width: 44, height: 44 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 10, background: 'var(--accent-pale, #e6f4f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: 'var(--accent, #1d6b5a)', letterSpacing: '-0.5px', overflow: 'hidden', position: 'relative', border: '1px solid var(--border)' }}>
-            {imageUrl ? <Image src={imageUrl} alt={`${centre.name} logo`} fill sizes="44px" style={{ objectFit: 'contain', padding: 4 }} /> : initials}
-          </div>
-          <span style={{ position: 'absolute', bottom: -3, right: -3, width: 16, height: 16, borderRadius: '50%', background: '#1d9bf0', border: '2px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><polyline points="2,5 4.2,7.5 8,3" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          </span>
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', lineHeight: 1.3, marginBottom: 3 }}>{centre.name}</div>
-          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{[type, funding, centre.address ? centre.address.split(',')[0] : null].filter(Boolean).join(' · ')}</div>
-        </div>
-        <span style={{ fontSize: 12, fontWeight: 700, color: '#16a34a', whiteSpace: 'nowrap', flexShrink: 0 }}>Verified ↗</span>
-      </a>
-    )
-  }
-
-  // Verified but no website → internal profile, still shows Verified badge
-  if (verified) {
-    return (
-      <Link href={`/centre/${slug}`}
-        style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', border: '1px solid var(--border)', borderRadius: 10, textDecoration: 'none', background: 'var(--white)', transition: 'border-color 0.15s, box-shadow 0.15s' }}
-      >
-        <div style={{ position: 'relative', flexShrink: 0, width: 44, height: 44 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 10, background: 'var(--accent-pale, #e6f4f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: 'var(--accent, #1d6b5a)', letterSpacing: '-0.5px', overflow: 'hidden', position: 'relative', border: '1px solid var(--border)' }}>
-            {imageUrl ? <Image src={imageUrl} alt={`${centre.name} logo`} fill sizes="44px" style={{ objectFit: 'contain', padding: 4 }} /> : initials}
-          </div>
-          <span style={{ position: 'absolute', bottom: -3, right: -3, width: 16, height: 16, borderRadius: '50%', background: '#1d9bf0', border: '2px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><polyline points="2,5 4.2,7.5 8,3" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          </span>
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', lineHeight: 1.3, marginBottom: 3 }}>{centre.name}</div>
-          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{[type, funding, centre.address ? centre.address.split(',')[0] : null].filter(Boolean).join(' · ')}</div>
-        </div>
-        <span style={{ fontSize: 12, fontWeight: 700, color: '#16a34a', whiteSpace: 'nowrap', flexShrink: 0 }}>Verified</span>
-      </Link>
-    )
-  }
-
-  // Not verified → internal profile
   return (
-    <Link href={`/centre/${slug}`}
-      style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', border: '1px solid var(--border)', borderRadius: 10, textDecoration: 'none', background: 'var(--white)', transition: 'border-color 0.15s, box-shadow 0.15s' }}
+    <Link
+      href={`/centre/${slug}`}
+      style={{
+        display: 'flex', alignItems: 'center', gap: 14,
+        padding: '13px 16px', border: '1px solid var(--border)',
+        borderRadius: 10, textDecoration: 'none',
+        background: 'var(--white)', transition: 'border-color 0.15s',
+      }}
     >
-      <div style={{ position: 'relative', flexShrink: 0, width: 44, height: 44 }}>
-        <div style={{ width: 44, height: 44, borderRadius: 10, background: 'var(--accent-pale, #e6f4f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: 'var(--accent, #1d6b5a)', letterSpacing: '-0.5px', overflow: 'hidden', position: 'relative', border: '1px solid var(--border)' }}>
-          {imageUrl ? <Image src={imageUrl} alt={`${centre.name} logo`} fill sizes="44px" style={{ objectFit: 'contain', padding: 4 }} /> : initials}
+      {/* Avatar */}
+      <div style={{
+        width: 40, height: 40, borderRadius: 8, flexShrink: 0,
+        background: 'var(--accent-pale)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 13, fontWeight: 700, color: 'var(--accent)',
+        border: '1px solid var(--border)',
+        overflow: 'hidden', position: 'relative',
+      }}>
+        {imageUrl
+          ? <Image src={imageUrl} alt={centre.name} fill sizes="40px" style={{ objectFit: 'contain', padding: 3 }} />
+          : initials}
+      </div>
+
+      {/* Info */}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', lineHeight: 1.3, marginBottom: 2 }}>
+          {centre.name}
+        </div>
+        <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+          {[type, funding, centre.address ? centre.address.split(',')[0] : null].filter(Boolean).join(' · ')}
         </div>
       </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', lineHeight: 1.3, marginBottom: 3 }}>{centre.name}</div>
-        <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{[type, funding, centre.address ? centre.address.split(',')[0] : null].filter(Boolean).join(' · ')}</div>
-      </div>
-      <span style={{ fontSize: 12, fontWeight: 400, color: '#9ca3af', whiteSpace: 'nowrap', flexShrink: 0 }}>Not Verified</span>
+
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="var(--text-muted)" strokeWidth="1.5">
+        <path d="M7 4l6 6-6 6" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
     </Link>
   )
 }
 
-export default function NearestCentres({ result, locationName, locationSlug, limit = 5 }: Props) {
+export default async function NearestCentres({ result, locationName, locationSlug, limit = 5 }: Props) {
   const displayed = result.centres.slice(0, limit)
   const total = result.centres.length
 
@@ -161,8 +96,6 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
             ? `Nearest rehab centres to ${locationName}`
             : `Rehab & addiction centres in ${locationName}`}
         </h2>
-
-        {/* Subtitle — just the count, no yellow warning box */}
         <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>
           {result.isFallback
             ? `Showing ${total} CQC-registered centres from ${result.sourceArea}${result.distanceKm < 999 ? ` (${Math.round(result.distanceKm)} km away)` : ''} — these centres may accept referrals.`
@@ -170,40 +103,41 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
         </p>
       </div>
 
-      {/* Centre list — verified at top, competitors folded */}
+      {/* ── Sponsored slots — auction runs fresh on each request ── */}
+      <SponsoredSlots locationSlug={locationSlug} listingType="centre" />
+
+      {/* ── Promote CTA — above organic list ── */}
+      <Link
+        href="/advertise"
+        style={{
+          display: 'flex', alignItems: 'center', gap: 14,
+          padding: '13px 16px', marginBottom: 8,
+          border: '1px dashed var(--border-mid)',
+          borderRadius: 10, textDecoration: 'none',
+          background: 'var(--bg)', transition: 'border-color 0.15s',
+        }}
+      >
+        <div style={{
+          width: 40, height: 40, borderRadius: 8,
+          background: 'var(--accent-pale)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+        }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+          </svg>
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', marginBottom: 1 }}>Promote your centre here</div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Appear above organic results · Pay per click · Cancel anytime</div>
+        </div>
+        <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', background: 'var(--accent)', padding: '5px 12px', borderRadius: 6, flexShrink: 0, whiteSpace: 'nowrap' }}>Get started →</span>
+      </Link>
+
+      {/* ── Organic list — flat, unranked ── */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {/* Verified card always visible */}
-        {displayed.slice(0, 1).map((centre, i) => (
-          <CentreRow key={centre.cqcUrl || i} centre={centre} sourceTownSlug={result.sourceTownSlug} index={i} />
+        {displayed.map((centre, i) => (
+          <CentreRow key={centre.cqcUrl || i} centre={centre} sourceTownSlug={result.sourceTownSlug} />
         ))}
-
-        {/* Unverified competitors — folded */}
-        {displayed.length > 1 && (
-          <FoldedCompetitors centres={displayed.slice(1)} sourceTownSlug={result.sourceTownSlug} type="centre" />
-        )}
-
-        {/* 6th card: Add your centre CTA — dashed border style */}
-        <Link
-          href="/verify?type=centre"
-          style={{
-            display: 'flex', alignItems: 'center', gap: 14,
-            padding: '14px 16px',
-            border: '1px dashed var(--border-mid)',
-            borderRadius: 10, textDecoration: 'none',
-            background: 'var(--bg)', transition: 'border-color 0.15s',
-          }}
-        >
-          <div style={{ width: 44, height: 44, borderRadius: 10, background: 'var(--accent-pale)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
-            </svg>
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', lineHeight: 1.3, marginBottom: 2 }}>Add your centre</div>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Missing from our directory? Add or claim your listing — from £99/month</div>
-          </div>
-          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', whiteSpace: 'nowrap', flexShrink: 0 }}>Get verified →</span>
-        </Link>
       </div>
 
       {/* Footer */}

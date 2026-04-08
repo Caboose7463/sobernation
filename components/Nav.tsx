@@ -505,6 +505,15 @@ export default function Nav() {
             ))}
           </div>
 
+          {/* Contact — plain link, no dropdown */}
+          <Link
+            href="/contact"
+            className="sn-nav__btn"
+            style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}
+          >
+            Contact
+          </Link>
+
           {/* Right: search icon + CTA + burger */}
           <div className="sn-nav__right">
             {/* Search icon — desktop + mobile */}
@@ -582,6 +591,13 @@ export default function Nav() {
               )}
             </div>
           ))}
+          {/* Mobile Contact link */}
+          <div className="sn-nav__mobile-section">
+            <Link href="/contact" className="sn-nav__mobile-toggle" style={{ textDecoration: 'none', display: 'flex' }}>
+              Contact
+            </Link>
+          </div>
+
           <div className="sn-nav__mobile-cta">
             <a href="tel:03001236600">
               Get help now — 0300 123 6600 (free, 24/7)

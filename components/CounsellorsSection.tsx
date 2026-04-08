@@ -1,16 +1,16 @@
 /**
  * CounsellorsSection — shown on location pages BELOW rehab centres.
  *
- * Shows up to 5 addiction counsellors for a given location.
- * Verified counsellor always shown first; unverified fold behind a toggle.
+ * Sponsored slots (auction-driven) appear first.
+ * Organic counsellor list is flat — no verified labels, no fold.
  */
 
 import { createClient } from '@supabase/supabase-js'
 import Link from 'next/link'
 import CounsellorCard, { type Counsellor } from './CounsellorCard'
-import FoldedCounsellors from './FoldedCounsellors'
+import SponsoredSlots from './SponsoredSlots'
 
-// ── FoldedCounsellors is in its own client component file ────────────────
+// ─────────────────────────────────────────────────────────────────────────
 
 interface Props {
   locationSlug: string
@@ -246,53 +246,42 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
           </p>
         )}
 
-        <p style={{ fontSize: 12, color: 'var(--text-light)', margin: '0 0 14px', lineHeight: 1.5 }}>
-          Blue tick listings have been identity-checked and verified by SoberNation.
-        </p>
+        {/* Sponsored counsellors — auction runs fresh each request */}
+        <SponsoredSlots locationSlug={locationSlug} listingType="counsellor" />
+
+        {/* ── Promote CTA — above organic list ── */}
+        <a
+          href="/advertise"
+          style={{
+            display: 'flex', alignItems: 'center', gap: 14,
+            padding: '13px 16px', marginBottom: 8,
+            border: '1px dashed var(--border-mid)',
+            borderRadius: 10, textDecoration: 'none',
+            background: 'var(--bg)', transition: 'border-color 0.15s',
+          }}
+        >
+          <div style={{
+            width: 40, height: 40, borderRadius: '50%',
+            background: 'var(--accent-pale)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+            </svg>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', marginBottom: 1 }}>Promote your counsellor listing</div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Appear above organic results · Pay per click · Cancel anytime</div>
+          </div>
+          <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', background: 'var(--accent)', padding: '5px 12px', borderRadius: 6, flexShrink: 0, whiteSpace: 'nowrap' }}>Get started →</span>
+        </a>
 
         {counsellors.length > 0 ? (
           <div className="cs-list">
-            {/* Verified counsellor always shown first */}
-            <CounsellorCard key={counsellors[0].id} counsellor={counsellors[0]} forceVerified={true} />
-
-            {/* Unverified competitors folded */}
-            {counsellors.length > 1 && (
-              <FoldedCounsellors counsellors={counsellors.slice(1)} />
-            )}
-
-            {/* 6th card: Add your counsellor CTA */}
-            <a
-              href="/verify?type=counsellor"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 14,
-                padding: '14px 16px',
-                border: '1px dashed var(--border-mid)',
-                borderRadius: 10,
-                textDecoration: 'none',
-                background: 'var(--bg)',
-                transition: 'border-color 0.15s',
-              }}
-            >
-              <div style={{
-                width: 44, height: 44, borderRadius: '50%',
-                background: 'var(--accent-pale)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                flexShrink: 0,
-              }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10"/>
-                  <line x1="12" y1="8" x2="12" y2="16"/>
-                  <line x1="8" y1="12" x2="16" y2="12"/>
-                </svg>
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', lineHeight: 1.3, marginBottom: 2 }}>Add your counsellor listing</div>
-                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Already in our directory? Claim your listing — from £10/month</div>
-              </div>
-              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', whiteSpace: 'nowrap', flexShrink: 0 }}>Get verified →</span>
-            </a>
+            {counsellors.map((c) => (
+              <CounsellorCard key={c.id} counsellor={c} />
+            ))}
           </div>
         ) : (
           <p style={{ fontSize: 14, color: 'var(--text-muted)', marginBottom: 14, lineHeight: 1.6 }}>
@@ -305,17 +294,16 @@ export default async function CounsellorsSection({ locationSlug, locationName }:
           <div className="cs-cta-left">
             <div className="cs-cta-icon">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
               </svg>
             </div>
             <div>
               <div className="cs-cta-text-title">Are you a counsellor in {locationName}?</div>
-              <div className="cs-cta-text-sub">Get a verified listing — from £10/month</div>
+              <div className="cs-cta-text-sub">Promote your listing — pay per click</div>
             </div>
           </div>
-          <Link href={`/verify?type=counsellor&location=${locationSlug}`} className="cs-cta-btn">
-            Add your listing →
+          <Link href="/advertise" className="cs-cta-btn">
+            Promote your listing →
           </Link>
         </div>
       </div>

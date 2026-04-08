@@ -235,6 +235,26 @@ export function getCentreSlug(centre: RehabCentre, townSlug: string): string {
   return toCentreSlug(centre.name, townSlug)
 }
 
+/**
+ * Search centres by name (case-insensitive, substring match).
+ * Used by /api/ads/search-listing for the autocomplete on the claim form.
+ */
+export function searchCentres(query: string, limit = 10): CentreWithSlug[] {
+  const q = query.toLowerCase().trim()
+  if (!q || q.length < 2) return []
+  const results: CentreWithSlug[] = []
+  const seen = new Set<string>()
+  for (const [, centre] of _centreBySlug) {
+    if (seen.has(centre.cqcUrl)) continue // dedupe borough-aggregated duplicates
+    if (centre.name.toLowerCase().includes(q)) {
+      results.push(centre)
+      seen.add(centre.cqcUrl)
+      if (results.length >= limit) break
+    }
+  }
+  return results
+}
+
 // ── Centre image lookup ───────────────────────────────────────────────────────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const _centreImages: Record<string, string | null> = (() => {
