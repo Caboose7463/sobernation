@@ -25,6 +25,10 @@ interface FormState {
   name: string
   locations: string[]            // all locations they serve
   featuredLocations: string[]    // subset they want featured (£99/mo each)
+  featuredPhone: string          // phone shown on featured listing (pre-filled from ownerPhone)
+  featuredLink: string           // optional direct link for featured listing
+  // Destination: where does clicking the listing go?
+  listingDestination: 'sobernation' | 'website'
   // Contact info (public on listing)
   phone: string
   website: string
@@ -272,6 +276,8 @@ export default function OnboardPage() {
     email: '', password: '',
     name: '',
     locations: [], featuredLocations: [],
+    featuredPhone: '', featuredLink: '',
+    listingDestination: 'sobernation',
     phone: '', website: '', contactEmail: '',
     docFile: null,
   })
@@ -667,12 +673,44 @@ export default function OnboardPage() {
               </div>
 
               {featuredCount > 0 && (
-                <div style={{ marginTop: 16, padding: '14px 16px', background: '#fffbeb', border: '1.5px solid #f59e0b', borderRadius: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: '#92400e' }}>Featured in {featuredCount} location{featuredCount !== 1 ? 's' : ''}</div>
-                    <div style={{ fontSize: 12, color: '#78350f' }}>£{PRICE_VERIFIED}/mo verified + £{PRICE_FEATURED} × {featuredCount} featured</div>
+                <div style={{ marginTop: 24, padding: '18px 16px', background: '#fffbeb', border: '1.5px solid #f59e0b', borderRadius: 12 }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#92400e', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#d97706"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    Your featured listing extras
                   </div>
-                  <span style={{ fontSize: 20, fontWeight: 800, color: '#92400e' }}>£{totalPrice}<span style={{ fontSize: 12, fontWeight: 500 }}>/mo</span></span>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                    <div>
+                      <label style={{ ...labelStyle, color: '#92400e' }}>
+                        Your mobile number <span style={{ fontWeight: 400, color: '#78350f' }}>(shown prominently for direct calls)</span>
+                      </label>
+                      <input
+                        className="ob-input"
+                        type="tel"
+                        value={form.featuredPhone || form.ownerPhone}
+                        onChange={e => updateForm('featuredPhone', e.target.value)}
+                        placeholder="e.g. 07700 900 123"
+                        style={inputStyle}
+                      />
+                      <p style={{ fontSize: 11, color: '#78350f', marginTop: 5 }}>People see this number and can tap to call instantly — no form needed.</p>
+                    </div>
+                    <div>
+                      <label style={{ ...labelStyle, color: '#92400e' }}>Add a direct link <span style={{ fontWeight: 400, color: '#78350f' }}>(optional)</span></label>
+                      <input
+                        className="ob-input"
+                        type="url"
+                        value={form.featuredLink}
+                        onChange={e => updateForm('featuredLink', e.target.value)}
+                        placeholder="e.g. https://yourbookingpage.com or your website"
+                        style={inputStyle}
+                      />
+                      <p style={{ fontSize: 11, color: '#78350f', marginTop: 5 }}>Shown as a button on your featured listing. Leave blank to use your SoberNation profile.</p>
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid #fde68a', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ fontSize: 12, color: '#78350f' }}>£{PRICE_VERIFIED}/mo verified + £{PRICE_FEATURED} × {featuredCount} featured</div>
+                    <span style={{ fontSize: 20, fontWeight: 800, color: '#92400e' }}>£{totalPrice}<span style={{ fontSize: 12, fontWeight: 500 }}>/mo</span></span>
+                  </div>
                 </div>
               )}
 
@@ -707,13 +745,60 @@ export default function OnboardPage() {
             </div>
           )}
 
-          {/* ── STEP 7: Contact info ── */}
+          {/* ── STEP 7: Contact info + destination ── */}
           {step === 7 && (
             <div>
               <div style={stepLabelStyle}>Step 7 of {TOTAL_STEPS}</div>
-              <h2 style={stepHeadingStyle}>How should people contact you?</h2>
-              <p style={stepSubStyle}>This goes on your verified listing. Leave anything blank to add later.</p>
-              <div style={{ marginTop: 28, display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <h2 style={stepHeadingStyle}>Where should we send people?</h2>
+              <p style={stepSubStyle}>Choose where visitors go when they click your listing.</p>
+
+              {/* Destination choice */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 24, marginBottom: 28 }}>
+                {(
+                  [
+                    {
+                      value: 'sobernation' as const,
+                      label: 'SoberNation listing',
+                      desc: 'People land on your profile page on our site — includes your photo, bio, contact details and reviews.',
+                      icon: (
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                      ),
+                    },
+                    {
+                      value: 'website' as const,
+                      label: 'Their own website',
+                      desc: 'Send visitors directly to your own site or booking page — best if you handle enquiries there.',
+                      icon: (
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+                          <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+                        </svg>
+                      ),
+                    },
+                  ] as const
+                ).map(opt => (
+                  <button
+                    key={opt.value}
+                    onClick={() => updateForm('listingDestination', opt.value)}
+                    style={{
+                      padding: '18px 16px', textAlign: 'left', cursor: 'pointer',
+                      border: form.listingDestination === opt.value ? '2px solid var(--accent)' : '1.5px solid var(--border)',
+                      borderRadius: 12,
+                      background: form.listingDestination === opt.value ? 'var(--accent-pale)' : '#fff',
+                      transition: 'all 0.15s',
+                    }}
+                  >
+                    <div style={{ color: form.listingDestination === opt.value ? 'var(--accent)' : 'var(--text-muted)', marginBottom: 10 }}>{opt.icon}</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 6 }}>{opt.label}</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5 }}>{opt.desc}</div>
+                  </button>
+                ))}
+              </div>
+
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)', marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Your contact details</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div>
                   <label style={labelStyle}>Phone number</label>
                   <input className="ob-input" type="tel" value={form.phone} onChange={e => updateForm('phone', e.target.value)} placeholder="e.g. 0800 123 4567" style={inputStyle} />
