@@ -133,7 +133,6 @@ export async function GET(
       { url: `${BASE}/find-my-rehab`, lastmod: now, changefreq: 'weekly', priority: 0.92 },
       { url: `${BASE}/community`, lastmod: now, changefreq: 'daily', priority: 0.85 },
       { url: `${BASE}/articles`, lastmod: now, changefreq: 'daily', priority: 0.90 },
-      { url: `${BASE}/search`, lastmod: now, changefreq: 'monthly', priority: 0.60 },
       // SEO sprint pages
       { url: `${BASE}/drug-addiction-treatment`, lastmod: now, changefreq: 'monthly', priority: 0.94 },
       { url: `${BASE}/alcohol-and-mental-health`, lastmod: now, changefreq: 'monthly', priority: 0.90 },
@@ -147,7 +146,6 @@ export async function GET(
       { url: `${BASE}/about`, lastmod: now, changefreq: 'yearly', priority: 0.70 },
       { url: `${BASE}/editorial-policy`, lastmod: now, changefreq: 'yearly', priority: 0.65 },
       { url: `${BASE}/privacy-policy`, lastmod: now, changefreq: 'yearly', priority: 0.60 },
-      { url: `${BASE}/cookie-policy`, lastmod: now, changefreq: 'yearly', priority: 0.55 },
       { url: `${BASE}/contact`, lastmod: now, changefreq: 'yearly', priority: 0.60 },
       { url: `${BASE}/terms`, lastmod: now, changefreq: 'yearly', priority: 0.60 },
     ]
@@ -235,52 +233,58 @@ export async function GET(
       { route: 'binge-drinking', weight: 0.80 },
     ], slugs, now)
   } else if (id === 7) {
-    // ── Shard 7: Milestone & sobriety time pages ──────────────────────────────
-    // days-sober: 1–3650
-    for (let d = 1; d <= 3650; d++) {
+    // ── Shard 7: Milestone sobriety pages only ────────────────────────────────
+    // Only submit pages with meaningfully differentiated content to the sitemap.
+    // Non-milestone pages still exist and serve users via ISR — just not submitted.
+
+    const daysSoberMilestones = [
+      1,2,3,4,5,6,7,10,14,21,28,30,45,60,75,90,100,
+      120,150,180,200,250,300,365,400,500,600,730,
+      1000,1095,1460,1825,2555,3650,7300,
+    ]
+    const daysCleanMilestones = [7,14,21,30,60,90,180,365,730,1095,1825,3650]
+    const weeksSoberMilestones = [1,2,3,4,8,13,26,52,104]
+    const monthsSoberMilestones = [1,3,6,12,18,24,36,60,120]
+
+    for (const d of daysSoberMilestones) {
       entries.push({
         url: `${BASE}/days-sober/${d}`,
         lastmod: now,
         changefreq: 'yearly',
-        priority: d <= 30 ? 0.72 : d <= 365 ? 0.65 : d <= 1000 ? 0.58 : 0.45,
+        priority: d <= 30 ? 0.75 : d <= 365 ? 0.68 : d <= 1000 ? 0.62 : 0.55,
       })
     }
-    // days-clean: 1–3650
-    for (let d = 1; d <= 3650; d++) {
+    for (const d of daysCleanMilestones) {
       entries.push({
         url: `${BASE}/days-clean/${d}`,
         lastmod: now,
         changefreq: 'yearly',
-        priority: d <= 30 ? 0.68 : d <= 365 ? 0.60 : 0.45,
+        priority: d <= 90 ? 0.65 : 0.55,
       })
     }
-    // weeks-sober: 1–520
-    for (let w = 1; w <= 520; w++) {
+    for (const w of weeksSoberMilestones) {
       entries.push({
         url: `${BASE}/weeks-sober/${w}`,
         lastmod: now,
         changefreq: 'yearly',
-        priority: w <= 52 ? 0.65 : 0.50,
+        priority: w <= 52 ? 0.65 : 0.55,
       })
     }
-    // months-sober: 1–120
-    const monthMilestones = new Set([1,3,6,12,18,24,36,60,120])
-    for (let m = 1; m <= 120; m++) {
+    for (const m of monthsSoberMilestones) {
       entries.push({
         url: `${BASE}/months-sober/${m}`,
         lastmod: now,
         changefreq: 'yearly',
-        priority: monthMilestones.has(m) ? 0.72 : 0.55,
+        priority: [1,3,6,12,24,60].includes(m) ? 0.72 : 0.58,
       })
     }
-    // years-sober: 1–50
-    const yearMilestones = new Set([1,2,5,10,20,25,50])
-    for (let y = 1; y <= 50; y++) {
+    // years-sober: 1–20 only (50 was excessive)
+    for (let y = 1; y <= 20; y++) {
       entries.push({
         url: `${BASE}/years-sober/${y}`,
         lastmod: now,
         changefreq: 'yearly',
-        priority: yearMilestones.has(y) ? 0.75 : 0.60,
+        priority: [1,2,5,10,20].includes(y) ? 0.75 : 0.60,
       })
     }
   }

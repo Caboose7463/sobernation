@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
+import { getLocationSlugs, getLocation, getTopLocationSlugs } from '../../../lib/locations'
+import { getNearbyLocations } from '../../../lib/nearby-locations'
 import { getRehabsForLocation } from '../../../lib/rehabs'
 import { locationMetadata, faqSchema, breadcrumbSchema, medicalWebPageSchema } from '../../../lib/seo'
 import { BUILD_MONTH, CQC_ATTRIBUTION } from '../../../lib/build-info'
@@ -13,6 +14,7 @@ import Breadcrumb from '../../../components/Breadcrumb'
 import LastReviewed from '../../../components/LastReviewed'
 import CounsellorsSection from '../../../components/CounsellorsSection'
 import ArticleCard from '../../../components/ArticleCard'
+import RelatedLinksBlock from '../../../components/RelatedLinksBlock'
 import { getSupabase } from '../../../lib/articles'
 import type { Article } from '../../../lib/articles'
 
@@ -96,6 +98,9 @@ export default async function RehabLocationPage(
     .order('published_at', { ascending: false })
     .limit(3)
   const articles = (locationArticles ?? []) as Article[]
+
+  // Nearby locations for internal linking
+  const nearbyLocations = getNearbyLocations(location, 8, 40)
 
   const breadcrumbs = [
     { name: 'Home', href: '/' },
@@ -253,6 +258,20 @@ export default async function RehabLocationPage(
       </div>
 
       {/* Global SiteFooter rendered by layout.tsx */}
+
+      {/* ── Nearby towns ── */}
+      {nearbyLocations.length > 0 && (
+        <div className="container-wide" style={{ paddingBottom: 48 }}>
+          <RelatedLinksBlock
+            title={`Rehab and addiction help near ${loc.name}`}
+            links={nearbyLocations.map(n => ({
+              label: `Rehab in ${n.name}`,
+              href: `/rehab/${n.slug}`,
+              description: `${Math.round(n.distanceKm)} km away`,
+            }))}
+          />
+        </div>
+      )}
     </div>
   )
 }

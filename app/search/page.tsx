@@ -12,6 +12,7 @@ import { getAllLocations } from '../../lib/locations'
 export const metadata: Metadata = {
   title: 'Search | SoberNation',
   description: 'Search SoberNation for rehab centres, addiction guides, sobriety tools, and support services across the UK.',
+  robots: { index: false, follow: true },
 }
 
 // Static pages that are searchable
