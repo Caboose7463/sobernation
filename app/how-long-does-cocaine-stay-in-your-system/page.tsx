@@ -123,7 +123,7 @@ export default function CocaineDetectionPage() {
             </div>
 
             <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 16 }}>Frequently asked questions</h2>
-            <FaqBlock faqs={faqs} schema={faqSchema(faqs)} />
+            <FaqBlock faqs={faqs} />
 
             <div style={{ marginTop: 28 }}>
               <Link href="/cocaine-addiction/london" style={{ display: 'inline-block', padding: '12px 20px', background: 'var(--accent)', color: '#fff', borderRadius: 'var(--radius-md)', fontWeight: 700, fontSize: 14, textDecoration: 'none', marginRight: 10 }}>Cocaine addiction help →</Link>

@@ -154,7 +154,7 @@ export default function RehabTypePage({
               <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 16 }}>
                 Frequently asked questions about {config.name.toLowerCase()} in {location}
               </h2>
-              <FaqBlock faqs={faqs} schema={faqSchema(faqs)} />
+              <FaqBlock faqs={faqs} />
             </div>
 
             {/* Cross-links: more services in this location */}

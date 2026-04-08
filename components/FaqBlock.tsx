@@ -4,20 +4,15 @@ import type { FaqItem } from '../lib/seo'
 
 interface FaqBlockProps {
   faqs: FaqItem[]
-  schema?: object  // pre-generated FAQ JSON-LD to inject
+  // schema prop intentionally removed — parent page emits the FAQPage JSON-LD
+  // in its own <script> tag; passing it here caused duplicate FAQPage errors in GSC
 }
 
-export default function FaqBlock({ faqs, schema }: FaqBlockProps) {
+export default function FaqBlock({ faqs }: FaqBlockProps) {
   const [open, setOpen] = useState<number | null>(null)
 
   return (
     <>
-      {schema && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-        />
-      )}
       <div className="faq-block">
         {faqs.map((faq, i) => (
           <div

@@ -132,7 +132,7 @@ export default async function MonthsSoberPage(
               <Link href="/sobriety-counter" style={{ display: 'inline-block', padding: '10px 18px', background: '#fff', color: 'var(--accent)', borderRadius: 'var(--radius-sm)', fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>Sobriety calculator →</Link>
             </div>
             <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 16 }}>Frequently asked questions about {months} month{months === 1 ? '' : 's'} sober</h2>
-            <FaqBlock faqs={faqs} schema={faqSchema(faqs)} />
+            <FaqBlock faqs={faqs} />
             <div style={{ marginTop: 24, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               {[
                 { label: `${days} days sober`, href: `/days-sober/${days}` },

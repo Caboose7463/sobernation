@@ -119,7 +119,7 @@ export default async function WeeksSoberPage(
             <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 16 }}>
               Frequently asked questions about {weeks} week{weeks === 1 ? '' : 's'} sober
             </h2>
-            <FaqBlock faqs={faqs} schema={faqSchema(faqs)} />
+            <FaqBlock faqs={faqs} />
             <div style={{ marginTop: 24, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               {[
                 { label: `${days} days sober`, href: `/days-sober/${days}` },

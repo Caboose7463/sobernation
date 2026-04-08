@@ -351,7 +351,7 @@ export default async function DaysSoberPage(
             <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 16 }}>
               Frequently asked questions about {days} days sober
             </h2>
-            <FaqBlock faqs={faqs} schema={faqSchema(faqs)} />
+            <FaqBlock faqs={faqs} />
 
           </div>
           <HelplinesSidebar />

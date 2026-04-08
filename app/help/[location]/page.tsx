@@ -264,7 +264,7 @@ export default async function HelpLocationPage(
               <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 16 }}>
                 Frequently asked questions about addiction help in {loc.name}
               </h2>
-              <FaqBlock faqs={faqs} schema={faqSchema(faqs)} />
+              <FaqBlock faqs={faqs} />
             </div>
 
           </div>

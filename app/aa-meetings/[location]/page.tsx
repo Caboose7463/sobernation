@@ -182,7 +182,7 @@ export default async function AAMeetingsPage(
             <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 16 }}>
               Frequently asked questions about AA in {loc.name}
             </h2>
-            <FaqBlock faqs={faqs} schema={faqSchema(faqs)} />
+            <FaqBlock faqs={faqs} />
           </div>
           <HelplinesSidebar />
         </div>

@@ -102,7 +102,7 @@ export default function SupportGroupPage({
             <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 16 }}>
               Frequently asked questions about {config.name} in {location}
             </h2>
-            <FaqBlock faqs={faqs} schema={faqSchema(faqs)} />
+            <FaqBlock faqs={faqs} />
 
             {/* Related links */}
             <div style={{ marginTop: 28 }}>

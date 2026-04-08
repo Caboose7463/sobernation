@@ -108,7 +108,7 @@ export default function DrugDetectionPage({ config }: { config: DetectionConfig 
             </div>
 
             <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 16 }}>Frequently asked questions</h2>
-            <FaqBlock faqs={config.faqs} schema={faqSchema(config.faqs)} />
+            <FaqBlock faqs={config.faqs} />
 
             <div style={{ marginTop: 28, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               <Link href={`/${config.relatedSlug}/london`} style={{ padding: '12px 20px', background: 'var(--accent)', color: '#fff', borderRadius: 'var(--radius-md)', fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>

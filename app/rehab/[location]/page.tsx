@@ -245,7 +245,7 @@ export default async function RehabLocationPage(
             <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 16 }}>
               Frequently asked questions about rehab in {loc.name}
             </h2>
-            <FaqBlock faqs={faqs} schema={faqSchema(faqs)} />
+            <FaqBlock faqs={faqs} />
 
           </div>
           <HelplinesSidebar />
