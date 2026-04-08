@@ -105,9 +105,9 @@ export default function CounsellorCard({ counsellor }: Props) {
       style={{
         display: 'flex', alignItems: 'center', gap: 14,
         padding: '13px 16px',
-        border: counsellor.verified ? '1.5px solid #c8e6df' : '1px solid var(--border)',
+        border: '1px solid var(--border)',
         borderRadius: 10, textDecoration: 'none',
-        background: counsellor.verified ? '#f9fffe' : 'var(--white)',
+        background: 'var(--white)',
         transition: 'border-color 0.15s',
         color: 'inherit',
       }}
@@ -122,11 +122,9 @@ export default function CounsellorCard({ counsellor }: Props) {
         )}
       </div>
       {counsellor.verified ? (
-        <span style={{ fontSize: 12, fontWeight: 700, color: '#16a34a', whiteSpace: 'nowrap', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-          </svg>
-          Verified →
+        <span style={{ fontSize: 12, fontWeight: 700, color: '#1d9bf0', whiteSpace: 'nowrap', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#1d9bf0"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          Verified
         </span>
       ) : (
         <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="var(--text-muted)" strokeWidth="1.5">
