@@ -1,16 +1,55 @@
-import Link from 'next/link'
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Get Verified | SoberNation',
-  description: 'Claim your rehab centre or counsellor listing on SoberNation. Get a verified badge, manage your contact info, and reach people seeking help.',
+  title: 'Get Verified on SoberNation — £25/month',
+  description: 'Verify your rehab centre or counsellor listing on SoberNation. Get a verified badge, receive leads, and access your stats dashboard. £25/month. Cancel anytime.',
 }
 
-const CheckIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
-    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-  </svg>
-)
+const BENEFITS = [
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.19 2 2 0 012 .01h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.16 6.16l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+      </svg>
+    ),
+    title: 'Leads sent directly to you',
+    desc: 'Enquiries from people searching in your area land in your inbox.',
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+    ),
+    title: 'Verified badge',
+    desc: 'Your listing appears first, above all unverified results in your location.',
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+    ),
+    title: 'Stats dashboard',
+    desc: 'See how many people viewed your listing and clicked through each month.',
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+      </svg>
+    ),
+    title: 'Cancel anytime',
+    desc: 'No contracts, no lock-in. Cancel from your dashboard with one click.',
+  },
+]
+
+const HOW_IT_WORKS = [
+  { n: '1', title: 'Select your listing', desc: 'Search for your centre or name. If you\'re already in our directory, claim it instantly.' },
+  { n: '2', title: 'Verify your identity', desc: 'Upload a utility bill (centres) or photo ID (counsellors). Keeps our directory trustworthy.' },
+  { n: '3', title: 'Pay £25/month', desc: 'Secure Stripe checkout. Your verified badge goes live the moment payment clears.' },
+]
 
 export default function VerifyLandingPage() {
   return (
@@ -19,11 +58,17 @@ export default function VerifyLandingPage() {
       {/* ── Hero ── */}
       <section style={{
         background: 'linear-gradient(135deg, #0f4c38 0%, #1a6b5a 50%, #2d8a72 100%)',
-        padding: '80px 20px 120px',
+        padding: '80px 20px 100px',
         textAlign: 'center',
         color: '#fff',
+        position: 'relative',
+        overflow: 'hidden',
       }}>
-        <div style={{ maxWidth: 640, margin: '0 auto' }}>
+        {/* Subtle dot grid */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '28px 28px', pointerEvents: 'none' }} />
+
+        <div style={{ maxWidth: 620, margin: '0 auto', position: 'relative' }}>
+          {/* Pill badge */}
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)',
@@ -36,223 +81,134 @@ export default function VerifyLandingPage() {
             Verified Listings
           </div>
 
-          <h1 style={{ fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: 20, color: '#ffffff' }}>
-            Add your listing &amp; get verified
+          <h1 style={{ fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: 20 }}>
+            Get verified.<br/>Get found.
           </h1>
-          <p style={{ fontSize: 18, lineHeight: 1.7, marginBottom: 32, maxWidth: 520, margin: '0 auto 32px', color: 'rgba(255,255,255,0.88)' }}>
-            Claim your rehab centre or counsellor listing on SoberNation. Get a verified badge, manage your contact info, and reach thousands of people searching for help.
+          <p style={{ fontSize: 'clamp(16px, 2vw, 20px)', lineHeight: 1.6, marginBottom: 36, maxWidth: 480, margin: '0 auto 36px', color: 'rgba(255,255,255,0.88)' }}>
+            Rehab centres and counsellors across the UK use SoberNation to reach people searching for help. One simple price.
           </p>
 
-          {/* Live traffic stat */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 12, padding: '10px 20px', marginBottom: 32 }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#4ade80', display: 'inline-block', boxShadow: '0 0 0 3px rgba(74,222,128,0.3)', animation: 'pulse 2s infinite' }} />
-            <style>{`@keyframes pulse { 0%,100%{box-shadow:0 0 0 3px rgba(74,222,128,0.3)} 50%{box-shadow:0 0 0 6px rgba(74,222,128,0.1)} }`}</style>
-            <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>
-              <strong style={{ color: '#fff' }}>3,200+</strong> people searching for rehab &amp; counselling on SoberNation this month
-            </span>
+          {/* Price highlight */}
+          <div style={{ display: 'inline-block', background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 16, padding: '20px 36px', marginBottom: 32 }}>
+            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', marginBottom: 4, fontWeight: 500 }}>Centres & counsellors</div>
+            <div style={{ fontSize: 48, fontWeight: 800, lineHeight: 1, letterSpacing: '-0.03em' }}>
+              £25<span style={{ fontSize: 18, fontWeight: 500, opacity: 0.8 }}>/month</span>
+            </div>
+            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', marginTop: 6 }}>Cancel anytime · no contracts</div>
           </div>
 
-          <div>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/verify/onboard" style={{
               display: 'inline-block', background: '#fff', color: '#1a6b5a',
-              fontWeight: 700, fontSize: 16, padding: '16px 40px',
+              fontWeight: 800, fontSize: 16, padding: '16px 36px',
               borderRadius: 50, textDecoration: 'none',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.15)', transition: 'transform 0.15s',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
             }}>
-              Add listing &amp; get verified — from £10/month
+              Get verified →
             </Link>
-            <p style={{ marginTop: 12, fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>
-              No contract. Cancel anytime.
-            </p>
+            <Link href="/verify/login" style={{
+              display: 'inline-block',
+              background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.25)',
+              color: '#fff', fontWeight: 600, fontSize: 16, padding: '16px 28px',
+              borderRadius: 50, textDecoration: 'none',
+            }}>
+              Already verified? Log in
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* ── Social proof strip ── */}
-      <section style={{ background: '#fff', borderBottom: '1px solid var(--border)', padding: '20px 20px' }}>
-        <div style={{ maxWidth: 760, margin: '0 auto', textAlign: 'center' }}>
-          <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-light)', marginBottom: 16 }}>
-            Trusted by providers across the UK
-          </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px 24px' }}>
-            {[
-              'Turning Point', 'Change Grow Live', 'With You', 'Forward Leeds',
-              'Swanswell', 'UKAT', 'Priory Group', 'Castle Craig',
-            ].map(name => (
-              <span key={name} style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-muted)', opacity: 0.7 }}>{name}</span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── ROI stats bar ── */}
-      <section style={{ background: 'var(--accent-pale)', borderBottom: '1px solid #c8e6df', padding: '28px 20px' }}>
-        <div style={{ maxWidth: 760, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 24, textAlign: 'center' }}>
-          {[
-            { stat: '3,200+', label: 'monthly searches on SoberNation' },
-            { stat: '1 patient', label: 'covers 2–3 years of your subscription' },
-            { stat: '#1', label: 'position in your location — always' },
-            { stat: '5 min', label: 'to set up and go live' },
-          ].map(s => (
-            <div key={s.stat}>
-              <div style={{ fontSize: 26, fontWeight: 700, color: 'var(--accent)', lineHeight: 1 }}>{s.stat}</div>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4, lineHeight: 1.4 }}>{s.label}</div>
+      {/* ── Benefits ── */}
+      <section style={{ maxWidth: 860, margin: '0 auto', padding: '64px 20px 0' }}>
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(22px,4vw,30px)', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 8 }}>
+          What you get
+        </h2>
+        <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: 15, marginBottom: 40 }}>
+          Everything included in your £25/month subscription.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: 20 }}>
+          {BENEFITS.map(b => (
+            <div key={b.title} style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: 14, padding: '24px 20px' }}>
+              <div style={{ marginBottom: 12 }}>{b.icon}</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 6 }}>{b.title}</div>
+              <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>{b.desc}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── Pricing cards ── */}
-      <section style={{ maxWidth: 760, margin: '0 auto', padding: '60px 20px 80px' }}>
-        <h2 style={{ textAlign: 'center', fontSize: 24, fontWeight: 700, marginBottom: 8 }}>Simple, transparent pricing</h2>
-        <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: 40, fontSize: 15 }}>One patient covers years of your subscription cost</p>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
-
-          {/* Counsellor card */}
-          <div style={{ background: '#fff', border: '1px solid var(--border)', borderRadius: 16, padding: '32px 28px', boxShadow: '0 4px 24px rgba(0,0,0,0.07)' }}>
-            <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-light)', marginBottom: 12 }}>Counsellors</div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
-              <span style={{ fontSize: 40, fontWeight: 700, color: 'var(--text)' }}>£10</span>
-              <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>/month per location</span>
-            </div>
-            <p style={{ fontSize: 12, color: 'var(--accent)', fontWeight: 600, marginBottom: 16 }}>
-              £120/year — covered by a single new client
-            </p>
-            <p style={{ fontSize: 14, color: 'var(--text-muted)', marginBottom: 24, lineHeight: 1.6 }}>
-              Show up as a verified counsellor in every location you practise.
-            </p>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 28 }}>
-              {[
-                'Verified badge — appear above unverified listings',
-                'Direct link to your website when clicked',
-                'Competitors folded below "View all" for searchers',
-                'Edit your contact info & photo',
-                'BACP registration displayed',
-                'Billing portal & invoices',
-              ].map(f => (
-                <li key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 14 }}>
-                  <span style={{ color: 'var(--accent)', flexShrink: 0, marginTop: 1 }}><CheckIcon /></span>
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <Link href="/verify/onboard?type=counsellor" style={{ display: 'block', textAlign: 'center', background: 'var(--accent)', color: '#fff', padding: '13px 20px', borderRadius: 10, fontWeight: 600, fontSize: 15, textDecoration: 'none' }}>
-              Get verified as a counsellor
-            </Link>
-          </div>
-
-          {/* Centre card */}
-          <div style={{ background: '#fff', border: '2px solid var(--accent)', borderRadius: 16, padding: '32px 28px', boxShadow: '0 4px 24px rgba(26,107,90,0.12)', position: 'relative' }}>
-            <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: 'var(--accent)', color: '#fff', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '4px 14px', borderRadius: 100, whiteSpace: 'nowrap' }}>Most popular</div>
-            <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 12 }}>Rehab Centres</div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
-              <span style={{ fontSize: 40, fontWeight: 700, color: 'var(--text)' }}>£99</span>
-              <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>/month per location</span>
-            </div>
-            <p style={{ fontSize: 12, color: 'var(--accent)', fontWeight: 600, marginBottom: 16 }}>
-              £1,188/year — covered by a single admission
-            </p>
-            <p style={{ fontSize: 14, color: 'var(--text-muted)', marginBottom: 24, lineHeight: 1.6 }}>
-              Full centre verification with priority placement and direct website link.
-            </p>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 28 }}>
-              {[
-                'Verified badge — appear above all unverified centres',
-                'Direct link to your website when clicked',
-                'Competitors folded below "View all" — you dominate the page',
-                'CQC registration number displayed',
-                'Edit contact info & website',
-                'Multi-location support',
-                'Billing portal & invoices',
-              ].map(f => (
-                <li key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 14 }}>
-                  <span style={{ color: 'var(--accent)', flexShrink: 0, marginTop: 1 }}><CheckIcon /></span>
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <Link href="/verify/onboard?type=centre" style={{ display: 'block', textAlign: 'center', background: 'var(--accent)', color: '#fff', padding: '13px 20px', borderRadius: 10, fontWeight: 600, fontSize: 15, textDecoration: 'none' }}>
-              Get verified as a centre
-            </Link>
-          </div>
-        </div>
-
-        <p style={{ textAlign: 'center', marginTop: 32, fontSize: 14, color: 'var(--text-muted)' }}>
-          Already verified?{' '}
-          <Link href="/verify/login" style={{ color: 'var(--accent)', fontWeight: 600 }}>
-            Log in to your dashboard
-          </Link>
+      {/* ── Listing preview mockup ── */}
+      <section style={{ maxWidth: 560, margin: '0 auto', padding: '64px 20px 0' }}>
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(20px,4vw,28px)', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 8 }}>
+          How you&apos;ll appear
+        </h2>
+        <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: 14, marginBottom: 32 }}>
+          Your verified listing sits above all unverified results.
         </p>
-      </section>
-
-      {/* ── Testimonials ── */}
-      <section style={{ background: '#fff', borderTop: '1px solid var(--border)', padding: '64px 20px' }}>
-        <div style={{ maxWidth: 760, margin: '0 auto' }}>
-          <h2 style={{ fontSize: 24, fontWeight: 700, textAlign: 'center', marginBottom: 8 }}>What providers say</h2>
-          <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: 40, fontSize: 15 }}>From centres and counsellors across the UK</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
-            {[
-              {
-                quote: "Within the first month, we had 3 enquiries we could directly attribute to our SoberNation listing. The £99 paid for itself before the second billing date.",
-                name: 'Clinical Director',
-                org: 'Residential Rehab Centre, Manchester',
-              },
-              {
-                quote: "Being the only verified counsellor in my area means when someone searches, they see my name first and click straight through to my booking page. It's effortless.",
-                name: 'BACP-Accredited Counsellor',
-                org: 'Private Practice, Leeds',
-              },
-              {
-                quote: "The setup took literally 5 minutes. The badge went live the moment we paid and we immediately looked more credible than the other centres in our city.",
-                name: 'Admissions Manager',
-                org: 'Addiction Treatment Centre, Bristol',
-              },
-            ].map((t, i) => (
-              <div key={i} style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 14, padding: '24px 22px' }}>
-                <div style={{ fontSize: 20, color: 'var(--accent)', marginBottom: 12, lineHeight: 1 }}>&ldquo;</div>
-                <p style={{ fontSize: 14, lineHeight: 1.7, color: 'var(--text)', marginBottom: 16 }}>{t.quote}</p>
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>{t.name}</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{t.org}</div>
-                </div>
-              </div>
-            ))}
+        <div style={{ border: '1px solid var(--border)', borderRadius: 14, background: '#fff', overflow: 'hidden', boxShadow: '0 8px 40px rgba(0,0,0,0.08)' }}>
+          {/* Header */}
+          <div style={{ background: 'linear-gradient(135deg, #0f4c38, #1a6b5a)', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#4ade80"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+            <span style={{ fontSize: 11, fontWeight: 600, color: '#fff', letterSpacing: '0.04em' }}>Verified listing — appears first</span>
           </div>
+          {/* Verified row */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px' }}>
+            <div style={{ width: 42, height: 42, borderRadius: 9, background: '#1a6b5a', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 15 }}>YN</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 2 }}>Your Name / Centre</div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Addiction Service · Private · Your Location</div>
+            </div>
+            <span style={{ fontSize: 12, fontWeight: 700, color: '#16a34a', display: 'flex', alignItems: 'center', gap: 4 }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Verified →
+            </span>
+          </div>
+          {/* Unverified ghost rows */}
+          {[1, 2].map(i => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '12px 16px', borderTop: '1px solid var(--border)', opacity: 0.3 }}>
+              <div style={{ width: 42, height: 42, borderRadius: 9, background: 'var(--border)', flexShrink: 0 }} />
+              <div style={{ flex: 1 }}>
+                <div style={{ height: 12, background: 'var(--border)', borderRadius: 4, width: '55%', marginBottom: 6 }} />
+                <div style={{ height: 10, background: 'var(--border)', borderRadius: 4, width: '35%' }} />
+              </div>
+              <span style={{ fontSize: 11, color: '#9ca3af' }}>Unverified</span>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* ── How it works ── */}
-      <section style={{ borderTop: '1px solid var(--border)', padding: '64px 20px' }}>
-        <div style={{ maxWidth: 680, margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>Live in under 5 minutes</h2>
-          <p style={{ color: 'var(--text-muted)', marginBottom: 48 }}>No technical setup. No waiting for approval.</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 32, textAlign: 'left' }}>
-            {[
-              { n: '1', title: 'Create account', desc: 'Sign up with your email. Takes 30 seconds.' },
-              { n: '2', title: 'Claim your listing', desc: 'Search for your centre or name and claim it — or add a new one.' },
-              { n: '3', title: 'Pay securely', desc: 'Stripe checkout. Cancel any time, no lock-in.' },
-              { n: '4', title: 'Badge goes live', desc: 'Your verified badge appears instantly. Competitors fold below you.' },
-            ].map(s => (
-              <div key={s.n}>
-                <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--accent-pale)', color: 'var(--accent)', fontWeight: 700, fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
-                  {s.n}
-                </div>
-                <h3 style={{ fontSize: 15, fontWeight: 600, marginBottom: 6 }}>{s.title}</h3>
-                <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>{s.desc}</p>
+      <section style={{ maxWidth: 760, margin: '0 auto', padding: '64px 20px 0' }}>
+        <h2 style={{ textAlign: 'center', fontSize: 'clamp(20px,4vw,28px)', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 8 }}>
+          Live in under 5 minutes
+        </h2>
+        <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: 14, marginBottom: 48 }}>
+          No technical setup required.
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 32, textAlign: 'left' }}>
+          {HOW_IT_WORKS.map(s => (
+            <div key={s.n}>
+              <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--accent-pale)', color: 'var(--accent)', fontWeight: 800, fontSize: 17, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
+                {s.n}
               </div>
-            ))}
-          </div>
+              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>{s.title}</h3>
+              <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>{s.desc}</p>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* ── Final CTA ── */}
-      <section style={{ background: 'linear-gradient(135deg, #0f4c38, #1a6b5a)', padding: '60px 20px', textAlign: 'center' }}>
-        <div style={{ maxWidth: 520, margin: '0 auto' }}>
-          <h2 style={{ fontSize: 28, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Ready to get verified?</h2>
-          <p style={{ color: 'rgba(255,255,255,0.75)', marginBottom: 32, lineHeight: 1.6 }}>Join rehab centres and counsellors across the UK who are turning searches into admissions.</p>
-          <Link href="/verify/onboard" style={{ display: 'inline-block', background: '#fff', color: '#1a6b5a', fontWeight: 700, fontSize: 16, padding: '16px 40px', borderRadius: 50, textDecoration: 'none' }}>
-            Start free — takes 5 minutes
+      <section style={{ padding: '64px 20px 80px' }}>
+        <div style={{ maxWidth: 520, margin: '0 auto', background: 'linear-gradient(135deg, #0f4c38, #1a6b5a)', borderRadius: 20, padding: '48px 36px', textAlign: 'center' }}>
+          <h2 style={{ fontSize: 'clamp(22px,4vw,30px)', fontWeight: 800, color: '#fff', marginBottom: 12, letterSpacing: '-0.02em' }}>
+            Ready to get verified?
+          </h2>
+          <p style={{ color: 'rgba(255,255,255,0.75)', marginBottom: 32, lineHeight: 1.6, fontSize: 15 }}>
+            £25/month. Verified badge live instantly after payment. Cancel anytime.
+          </p>
+          <Link href="/verify/onboard" style={{ display: 'inline-block', background: '#fff', color: '#1a6b5a', fontWeight: 800, fontSize: 16, padding: '16px 40px', borderRadius: 50, textDecoration: 'none' }}>
+            Get verified now →
           </Link>
         </div>
       </section>

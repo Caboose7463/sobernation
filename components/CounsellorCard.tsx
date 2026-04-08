@@ -104,9 +104,11 @@ export default function CounsellorCard({ counsellor }: Props) {
       href={profileHref}
       style={{
         display: 'flex', alignItems: 'center', gap: 14,
-        padding: '13px 16px', border: '1px solid var(--border)',
+        padding: '13px 16px',
+        border: counsellor.verified ? '1.5px solid #c8e6df' : '1px solid var(--border)',
         borderRadius: 10, textDecoration: 'none',
-        background: 'var(--white)', transition: 'border-color 0.15s',
+        background: counsellor.verified ? '#f9fffe' : 'var(--white)',
+        transition: 'border-color 0.15s',
         color: 'inherit',
       }}
     >
@@ -119,9 +121,18 @@ export default function CounsellorCard({ counsellor }: Props) {
           <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.4 }}>{subtitle}</div>
         )}
       </div>
-      <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="var(--text-muted)" strokeWidth="1.5">
-        <path d="M7 4l6 6-6 6" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
+      {counsellor.verified ? (
+        <span style={{ fontSize: 12, fontWeight: 700, color: '#16a34a', whiteSpace: 'nowrap', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          Verified →
+        </span>
+      ) : (
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="var(--text-muted)" strokeWidth="1.5">
+          <path d="M7 4l6 6-6 6" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      )}
     </Link>
   )
 }

@@ -1,16 +1,14 @@
 /**
- * NearestCentres — shows CQC-registered rehab centres on location pages.
- *
- * Sponsored slots (from the auction engine) appear above this section.
- * This component renders only the organic flat list — no verified labels,
- * no ranking manipulation, no fold. Just a clean directory.
+ * NearestCentres — verified listings shown first, unverified collapsed.
+ * First centre is hardcoded as verified for demo purposes.
  */
+'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import type { RehabsResult, RehabCentre } from '../lib/rehabs'
 import { getCorrectCentreSlug, getCentreImage } from '../lib/rehabs'
-import SponsoredSlots from './SponsoredSlots'
 
 interface Props {
   result: RehabsResult
@@ -34,8 +32,7 @@ function typeLabel(serviceType: string): string {
   return 'Addiction Service'
 }
 
-// Clean organic listing card — no verified badges, no ranking logic
-function CentreRow({ centre, sourceTownSlug }: { centre: RehabCentre; sourceTownSlug: string }) {
+function CentreRow({ centre, sourceTownSlug, verified }: { centre: RehabCentre; sourceTownSlug: string; verified?: boolean }) {
   const slug = getCorrectCentreSlug(centre, sourceTownSlug)
   const funding = fundingLabel(centre.name, centre.serviceType)
   const type = typeLabel(centre.serviceType)
@@ -47,9 +44,11 @@ function CentreRow({ centre, sourceTownSlug }: { centre: RehabCentre; sourceTown
       href={`/centre/${slug}`}
       style={{
         display: 'flex', alignItems: 'center', gap: 14,
-        padding: '13px 16px', border: '1px solid var(--border)',
+        padding: '13px 16px',
+        border: verified ? '1.5px solid #c8e6df' : '1px solid var(--border)',
         borderRadius: 10, textDecoration: 'none',
-        background: 'var(--white)', transition: 'border-color 0.15s',
+        background: verified ? '#f9fffe' : 'var(--white)',
+        transition: 'border-color 0.15s',
       }}
     >
       {/* Avatar */}
@@ -76,16 +75,28 @@ function CentreRow({ centre, sourceTownSlug }: { centre: RehabCentre; sourceTown
         </div>
       </div>
 
-      <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="var(--text-muted)" strokeWidth="1.5">
-        <path d="M7 4l6 6-6 6" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
+      {verified ? (
+        <span style={{ fontSize: 12, fontWeight: 700, color: '#16a34a', whiteSpace: 'nowrap', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Verified →
+        </span>
+      ) : (
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="var(--text-muted)" strokeWidth="1.5">
+          <path d="M7 4l6 6-6 6" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      )}
     </Link>
   )
 }
 
-export default async function NearestCentres({ result, locationName, locationSlug, limit = 5 }: Props) {
-  const displayed = result.centres.slice(0, limit)
+export default function NearestCentres({ result, locationName, locationSlug, limit = 5 }: Props) {
+  const [showUnverified, setShowUnverified] = useState(false)
   const total = result.centres.length
+
+  // First centre is treated as verified (demo); the rest are unverified
+  const verified = result.centres.slice(0, 1)
+  const unverified = result.centres.slice(1, limit)
+  const unverifiedCount = result.centres.slice(1).length
 
   return (
     <div style={{ marginTop: 40 }}>
@@ -103,15 +114,48 @@ export default async function NearestCentres({ result, locationName, locationSlu
         </p>
       </div>
 
-      {/* ── Sponsored slots — auction runs fresh on each request ── */}
-      <SponsoredSlots locationSlug={locationSlug} listingType="centre" />
+      {/* Verified listings */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {verified.map((centre, i) => (
+          <CentreRow key={centre.cqcUrl || i} centre={centre} sourceTownSlug={result.sourceTownSlug} verified={true} />
+        ))}
+      </div>
 
-      {/* ── Promote CTA — above organic list ── */}
+      {/* Collapsible unverified */}
+      {unverifiedCount > 0 && (
+        <div style={{ marginTop: 8 }}>
+          <button
+            onClick={() => setShowUnverified(v => !v)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 6, width: '100%',
+              padding: '10px 14px', background: 'var(--bg)', borderRadius: 8,
+              border: '1px solid var(--border)', cursor: 'pointer',
+              fontSize: 13, color: 'var(--text-muted)', fontWeight: 500,
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+              style={{ transition: 'transform 0.2s', transform: showUnverified ? 'rotate(90deg)' : 'rotate(0deg)' }}>
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+            </svg>
+            View {unverifiedCount} other centre{unverifiedCount !== 1 ? 's' : ''} (unverified)
+          </button>
+
+          {showUnverified && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>
+              {unverified.map((centre, i) => (
+                <CentreRow key={centre.cqcUrl || i} centre={centre} sourceTownSlug={result.sourceTownSlug} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* "Add your centre" CTA */}
       <Link
-        href="/advertise"
+        href="/verify?type=centre"
         style={{
           display: 'flex', alignItems: 'center', gap: 14,
-          padding: '13px 16px', marginBottom: 8,
+          padding: '13px 16px', marginTop: 12,
           border: '1px dashed var(--border-mid)',
           borderRadius: 10, textDecoration: 'none',
           background: 'var(--bg)', transition: 'border-color 0.15s',
@@ -123,28 +167,18 @@ export default async function NearestCentres({ result, locationName, locationSlu
           display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
         }}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
           </svg>
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', marginBottom: 1 }}>Promote your centre here</div>
-          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Appear above organic results · Pay per click · Cancel anytime</div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', marginBottom: 1 }}>Add your centre</div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Missing from our directory? Add or claim your listing — from £25/month</div>
         </div>
-        <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', background: 'var(--accent)', padding: '5px 12px', borderRadius: 6, flexShrink: 0, whiteSpace: 'nowrap' }}>Get started →</span>
+        <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', background: 'var(--accent)', padding: '5px 12px', borderRadius: 6, flexShrink: 0, whiteSpace: 'nowrap' }}>Get verified →</span>
       </Link>
 
-      {/* ── Organic list — flat, unranked ── */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {displayed.map((centre, i) => (
-          <CentreRow key={centre.cqcUrl || i} centre={centre} sourceTownSlug={result.sourceTownSlug} />
-        ))}
-      </div>
-
-      {/* Footer */}
-      <div style={{ marginTop: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
-        {total > limit && (
-          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>Showing {limit} of {total}</span>
-        )}
+      {/* View all link */}
+      <div style={{ marginTop: 20 }}>
         <Link
           href={`/centres/${locationSlug}`}
           style={{ fontSize: 13, fontWeight: 600, color: 'var(--accent)', textDecoration: 'none' }}
