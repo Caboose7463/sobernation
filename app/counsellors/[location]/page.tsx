@@ -127,11 +127,11 @@ export default async function CounsellorsLocationPage({ params }: Props) {
               Are you a counsellor in {locationName}?
             </div>
             <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
-              Claim your listing and get a verified badge for £10/month.
+              Get a verified badge, appear at the top of search results and receive direct enquiries — from £10/month.
             </div>
           </div>
           <Link
-            href={`/counsellors/claim?location=${location}`}
+            href={`/onboard?type=counsellor&location=${location}`}
             style={{ fontSize: 13, fontWeight: 600, background: 'var(--accent)', color: '#fff', padding: '8px 16px', borderRadius: 'var(--radius-sm)', textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}
           >
             Get verified →

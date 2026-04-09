@@ -38396,3 +38396,7 @@ export function getLocationsByCountry(country: string): UKLocation[] {
   return LOCATIONS.filter(l => l.country === country)
 }
 
+export function getAllLocations(): UKLocation[] {
+  return LOCATIONS
+}
+

@@ -164,8 +164,8 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
       )}
 
       {/* "Add your centre" CTA */}
-      <Link
-        href="/verify?type=centre"
+        <Link
+        href="/onboard?type=centre"
         style={{
           display: 'flex', alignItems: 'center', gap: 14,
           padding: '13px 16px', marginTop: 12,
@@ -185,7 +185,7 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', marginBottom: 1 }}>Add your centre</div>
-          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Missing from our directory? Add or claim your listing — from £25/month</div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Missing from our directory? Get verified and receive direct enquiries — from £99/month</div>
         </div>
         <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', background: 'var(--accent)', padding: '5px 12px', borderRadius: 6, flexShrink: 0, whiteSpace: 'nowrap' }}>Get verified →</span>
       </Link>

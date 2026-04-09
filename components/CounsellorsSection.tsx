@@ -213,7 +213,7 @@ export default function CounsellorsSection({ locationSlug, locationName }: Props
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', marginBottom: 1 }}>Add your listing</div>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Missing from our directory? Add or claim your listing — from £25/month</div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Missing from our directory? Get verified and receive direct enquiries — from £10/month</div>
           </div>
           <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', background: 'var(--accent)', padding: '5px 12px', borderRadius: 6, flexShrink: 0, whiteSpace: 'nowrap' }}>Get verified →</span>
         </a>
