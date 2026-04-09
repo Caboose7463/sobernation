@@ -19,6 +19,7 @@ export interface Article {
   hero_image_url: string | null
   hero_image_alt: string | null
   published_at: string
+  updated_at?: string
   read_time_mins: number
   status: string
 }

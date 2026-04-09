@@ -155,6 +155,42 @@ export function breadcrumbSchema(items: BreadcrumbItem[]): object {
   }
 }
 
+export function howToSchema(opts: {
+  name: string
+  description?: string
+  steps: Array<{ name: string; text: string }>
+}): object {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: opts.name,
+    description: opts.description,
+    step: opts.steps.map((s, i) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      name: s.name,
+      text: s.text,
+    })),
+  }
+}
+
+export function siteLinksSearchBoxSchema(): object {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'SoberNation',
+    url: 'https://www.sobernation.co.uk',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: 'https://www.sobernation.co.uk/search?q={search_term_string}',
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  }
+}
+
 export function localBusinessSchema(centre: {
   name: string
   address: string

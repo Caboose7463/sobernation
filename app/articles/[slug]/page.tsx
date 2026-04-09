@@ -82,20 +82,25 @@ export default async function ArticlePage({ params }: Props) {
   const hasFaq = !!faqMatch
 
   // JSON-LD schema
+  const authorSlug = a.author_name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^dr-/, 'dr-')
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: a.title,
     description: a.excerpt,
     image: a.hero_image_url ?? undefined,
-    author: { '@type': 'Person', name: a.author_name },
+    author: {
+      '@type': 'Person',
+      name: a.author_name,
+      url: `https://www.sobernation.co.uk/author/${authorSlug}`,
+    },
     publisher: {
       '@type': 'Organization',
       name: 'SoberNation',
       logo: { '@type': 'ImageObject', url: 'https://www.sobernation.co.uk/logo.png' },
     },
     datePublished: a.published_at,
-    dateModified: a.published_at,
+    dateModified: a.updated_at ?? a.published_at,
     mainEntityOfPage: `https://www.sobernation.co.uk/articles/${a.slug}`,
   }
 

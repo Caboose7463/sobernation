@@ -7,6 +7,7 @@ import Nav from '../components/Nav'
 import CookieConsent from '../components/CookieConsent'
 import SiteFooter from '../components/SiteFooter'
 import { headers } from 'next/headers'
+import { siteLinksSearchBoxSchema } from '../lib/seo'
 
 export const metadata: Metadata = {
   title: {
@@ -62,20 +63,7 @@ const orgSchema = {
   ],
 }
 
-const webSiteSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'SoberNation',
-  url: 'https://www.sobernation.co.uk',
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: {
-      '@type': 'EntryPoint',
-      urlTemplate: 'https://www.sobernation.co.uk/search?q={search_term_string}',
-    },
-    'query-input': 'required name=search_term_string',
-  },
-}
+const webSiteSchema = siteLinksSearchBoxSchema()
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const headersList = await headers()

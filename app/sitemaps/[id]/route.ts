@@ -148,6 +148,10 @@ export async function GET(
       { url: `${BASE}/privacy-policy`, lastmod: now, changefreq: 'yearly', priority: 0.60 },
       { url: `${BASE}/contact`, lastmod: now, changefreq: 'yearly', priority: 0.60 },
       { url: `${BASE}/terms`, lastmod: now, changefreq: 'yearly', priority: 0.60 },
+      // Author pages — E-E-A-T signals
+      { url: `${BASE}/author/james-whitfield`, lastmod: now, changefreq: 'yearly', priority: 0.70 },
+      { url: `${BASE}/author/emily-clarke`, lastmod: now, changefreq: 'yearly', priority: 0.70 },
+      { url: `${BASE}/author/dr-sarah-dawson`, lastmod: now, changefreq: 'yearly', priority: 0.70 },
     ]
   } else if (id === 1) {
     entries = locationEntries([

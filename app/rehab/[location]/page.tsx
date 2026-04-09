@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import { getLocationSlugs, getLocation, getTopLocationSlugs } from '../../../lib/locations'
 import { getNearbyLocations } from '../../../lib/nearby-locations'
 import { getRehabsForLocation } from '../../../lib/rehabs'
-import { locationMetadata, faqSchema, breadcrumbSchema, medicalWebPageSchema } from '../../../lib/seo'
+import { locationMetadata, faqSchema, breadcrumbSchema, medicalWebPageSchema, howToSchema } from '../../../lib/seo'
 import { BUILD_MONTH, CQC_ATTRIBUTION } from '../../../lib/build-info'
 import { getLocationContent } from '../../../data/location-content'
 import LocationHero from '../../../components/LocationHero'
@@ -119,9 +119,22 @@ export default async function RehabLocationPage(
   })
   const snippet = locContent.intro
 
+  const howTo = howToSchema({
+    name: `How to access rehab in ${loc.name}`,
+    description: `Step-by-step guide to finding NHS or private drug and alcohol rehab in ${loc.name}.`,
+    steps: [
+      { name: 'Call Frank or your GP', text: 'Frank (0300 123 6600) can advise on local options and referral routes. Your GP can refer you to NHS services.' },
+      { name: 'Get assessed', text: 'A drug and alcohol worker will carry out an assessment to understand your needs and recommend the right level of care.' },
+      { name: 'Choose NHS or private', text: 'NHS is free but may have waiting times. Private rehab can begin within 24-72 hours and some centres offer payment plans.' },
+      { name: 'Begin treatment', text: 'Treatment typically starts with a medical detox, followed by residential or community-based therapeutic work.' },
+      { name: 'Plan your aftercare', text: 'Good rehab includes an aftercare plan — follow-up appointments, 12-step meetings, sober living, or outpatient support.' },
+    ],
+  })
+
   const schemas = [
     faqSchema(faqs),
     breadcrumbSchema(breadcrumbs),
+    howTo,
     medicalWebPageSchema({
       name: `Rehab Centres in ${loc.name}`,
       description: `Find NHS and private drug and alcohol rehab in ${loc.name}. Compare costs, waiting times and treatment types — NHS is free, private from £3,000 for 28 days. Same-week admissions available.`,
