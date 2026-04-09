@@ -6,6 +6,7 @@ import { getNearbyLocations } from '../../../lib/nearby-locations'
 import { getRehabsForLocation } from '../../../lib/rehabs'
 import { locationMetadata, faqSchema, breadcrumbSchema, medicalWebPageSchema } from '../../../lib/seo'
 import { BUILD_MONTH, CQC_ATTRIBUTION } from '../../../lib/build-info'
+import { getLocationContent } from '../../../data/location-content'
 import LocationHero from '../../../components/LocationHero'
 import NearestCentres from '../../../components/NearestCentres'
 import HelplinesSidebar from '../../../components/HelplinesSidebar'
@@ -108,7 +109,15 @@ export default async function RehabLocationPage(
     { name: loc.name, href: `/rehab/${location}` },
   ]
 
-  const snippet = `${loc.name} has both NHS-funded and private rehab centres for alcohol and drug addiction. NHS rehab is free via GP referral, while private residential rehab near ${loc.name} typically costs £3,000–£15,000 for a 28-day programme. Call Frank free on 0300 123 6600 for immediate guidance.`
+  const locContent = getLocationContent({
+    slug: location,
+    name: loc.name,
+    country: loc.country,
+    lat: loc.lat,
+    lng: loc.lng,
+    population: loc.population,
+  })
+  const snippet = locContent.intro
 
   const schemas = [
     faqSchema(faqs),
