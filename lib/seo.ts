@@ -25,7 +25,7 @@ export function locationMetadata(
     },
     'rehab': {
       title: `Rehab Centres in ${locationName} | Drug & Alcohol Rehabilitation`,
-      desc: `Find rehab centres in ${locationName}. Compare NHS and private residential and outpatient rehabilitation for alcohol and drug addiction in ${locationName}.`,
+      desc: `Rehab centres in ${locationName}: compare NHS and private treatment for alcohol and drug addiction. From free community support to private residential rehab from £3,000 — same-week admissions available.`,
     },
     'aa-meetings': {
       title: `AA Meetings in ${locationName} | Alcoholics Anonymous`,
@@ -33,7 +33,7 @@ export function locationMetadata(
     },
     'na-meetings': {
       title: `NA Meetings in ${locationName} | Narcotics Anonymous`,
-      desc: `Find Narcotics Anonymous (NA) meetings in ${locationName}. Drug recovery support groups, meeting times and types in ${locationName}.`,
+      desc: `Find Narcotics Anonymous (NA) meetings in ${locationName}. Free peer support groups for drug recovery — open to all addictions. Meeting times, formats and step-based and secular options listed.`,
     },
     'drug-treatment': {
       title: `Drug Treatment in ${locationName} | NHS & Private Services`,

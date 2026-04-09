@@ -1,4 +1,4 @@
-﻿import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import RehabTypePage from '../../../components/RehabTypePage'
@@ -18,7 +18,7 @@ export async function generateMetadata(
   if (!loc) return {}
   return {
     title: `Opiate Addiction Help in ${loc.name} | SoberNation`,
-    description: `Free NHS opioid and opiate addiction treatment in ${loc.name}. Free NHS options available. Call 0300 123 6600.`,
+    description: `Opiate addiction treatment in ${loc.name}: NHS methadone and buprenorphine programmes, private detox and counselling. Get free help via your GP, Frank or local drug and alcohol service.`,
   }
 }
 

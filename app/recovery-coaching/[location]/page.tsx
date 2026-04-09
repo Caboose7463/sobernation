@@ -1,4 +1,4 @@
-﻿import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import RehabTypePage from '../../../components/RehabTypePage'
@@ -18,7 +18,7 @@ export async function generateMetadata(
   if (!loc) return {}
   return {
     title: `Recovery Coaching in ${loc.name} | SoberNation`,
-    description: `Peer-led recovery coaching and mentoring in ${loc.name}. Free NHS options. Call 0300 123 6600.`,
+    description: `Peer recovery coaching in ${loc.name}: work with trained addiction mentors to build confidence, structure and long-term sobriety skills. NHS-funded, charitable and private coaching available.`,
   }
 }
 

@@ -1,4 +1,4 @@
-﻿import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import RehabTypePage from '../../../components/RehabTypePage'
@@ -18,7 +18,7 @@ export async function generateMetadata(
   if (!loc) return {}
   return {
     title: `Sleeping Pill Addiction Help in ${loc.name} | SoberNation`,
-    description: `Free help for sleeping pill and Z-drug dependency in ${loc.name}. Free NHS options and expert help. Call 0300 123 6600.`,
+    description: `Sleeping pill and Z-drug addiction support in ${loc.name}: zopiclone, zolpidem and benzodiazepine dependency. NHS tapering programmes and private detox available — speak to your GP first.`,
   }
 }
 

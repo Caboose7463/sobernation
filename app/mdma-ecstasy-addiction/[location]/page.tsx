@@ -1,4 +1,4 @@
-﻿import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import RehabTypePage from '../../../components/RehabTypePage'
@@ -18,7 +18,7 @@ export async function generateMetadata(
   if (!loc) return {}
   return {
     title: `MDMA & Ecstasy Addiction Help in ${loc.name} | SoberNation`,
-    description: `Help for MDMA and ecstasy addiction in ${loc.name}. Free NHS options and expert help. Call 0300 123 6600.`,
+    description: `MDMA and ecstasy addiction treatment in ${loc.name}: NHS community support, counselling and private rehab. Free help for ecstasy dependency via Frank or your local drug and alcohol service.`,
   }
 }
 

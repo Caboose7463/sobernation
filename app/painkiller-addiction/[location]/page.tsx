@@ -1,4 +1,4 @@
-﻿import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import RehabTypePage from '../../../components/RehabTypePage'
@@ -18,7 +18,7 @@ export async function generateMetadata(
   if (!loc) return {}
   return {
     title: `Painkiller Addiction Help in ${loc.name} | SoberNation`,
-    description: `Free NHS help for opioid painkiller addiction in ${loc.name}. Free NHS options and expert help. Call 0300 123 6600.`,
+    description: `NHS and private treatment for painkiller addiction in ${loc.name} — covering codeine, tramadol, dihydrocodeine and opioid dependency. Free help and tapering plans available without judgment.`,
   }
 }
 

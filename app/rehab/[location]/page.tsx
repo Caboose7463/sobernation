@@ -115,7 +115,7 @@ export default async function RehabLocationPage(
     breadcrumbSchema(breadcrumbs),
     medicalWebPageSchema({
       name: `Rehab Centres in ${loc.name}`,
-      description: `Find NHS and private drug and alcohol rehabilitation centres in ${loc.name}.`,
+      description: `Find NHS and private drug and alcohol rehab in ${loc.name}. Compare costs, waiting times and treatment types — NHS is free, private from £3,000 for 28 days. Same-week admissions available.`,
       url: `https://www.sobernation.co.uk/rehab/${location}`,
       keywords: [`rehab ${loc.name}`, `rehab centres ${loc.name}`, `drug rehabilitation ${loc.name}`, `alcohol rehab ${loc.name}`],
     }),

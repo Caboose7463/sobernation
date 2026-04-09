@@ -1,4 +1,4 @@
-﻿import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import RehabTypePage from '../../../components/RehabTypePage'
@@ -18,7 +18,7 @@ export async function generateMetadata(
   if (!loc) return {}
   return {
     title: `Online Rehab in ${loc.name} | SoberNation`,
-    description: `Digital and remote addiction treatment in ${loc.name}. Free NHS options. Call 0300 123 6600.`,
+    description: `Online addiction treatment in ${loc.name}: video therapy, digital CBT programmes and virtual group sessions for alcohol and drug misuse. Access support from home — no waiting list.`,
   }
 }
 

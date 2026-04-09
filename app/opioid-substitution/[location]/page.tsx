@@ -1,4 +1,4 @@
-﻿import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import RehabTypePage from '../../../components/RehabTypePage'
@@ -18,7 +18,7 @@ export async function generateMetadata(
   if (!loc) return {}
   return {
     title: `Opioid Substitution Therapy in ${loc.name} | SoberNation`,
-    description: `Free NHS methadone and buprenorphine treatment in ${loc.name}. Free NHS options. Call 0300 123 6600.`,
+    description: `Free NHS opioid substitution therapy (OST) in ${loc.name}: methadone and buprenorphine prescriptions for heroin and opiate dependency. Self-refer via your GP, Frank or local drug service.`,
   }
 }
 

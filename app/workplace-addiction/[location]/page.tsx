@@ -1,4 +1,4 @@
-﻿import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import RehabTypePage from '../../../components/RehabTypePage'
@@ -18,7 +18,7 @@ export async function generateMetadata(
   if (!loc) return {}
   return {
     title: `Workplace Addiction Support in ${loc.name} | SoberNation`,
-    description: `Addiction help for employees and employers in ${loc.name}. Free NHS options. Call 0300 123 6600.`,
+    description: `Workplace addiction support in ${loc.name}: confidential help for employees and employers. NHS-funded treatment, Employee Assistance Programmes and occupational health referrals available.`,
   }
 }
 

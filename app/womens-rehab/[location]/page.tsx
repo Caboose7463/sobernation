@@ -1,4 +1,4 @@
-﻿import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import RehabTypePage from '../../../components/RehabTypePage'
@@ -18,7 +18,7 @@ export async function generateMetadata(
   if (!loc) return {}
   return {
     title: `Women's Rehab in ${loc.name} | SoberNation`,
-    description: `Female-specific and women-only rehab in ${loc.name}. Free NHS options and expert help. Call 0300 123 6600.`,
+    description: `Women-only addiction rehab in ${loc.name}: trauma-informed treatment in a safe, female-specific environment. NHS-funded and private residential options for women with alcohol and drug dependency.`,
   }
 }
 

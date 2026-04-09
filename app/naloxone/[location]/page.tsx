@@ -1,4 +1,4 @@
-﻿import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import RehabTypePage from '../../../components/RehabTypePage'
@@ -18,7 +18,7 @@ export async function generateMetadata(
   if (!loc) return {}
   return {
     title: `Free Naloxone in ${loc.name} | SoberNation`,
-    description: `Where to get free naloxone (Narcan) overdose reversal medication in ${loc.name}. Free NHS options available. Call 0300 123 6600.`,
+    description: `Find free naloxone (Narcan) in ${loc.name}: the opioid overdose reversal medication available from pharmacies, drug services and GPs at no cost. Essential for anyone at risk of opiate overdose.`,
   }
 }
 

@@ -1,4 +1,4 @@
-﻿import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import RehabTypePage from '../../../components/RehabTypePage'
@@ -17,8 +17,8 @@ export async function generateMetadata(
   const loc = getLocation(location)
   if (!loc) return {}
   return {
-    title: `Addiction Aftercare in ${loc.name} | SoberNation`,
-    description: `Post-rehab support and relapse prevention in ${loc.name}. Free NHS options. Call 0300 123 6600.`,
+    title: `Addiction Aftercare in ${loc.name} | Post-Rehab Support`,
+    description: `Addiction aftercare in ${loc.name}: post-rehab counselling, NA/AA meetings, relapse prevention planning and NHS support services. Free and confidential help staying sober after treatment.`,
   }
 }
 

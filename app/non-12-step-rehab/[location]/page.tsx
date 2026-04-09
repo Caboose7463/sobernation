@@ -1,4 +1,4 @@
-﻿import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import RehabTypePage from '../../../components/RehabTypePage'
@@ -18,7 +18,7 @@ export async function generateMetadata(
   if (!loc) return {}
   return {
     title: `Non-12-Step Rehab in ${loc.name} | SoberNation`,
-    description: `Secular evidence-based addiction treatment in ${loc.name}. Free NHS options. Call 0300 123 6600.`,
+    description: `Non-12-step rehab in ${loc.name}: secular, evidence-based addiction treatment using CBT, SMART Recovery, motivational interviewing and mindfulness. No religious component required.`,
   }
 }
 

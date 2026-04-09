@@ -1,4 +1,4 @@
-﻿import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import RehabTypePage from '../../../components/RehabTypePage'
@@ -18,7 +18,7 @@ export async function generateMetadata(
   if (!loc) return {}
   return {
     title: `Inhalant & Solvent Addiction Help in ${loc.name} | SoberNation`,
-    description: `Help for inhalant and volatile substance abuse in ${loc.name}. Free NHS options and expert help. Call 0300 123 6600.`,
+    description: `Help for inhalant and solvent addiction in ${loc.name}: glue, aerosols and volatile substance abuse. Free NHS community treatment and specialist counselling available without referral.`,
   }
 }
 

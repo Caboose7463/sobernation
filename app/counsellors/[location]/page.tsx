@@ -46,8 +46,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const name = loc?.name
   if (!name) return {}
   return {
-    title: `Addiction Counsellors in ${name}`,
-    description: `Find verified addiction counsellors and therapists in ${name}. Browse BACP-registered specialists in alcohol, drug and substance misuse recovery.`,
+    title: `Addiction Counsellors in ${name} | Verified Therapists`,
+    description: `Find BACP-registered addiction counsellors and therapists in ${name}. Verified specialists in alcohol and drug misuse recovery. No waiting list — browse and contact directly.`,
   }
 }
 

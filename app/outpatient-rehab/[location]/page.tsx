@@ -1,4 +1,4 @@
-﻿import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import RehabTypePage from '../../../components/RehabTypePage'
@@ -18,7 +18,7 @@ export async function generateMetadata(
   if (!loc) return {}
   return {
     title: `Outpatient Rehab in ${loc.name} | SoberNation`,
-    description: `Community-based outpatient rehab and day programmes in ${loc.name}. Free NHS options and expert help. Call 0300 123 6600.`,
+    description: `Outpatient addiction rehab in ${loc.name}: day and community programmes for alcohol and drug misuse. Live at home while receiving NHS or private therapy — no residential stay required.`,
   }
 }
 

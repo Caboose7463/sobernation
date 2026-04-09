@@ -90,7 +90,7 @@ export default async function NAMeetingsPage(
     breadcrumbSchema(breadcrumbs),
     medicalWebPageSchema({
       name: `NA Meetings in ${loc.name}`,
-      description: `Find Narcotics Anonymous NA meetings in ${loc.name}. Free drug recovery support groups for any addiction.`,
+      description: `Find Narcotics Anonymous (NA) meetings in ${loc.name}. Free drug recovery support groups for all addictions — open and closed meetings, step-based and secular options listed.`,
       url: `https://www.sobernation.co.uk/na-meetings/${location}`,
     }),
   ]
@@ -180,16 +180,7 @@ export default async function NAMeetingsPage(
         </div>
       </div>
 
-      <footer style={{ borderTop: '1px solid var(--border)', padding: '28px 20px', background: 'var(--white)', marginTop: 48 }}>
-        <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-          <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation</div>
-          <div style={{ display: 'flex', gap: 20 }}>
-            {[['Privacy', '/privacy'], ['Contact', '/contact'], ['About', '/about']].map(([label, href]) => (
-              <Link key={href} href={href} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{label}</Link>
-            ))}
-          </div>
-        </div>
-      </footer>
+      {/* Global SiteFooter rendered by layout.tsx */}
     </div>
   )
 }

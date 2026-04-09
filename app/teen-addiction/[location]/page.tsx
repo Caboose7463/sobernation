@@ -1,4 +1,4 @@
-﻿import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import RehabTypePage from '../../../components/RehabTypePage'
@@ -18,7 +18,7 @@ export async function generateMetadata(
   if (!loc) return {}
   return {
     title: `Teen & Young People Addiction Help in ${loc.name} | SoberNation`,
-    description: `Specialist addiction support for young people in ${loc.name}. Free NHS options. Call 0300 123 6600.`,
+    description: `Specialist addiction support for young people and teenagers in ${loc.name}. NHS CAMHS referrals, youth drug services and private programmes for under-18 alcohol and substance misuse.`,
   }
 }
 

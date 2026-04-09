@@ -1,4 +1,4 @@
-﻿import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import RehabTypePage from '../../../components/RehabTypePage'
@@ -18,7 +18,7 @@ export async function generateMetadata(
   if (!loc) return {}
   return {
     title: `How to Help Someone with Addiction in ${loc.name} | SoberNation`,
-    description: `Advice for families and friends of someone with an addiction in ${loc.name}. Free NHS help available. Call 0300 123 6600.`,
+    description: `Support for families and loved ones of someone with addiction in ${loc.name}. Advice on intervention, setting boundaries, enabling, Al-Anon and accessing professional help.`,
   }
 }
 
