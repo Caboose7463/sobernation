@@ -13,7 +13,10 @@ export default function robots(): MetadataRoute.Robots {
           '/dashboard/',
           '/verify/',
           '/go/',
-          '/search?*',  // block parameterised search URLs
+          // /search is intentionally NOT blocked here — the search page has
+          // its own `robots: { index: false }` metadata, which is sufficient
+          // to prevent indexing while still allowing Google to validate the
+          // SiteLinksSearchBox schema action URL.
         ],
       },
       {

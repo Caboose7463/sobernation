@@ -54,32 +54,32 @@ const STATS = [
 
 const VALUES = [
   {
-    icon: '⚖️',
+    icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v3M6.3 6.3l-2.1 2.1M3 12H0M6.3 17.7l-2.1 2.1M12 18v3M17.7 17.7l2.1 2.1M21 12h3M17.7 6.3l2.1-2.1"/><line x1="17" y1="12" x2="7" y2="12"/><path d="M17 12l-5-9-5 9"/><path d="M7 12l5 9 5-9"/></svg>,
     title: 'Evidence-based',
     body: 'Every clinical claim on SoberNation is aligned with current NICE guidelines (CG115, NG58, NG11) and NHS clinical frameworks. We do not publish speculative information about addiction treatment.',
   },
   {
-    icon: '🔍',
+    icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
     title: 'Regularly reviewed',
     body: 'Our content is reviewed at regular intervals and updated when NHS guidance, NICE guidelines, or drug regulations change. All clinical content is reviewed by Dr. Sarah Dawson, Clinical Psychologist.',
   },
   {
-    icon: '🏥',
+    icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>,
     title: 'CQC-verified data',
     body: 'Every rehabilitation centre and treatment facility listed on SoberNation is sourced from the Care Quality Commission (CQC) public register. We show only registered, regulated services.',
   },
   {
-    icon: '🤝',
+    icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>,
     title: 'Truly independent',
     body: 'SoberNation does not accept payment to promote, rank, or feature specific providers. Facility listings are based solely on CQC registration and location — never commercial relationships.',
   },
   {
-    icon: '💬',
+    icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>,
     title: 'Safe messaging',
     body: 'All content follows Samaritans UK and NHS England safe messaging guidelines. Crisis helplines are displayed on every page. We never publish harmful methods or details.',
   },
   {
-    icon: '🆓',
+    icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
     title: 'Always free',
     body: 'SoberNation is free for everyone. We believe that finding addiction help should not require a subscription, referral, or any payment. Every resource on this site is openly accessible.',
   },

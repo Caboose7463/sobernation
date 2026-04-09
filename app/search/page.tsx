@@ -148,7 +148,11 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
         {/* No query */}
         {!q && (
           <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-            <div style={{ fontSize: 40, marginBottom: 16 }}>🔍</div>
+            <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'center' }}>
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+            </div>
             <div style={{ fontSize: 16, color: 'var(--text-muted)' }}>Enter a search term above to find locations, guides, and resources.</div>
             <div style={{ marginTop: 24, display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
               {['London rehab', 'AA meetings Manchester', 'signs of alcoholism', 'sobriety counter', 'NHS alcohol help'].map(s => (

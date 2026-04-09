@@ -40,6 +40,7 @@ const orgSchema = {
   description: "The UK's addiction recovery hub — free information about alcohol and drug addiction treatment, rehab centres, NHS services, and recovery support across the UK.",
   contactPoint: {
     '@type': 'ContactPoint',
+    telephone: '+44-20-4634-4476',
     email: 'editorial@sobernation.co.uk',
     contactType: 'customer support',
     areaServed: 'GB',
@@ -47,6 +48,9 @@ const orgSchema = {
   },
   address: {
     '@type': 'PostalAddress',
+    streetAddress: 'Office 1, 1 Coldbath Square',
+    addressLocality: 'London',
+    postalCode: 'EC1R 5HL',
     addressCountry: 'GB',
   },
   sameAs: [

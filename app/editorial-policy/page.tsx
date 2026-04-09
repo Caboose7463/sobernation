@@ -147,7 +147,11 @@ export default function EditorialPolicyPage() {
 
         {/* Badge explainer */}
         <div style={{ marginBottom: 52, padding: '20px 24px', background: '#f0fdf4', border: '2px solid #86efac', borderRadius: 'var(--radius-md)', display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-          <div style={{ fontSize: 28, flexShrink: 0 }}>✚</div>
+          <div style={{ flexShrink: 0, marginTop: 2 }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#166534" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
           <div>
             <div style={{ fontWeight: 700, fontSize: 15, color: '#166534', marginBottom: 6 }}>What the "Medically reviewed" badge means</div>
             <p style={{ fontSize: 14, color: '#15803d', lineHeight: 1.7, margin: 0 }}>

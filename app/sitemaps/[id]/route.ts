@@ -110,7 +110,8 @@ export async function GET(
     const drugs = [
       'alcohol','cannabis','cocaine','heroin','mdma','tramadol',
       'ketamine','diazepam','codeine','pregabalin','zopiclone',
-      'amphetamine','methamphetamine','buprenorphine',
+      'amphetamine','methamphetamine',
+      // buprenorphine page does not exist — removed to prevent 404 in sitemap
     ]
     entries = [
       { url: BASE, lastmod: now, changefreq: 'daily', priority: 1.0 },
