@@ -96,17 +96,17 @@ export default function AdvertisePage() {
 
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <a
-              href="#position-checker"
+              href="/verify"
               style={{
                 padding: '14px 28px', background: '#fff', color: '#0d4a3a',
                 borderRadius: 8, fontWeight: 700, fontSize: 16, textDecoration: 'none',
                 boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
               }}
             >
-              Check your city →
+              Get verified — £25/mo →
             </a>
             <a
-              href="#how-it-works"
+              href="#position-checker"
               style={{
                 padding: '14px 28px', background: 'rgba(255,255,255,0.12)',
                 border: '1px solid rgba(255,255,255,0.25)',
@@ -114,7 +114,7 @@ export default function AdvertisePage() {
                 textDecoration: 'none',
               }}
             >
-              How it works
+              Sponsored positions ↓
             </a>
           </div>
 
@@ -258,21 +258,21 @@ export default function AdvertisePage() {
             borderRadius: 20, padding: '48px 36px', textAlign: 'center',
           }}>
             <h2 style={{ fontSize: 'clamp(22px,4vw,32px)', fontWeight: 800, color: '#fff', marginBottom: 12, letterSpacing: '-0.02em' }}>
-              Ready to get started?
+              Ready to grow on SoberNation?
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.78)', marginBottom: 28, maxWidth: 460, margin: '0 auto 28px' }}>
-              Pick your position in under 5 minutes. No contracts, no bidding wars.
-              Your listing goes live immediately after payment.
+              Start with a verified listing — £25/month, badge live on payment, cancel anytime.
+              Or jump straight to a sponsored position.
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link
-                href="/advertise/promote"
+                href="/verify"
                 style={{
                   padding: '14px 28px', background: '#fff', color: '#0d4a3a',
                   borderRadius: 8, fontWeight: 700, fontSize: 16, textDecoration: 'none',
                 }}
               >
-                Start your campaign →
+                Get verified — £25/mo →
               </Link>
               <a
                 href="#position-checker"
@@ -282,7 +282,7 @@ export default function AdvertisePage() {
                   color: '#fff', borderRadius: 8, fontWeight: 600, fontSize: 16, textDecoration: 'none',
                 }}
               >
-                Check your city first
+                See sponsored positions
               </a>
             </div>
           </div>

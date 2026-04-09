@@ -213,7 +213,7 @@ export default function CounsellorsSection({ locationSlug, locationName }: Props
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', marginBottom: 1 }}>Add your listing</div>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Missing from our directory? Get verified and receive direct enquiries — from £10/month</div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Missing from our directory? Get verified and receive direct enquiries — £25/month</div>
           </div>
           <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', background: 'var(--accent)', padding: '5px 12px', borderRadius: 6, flexShrink: 0, whiteSpace: 'nowrap' }}>Get verified →</span>
         </a>
@@ -234,7 +234,7 @@ export default function CounsellorsSection({ locationSlug, locationName }: Props
             </div>
             <div>
               <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)', marginBottom: 2 }}>Are you a counsellor in {locationName}?</div>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Get verified · receive leads · £25/month · cancel anytime</div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Get verified · appear first in search · £25/month · cancel anytime</div>
             </div>
           </div>
           <Link href="/verify?type=counsellor" className="cs-cta-btn">

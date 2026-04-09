@@ -831,16 +831,37 @@ export default function OnboardPage() {
 
               {/* Benefits */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 24 }}>
-                {[
-                  { icon: '📨', label: 'Leads sent to you' },
-                  { icon: '✓', label: 'Verified badge' },
-                  { icon: '📊', label: 'Stats dashboard' },
-                ].map(b => (
-                  <div key={b.label} style={{ background: 'var(--accent-pale)', border: '1px solid #c8e6df', borderRadius: 10, padding: '12px', textAlign: 'center' }}>
-                    <div style={{ fontSize: 18, marginBottom: 4 }}>{b.icon}</div>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', lineHeight: 1.3 }}>{b.label}</div>
-                  </div>
-                ))}
+              {[
+                {
+                  icon: (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.19 2 2 0 012 .01h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.16 6.16l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+                    </svg>
+                  ),
+                  label: 'Leads sent to you',
+                },
+                {
+                  icon: (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                  ),
+                  label: 'Verified badge',
+                },
+                {
+                  icon: (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+                    </svg>
+                  ),
+                  label: 'Stats dashboard',
+                },
+              ].map(b => (
+                <div key={b.label} style={{ background: 'var(--accent-pale)', border: '1px solid #c8e6df', borderRadius: 10, padding: '12px', textAlign: 'center' }}>
+                  <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 6 }}>{b.icon}</div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--accent)', lineHeight: 1.3 }}>{b.label}</div>
+                </div>
+              ))}
               </div>
 
               {/* Pricing summary */}
