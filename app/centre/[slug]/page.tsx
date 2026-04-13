@@ -551,7 +551,7 @@ export default async function CentreProfilePage({ params }: Props) {
               <Link href={`/counsellors/claim?type=centre&name=${encodeURIComponent(centre.name)}&location=${centre.townSlug}`} className="cp-claim-btn">
                 Claim &amp; verify this listing
               </Link>
-              <div className="cp-claim-sub">From £30/month · Cancel anytime</div>
+              <div className="cp-claim-sub">From £25/month · Cancel anytime</div>
 
               <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--border)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-muted)' }}>

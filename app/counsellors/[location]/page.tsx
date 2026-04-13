@@ -60,19 +60,22 @@ export default async function CounsellorsLocationPage({ params }: Props) {
 
   const slugsToQuery = expandSlugs(location)
 
-  const { data: counsellors, error } = await supabase
-    .from('counsellors')
-    .select('id, name, title, location_name, location_slug, specialisms, phone, email, website, photo_url, verified, listing_type, profile_slug')
-    .in('location_slug', slugsToQuery)
-    .order('verified', { ascending: false })
-    .order('name', { ascending: true })
-    .limit(50)
+  let list: Counsellor[] = []
+  try {
+    const { data: counsellors, error } = await supabase
+      .from('counsellors')
+      .select('id, name, title, location_name, location_slug, specialisms, phone, email, website, photo_url, verified, listing_type, profile_slug')
+      .in('location_slug', slugsToQuery)
+      .order('verified', { ascending: false })
+      .order('name', { ascending: true })
+      .limit(50)
 
-  if (error) {
-    console.error('Supabase error:', error)
+    if (error) console.error('Supabase error:', error)
+    list = counsellors ?? []
+  } catch (err) {
+    console.error('Counsellors fetch failed:', err)
+    // Render page with empty list rather than 500
   }
-
-  const list: Counsellor[] = counsellors ?? []
   const verified = list.filter(c => c.verified)
   const unverified = list.filter(c => !c.verified)
 
@@ -127,7 +130,7 @@ export default async function CounsellorsLocationPage({ params }: Props) {
               Are you a counsellor in {locationName}?
             </div>
             <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
-              Get a verified badge, appear at the top of search results and receive direct enquiries — from £10/month.
+              Get a verified badge, appear at the top of search results and receive direct enquiries — from £25/month.
             </div>
           </div>
           <Link
