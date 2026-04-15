@@ -4,13 +4,19 @@
  * Mirrors /counsellors/[location] structure.
  */
 import { notFound } from 'next/navigation'
-import { getLocation } from '../../../lib/locations'
+import { getTopLocationSlugs, getLocation } from '../../../lib/locations'
 import { getRehabsForLocation, getCorrectCentreSlug } from '../../../lib/rehabs'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import type { RehabCentre } from '../../../lib/rehabs'
 
 export const revalidate = 3600
+// Only pre-built slugs are valid — unknown bot URLs get a clean 404, not a 500
+export const dynamicParams = false
+
+export async function generateStaticParams() {
+  return getTopLocationSlugs().map(location => ({ location }))
+}
 
 interface Props {
   params: Promise<{ location: string }>
