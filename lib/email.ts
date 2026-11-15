@@ -50,6 +50,23 @@ export async function sendEmail(input: SendEmailInput): Promise<{ ok: boolean; i
     })
     if (error) {
       console.error('[email] Resend rejected email:', input.subject, JSON.stringify(error))
+      // Until sobernation.co.uk is verified in Resend, internal notifications fall back
+      // to Resend's shared sender, which can only deliver to the Resend account owner.
+      if (/not verified/i.test(error.message) && sameRecipients(input.to, ENQUIRY_NOTIFY_EMAIL)) {
+        const retry = await resend.emails.send({
+          from: 'Sober Nation (unverified domain) <onboarding@resend.dev>',
+          to: input.to,
+          subject: input.subject,
+          html: input.html,
+          text: input.text,
+          replyTo: input.replyTo,
+        })
+        if (!retry.error) {
+          console.warn('[email] sent via onboarding@resend.dev fallback — verify sobernation.co.uk in Resend', retry.data?.id)
+          return { ok: true, id: retry.data?.id }
+        }
+        console.error('[email] fallback sender also rejected:', JSON.stringify(retry.error))
+      }
       return { ok: false, error: error.message }
     }
     console.log('[email] sent', data?.id, input.subject)
@@ -58,6 +75,11 @@ export async function sendEmail(input: SendEmailInput): Promise<{ ok: boolean; i
     console.error('[email] send threw:', input.subject, e)
     return { ok: false, error: String(e) }
   }
+}
+
+function sameRecipients(to: string | string[], expected: string): boolean {
+  const list = Array.isArray(to) ? to : [to]
+  return list.length === 1 && list[0].toLowerCase() === expected.toLowerCase()
 }
 
 export function escapeHtml(value: unknown): string {
