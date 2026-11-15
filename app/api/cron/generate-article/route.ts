@@ -90,6 +90,13 @@ export async function GET(req: Request) {
 
     if (!openaiRes.ok) {
       const err = await openaiRes.text()
+      // Out of OpenAI credit: put the item back in the queue and exit quietly
+      // so the daily cron doesn't register as a failure. Top up OpenAI to resume.
+      if (openaiRes.status === 429 && err.includes('insufficient_quota')) {
+        await supabase.from('article_queue').update({ status: 'pending' }).eq('id', item.id)
+        console.warn('[generate-article] Skipped: OpenAI account has no credit (insufficient_quota). Add credit at platform.openai.com to resume article generation.')
+        return NextResponse.json({ skipped: true, reason: 'openai_insufficient_quota' })
+      }
       throw new Error(`OpenAI error: ${err}`)
     }
 

@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
+// Static import so the JSON is bundled into the serverless function
+// (a runtime require() with a relative path was not traced and failed in production)
+import locationsData from '../../../../data/locations.json'
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const q = searchParams.get('q')?.trim().toLowerCase() ?? ''
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const locData = require('../../../../../data/locations.json') as {
+    const locData = locationsData as unknown as {
       locations: Array<{ slug: string; name: string; county?: string }>
     }
 

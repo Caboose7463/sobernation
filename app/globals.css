@@ -292,3 +292,7 @@ button, input, select, textarea {
   }
   .community-mobile-cats::-webkit-scrollbar { display: none; }
 }
+
+/* Sober stories card hover (CSS so the server component needs no event handlers) */
+.ss-card { border: 1px solid var(--border); transition: border-color 0.15s, box-shadow 0.15s; }
+.ss-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); }

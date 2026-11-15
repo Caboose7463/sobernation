@@ -58,9 +58,9 @@ function CentreCard({ centre, townSlug }: { centre: RehabCentre; townSlug: strin
   return (
     <Link
       href={`/centre/${slug}`}
+      className="ct-card"
       style={{
         background: '#fff',
-        border: '1px solid var(--border)',
         borderRadius: 'var(--radius-md)',
         padding: '18px 20px',
         display: 'flex',
@@ -68,11 +68,8 @@ function CentreCard({ centre, townSlug }: { centre: RehabCentre; townSlug: strin
         gap: 10,
         textDecoration: 'none',
         color: 'inherit',
-        transition: 'border-color 0.15s, box-shadow 0.15s, transform 0.15s',
         cursor: 'pointer',
       }}
-      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#1d4ed8'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(29,78,216,0.10)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)' }}
-      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; (e.currentTarget as HTMLElement).style.transform = '' }}
     >
       {/* Top row: logo + name */}
       <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
@@ -137,6 +134,8 @@ export default async function CentresLocationPage({ params }: Props) {
     <div style={{ minHeight: '100vh', background: 'var(--white)' }}>
       <style>{`
         .ct-hero { border-bottom: 1px solid var(--border); padding: 48px 20px 40px; }
+        .ct-card { border: 1px solid var(--border); transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s; }
+        .ct-card:hover { border-color: #1d4ed8; box-shadow: 0 4px 16px rgba(29,78,216,0.10); transform: translateY(-1px); }
         .ct-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
         @media (max-width: 640px) { .ct-grid { grid-template-columns: 1fr; } }
         .ct-claim {

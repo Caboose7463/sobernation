@@ -40,14 +40,18 @@ export default async function ThreadPage({ params }: Props) {
   if (!post || post.is_hidden) notFound()
 
   // Schema markup for SEO
+  const threadUrl = `https://www.sobernation.co.uk/community/${category}/${slug}`
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'DiscussionForumPosting',
     headline: post.title,
     text: post.body,
-    author: { '@type': 'Person', name: post.username },
+    // Community members have no public profile pages, so the author URL points
+    // at the thread they wrote (Search Console requires author.url).
+    author: { '@type': 'Person', name: post.username || 'SoberNation member', url: threadUrl },
     datePublished: post.created_at,
-    url: `https://sobernation.com/community/${category}/${slug}`,
+    url: threadUrl,
+    mainEntityOfPage: threadUrl,
   }
 
   return (

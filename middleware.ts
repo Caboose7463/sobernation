@@ -5,6 +5,14 @@ import { createClient } from '@supabase/supabase-js'
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  // ── Broken phone links: /any/path/tel:0300... or /any/path/tel%3A0300... ──
+  // Some crawlers/old cached pages resolve tel: links as relative paths.
+  // Send them to the real tel: URL (mobile dials, desktop ignores) instead of erroring.
+  const telMatch = decodeURIComponent(pathname).match(/\/tel:\+?([0-9]{3,15})\/?$/i)
+  if (telMatch) {
+    return NextResponse.redirect(`tel:${telMatch[1]}`, 301)
+  }
+
   // ── Return 410 Gone for old WordPress URLs ────────────────────────────────
   // 410 = "permanently gone" — tells Google to deindex faster than 404
   const WORDPRESS_PATHS = [
@@ -57,6 +65,9 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    '/:path*/tel%3A:num',
+    '/:path*/tel%3a:num',
+    '/:path*/tel\\::num',
     '/dashboard/:path*',
     '/sample-page/:path*',
     '/sample-page',

@@ -48,7 +48,7 @@ export default async function TherapistOGImage({ params }: Props) {
       >
         {/* Background pattern */}
         <div
-          style={{
+          style={{ display: 'flex',
             position: 'absolute',
             inset: 0,
             backgroundImage: 'radial-gradient(circle at 80% 20%, rgba(255,255,255,0.06) 0%, transparent 60%), radial-gradient(circle at 20% 80%, rgba(255,255,255,0.04) 0%, transparent 50%)',
@@ -58,24 +58,24 @@ export default async function TherapistOGImage({ params }: Props) {
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '40px' }}>
           <div style={{ width: 32, height: 32, background: 'rgba(255,255,255,0.2)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ fontSize: 18, color: '#fff', fontWeight: 800 }}>S</div>
+            <div style={{ display: 'flex', fontSize: 18, color: '#fff', fontWeight: 800 }}>S</div>
           </div>
-          <div style={{ color: 'rgba(255,255,255,0.9)', fontSize: 18, fontWeight: 700, letterSpacing: '-0.01em' }}>
+          <div style={{ display: 'flex', color: 'rgba(255,255,255,0.9)', fontSize: 18, fontWeight: 700, letterSpacing: '-0.01em' }}>
             SoberNation
           </div>
         </div>
 
         {/* Main content */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>
             Addiction Counsellor Profile
           </div>
-          <div style={{ fontSize: 58, fontWeight: 800, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: '20px', maxWidth: '800px' }}>
+          <div style={{ display: 'flex', fontSize: 58, fontWeight: 800, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: '20px', maxWidth: '800px' }}>
             {name}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#4ade80' }} />
-            <div style={{ fontSize: 22, color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>
+            <div style={{ display: 'flex', width: 8, height: 8, borderRadius: '50%', background: '#4ade80' }} />
+            <div style={{ display: 'flex', fontSize: 22, color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>
               Based in {location}
             </div>
           </div>
@@ -87,10 +87,10 @@ export default async function TherapistOGImage({ params }: Props) {
           marginTop: '40px', paddingTop: '24px',
           borderTop: '1px solid rgba(255,255,255,0.2)',
         }}>
-          <div style={{ fontSize: 16, color: 'rgba(255,255,255,0.7)' }}>
+          <div style={{ display: 'flex', fontSize: 16, color: 'rgba(255,255,255,0.7)' }}>
             sobernation.co.uk
           </div>
-          <div style={{
+          <div style={{ display: 'flex',
             background: 'rgba(255,255,255,0.15)', borderRadius: '999px',
             padding: '8px 18px', fontSize: 14, fontWeight: 700, color: '#fff',
           }}>

@@ -83,24 +83,14 @@ export default async function SoberStoriesPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 24 }}>
               {stories.map(story => (
                 <Link key={story.id} href={`/sober-stories/${story.slug}`} style={{ textDecoration: 'none' }}>
-                  <article style={{
+                  <article className="ss-card" style={{
                     background: 'var(--white)',
-                    border: '1px solid var(--border)',
                     borderRadius: 'var(--radius-md)',
                     overflow: 'hidden',
-                    transition: 'border-color 0.15s, box-shadow 0.15s',
                     height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                   }}
-                    onMouseEnter={e => {
-                      (e.currentTarget as HTMLElement).style.borderColor = 'var(--accent)'
-                      ;(e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-md)'
-                    }}
-                    onMouseLeave={e => {
-                      (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'
-                      ;(e.currentTarget as HTMLElement).style.boxShadow = 'none'
-                    }}
                   >
                     {/* Avatar / photo */}
                     <div style={{ height: 180, background: 'var(--bg-subtle)', overflow: 'hidden', position: 'relative', flexShrink: 0 }}>

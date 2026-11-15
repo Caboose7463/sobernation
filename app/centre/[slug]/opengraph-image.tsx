@@ -40,30 +40,30 @@ export default async function CentreOGImage({ params }: Props) {
           position: 'relative',
         }}
       >
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle at 80% 20%, rgba(255,255,255,0.07) 0%, transparent 55%)' }} />
+        <div style={{ display: 'flex', position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle at 80% 20%, rgba(255,255,255,0.07) 0%, transparent 55%)' }} />
 
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '40px' }}>
           <div style={{ width: 32, height: 32, background: 'rgba(255,255,255,0.2)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ fontSize: 16, color: '#fff', fontWeight: 800 }}>+</div>
+            <div style={{ display: 'flex', fontSize: 16, color: '#fff', fontWeight: 800 }}>+</div>
           </div>
-          <div style={{ color: 'rgba(255,255,255,0.9)', fontSize: 18, fontWeight: 700 }}>SoberNation</div>
+          <div style={{ display: 'flex', color: 'rgba(255,255,255,0.9)', fontSize: 18, fontWeight: 700 }}>SoberNation</div>
         </div>
 
         {/* CQC badge */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px', background: 'rgba(255,255,255,0.12)', borderRadius: '999px', width: 'fit-content', padding: '6px 14px' }}>
-          <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#34d399' }} />
-          <div style={{ fontSize: 13, color: '#fff', fontWeight: 700 }}>CQC Registered Treatment Centre</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px', background: 'rgba(255,255,255,0.12)', borderRadius: '999px', alignSelf: 'flex-start', padding: '6px 14px' }}>
+          <div style={{ display: 'flex', width: 8, height: 8, borderRadius: '50%', background: '#34d399' }} />
+          <div style={{ display: 'flex', fontSize: 13, color: '#fff', fontWeight: 700 }}>CQC Registered Treatment Centre</div>
         </div>
 
         {/* Main content */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <div style={{ fontSize: 52, fontWeight: 800, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: '20px', maxWidth: '820px' }}>
+          <div style={{ display: 'flex', fontSize: 52, fontWeight: 800, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: '20px', maxWidth: '820px' }}>
             {name}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#fbbf24' }} />
-            <div style={{ fontSize: 20, color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>
+            <div style={{ display: 'flex', width: 8, height: 8, borderRadius: '50%', background: '#fbbf24' }} />
+            <div style={{ display: 'flex', fontSize: 20, color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>
               {location}
             </div>
           </div>
@@ -71,8 +71,8 @@ export default async function CentreOGImage({ params }: Props) {
 
         {/* Bottom */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '36px', paddingTop: '22px', borderTop: '1px solid rgba(255,255,255,0.2)' }}>
-          <div style={{ fontSize: 15, color: 'rgba(255,255,255,0.65)' }}>sobernation.co.uk</div>
-          <div style={{ background: 'rgba(255,255,255,0.15)', borderRadius: '999px', padding: '8px 18px', fontSize: 14, fontWeight: 700, color: '#fff' }}>
+          <div style={{ display: 'flex', fontSize: 15, color: 'rgba(255,255,255,0.65)' }}>sobernation.co.uk</div>
+          <div style={{ display: 'flex', background: 'rgba(255,255,255,0.15)', borderRadius: '999px', padding: '8px 18px', fontSize: 14, fontWeight: 700, color: '#fff' }}>
             View profile →
           </div>
         </div>
