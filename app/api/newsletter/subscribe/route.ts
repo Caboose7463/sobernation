@@ -7,9 +7,10 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
+import { FROM_EMAIL } from '@/lib/email'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
-const FROM = process.env.RESEND_FROM_EMAIL ?? 'SoberNation <onboarding@resend.dev>'
+const FROM = FROM_EMAIL
 
 function getSupabase() {
   return createClient(

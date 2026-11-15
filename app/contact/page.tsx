@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import ContactForm from '../../components/ContactForm'
 
 export const metadata: Metadata = {
   title: 'Contact SoberNation | Get in Touch',
@@ -123,17 +124,6 @@ const TRANSPORT = [
   { Icon: IconCycle, title: 'Santander Cycles', detail: 'Docking stations on Rosebery Avenue and Farringdon Road' },
   { Icon: IconCar, title: 'By Car', detail: 'Limited street parking. Nearest NCP at Farringdon/Hatton Garden. EC1 is in the ULEZ zone.' },
 ]
-
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '12px 14px',
-  borderRadius: 8,
-  border: '1.5px solid var(--border)',
-  fontSize: 14,
-  outline: 'none',
-  boxSizing: 'border-box',
-  fontFamily: 'inherit',
-}
 
 export default function ContactPage() {
   return (
@@ -272,59 +262,7 @@ export default function ContactPage() {
           </p>
         </div>
 
-        <form
-          action="mailto:info@sobernation.co.uk"
-          method="GET"
-          encType="text/plain"
-          style={{ background: '#fff', border: '1.5px solid var(--border)', borderRadius: 14, padding: '32px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text)', display: 'block', marginBottom: 6 }}>Your name *</label>
-              <input name="name" required placeholder="Jane Smith" style={inputStyle} />
-            </div>
-            <div>
-              <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text)', display: 'block', marginBottom: 6 }}>Email address *</label>
-              <input type="email" name="email" required placeholder="jane@example.com" style={inputStyle} />
-            </div>
-          </div>
-
-          <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text)', display: 'block', marginBottom: 6 }}>Subject *</label>
-            <select name="subject" style={{ ...inputStyle, background: '#fff', color: 'var(--text)' }}>
-              <option value="">Select a topic...</option>
-              <option>General enquiry</option>
-              <option>Correction request — inaccurate content</option>
-              <option>Listing or directory query</option>
-              <option>Advertising enquiry</option>
-              <option>Press or media</option>
-              <option>Partnership or collaboration</option>
-              <option>Data or privacy request</option>
-              <option>Other</option>
-            </select>
-          </div>
-
-          <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text)', display: 'block', marginBottom: 6 }}>Message *</label>
-            <textarea name="body" required placeholder="Tell us how we can help..." rows={5} style={{ ...inputStyle, resize: 'vertical' }} />
-          </div>
-
-          <div style={{ background: 'var(--bg)', borderRadius: 8, padding: '12px 14px', fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5, display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
-              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-            </svg>
-            <span>
-              <strong>Not for crisis support.</strong> If you or someone you know needs immediate help, call{' '}
-              <a href="tel:03001236600" style={{ color: 'var(--accent)', fontWeight: 700, textDecoration: 'none' }}>Frank: 0300 123 6600</a>{' '}
-              (free, 24/7) or <a href="tel:999" style={{ color: '#dc2626', fontWeight: 700, textDecoration: 'none' }}>999</a> in an emergency.
-            </span>
-          </div>
-
-          <button type="submit" style={{ padding: '14px', borderRadius: 10, border: 'none', background: 'var(--accent)', color: '#fff', fontSize: 15, fontWeight: 700, cursor: 'pointer' }}>
-            Send message
-          </button>
-        </form>
+        <ContactForm />
       </section>
 
       {/* FAQs */}

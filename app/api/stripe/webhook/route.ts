@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createServiceClient } from '@/lib/supabase-server'
 import { Resend } from 'resend'
+import { FROM_EMAIL } from '@/lib/email'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
 
         if (owner) {
           await resend.emails.send({
-            from: process.env.RESEND_FROM_EMAIL!,
+            from: FROM_EMAIL,
             to: owner.email,
             subject: 'Your SoberNation listing is now verified!',
             html: `
@@ -104,7 +105,7 @@ export async function POST(request: NextRequest) {
 
         if (owner) {
           await resend.emails.send({
-            from: process.env.RESEND_FROM_EMAIL!,
+            from: FROM_EMAIL,
             to: owner.email,
             subject: 'Action required — payment failed for your SoberNation listing',
             html: `

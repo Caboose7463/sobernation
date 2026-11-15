@@ -52,7 +52,7 @@ export default function FindMyRehabPage() {
       await fetch('/api/matching/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(answers),
+        body: JSON.stringify({ ...answers, sourcePage: document.referrer || 'direct visit to /find-my-rehab' }),
       })
       setSubmitted(true)
     } catch {

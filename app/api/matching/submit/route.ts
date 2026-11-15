@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase-server'
+import { sendEmail, ENQUIRY_NOTIFY_EMAIL, detailsTable, detailsText } from '@/lib/email'
+
+export const runtime = 'nodejs'
 
 export async function POST(request: NextRequest) {
   try {
-    const { location, addiction, fundingType, budget, urgency, firstName, email, phone } = await request.json()
+    const { location, addiction, fundingType, budget, urgency, firstName, email, phone, sourcePage } = await request.json()
 
     if (!location || !firstName || !phone) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -26,7 +29,7 @@ export async function POST(request: NextRequest) {
     const matchedIds = (members ?? []).map((m: { id: string }) => m.id)
 
     // Store the lead
-    const { data: lead } = await supabase
+    const { data: lead, error: leadError } = await supabase
       .from('matching_leads')
       .insert({
         first_name: firstName,
@@ -44,7 +47,33 @@ export async function POST(request: NextRequest) {
       .select()
       .single()
 
-    // Send notification emails to matched centres (fire and forget)
+    if (leadError) console.error('[matching/submit] Supabase insert failed:', leadError.message)
+
+    // Notify the site owner of every enquiry (awaited so it isn't cut off when the function ends)
+    const rows: Array<[string, unknown]> = [
+      ['First name', firstName],
+      ['Phone', phone],
+      ['Email', email],
+      ['Location', location],
+      ['Addiction', addiction],
+      ['Funding', fundingType],
+      ['Budget', budget],
+      ['Urgency', urgency],
+      ['Came from', sourcePage],
+      ['Matched centres', (members ?? []).map((m: MatchingMember) => m.centre_name).join(', ') || 'none'],
+      ['Saved to database', lead ? `yes (matching_leads ${lead.id})` : 'NO — check Vercel logs'],
+      ['Received', new Date().toISOString()],
+    ]
+    await sendEmail({
+      to: ENQUIRY_NOTIFY_EMAIL,
+      replyTo: email || undefined,
+      subject: `New rehab enquiry: ${firstName} in ${location}`,
+      html: `<p>New enquiry from the Sober Nation "Find my rehab" form.</p>${detailsTable(rows)}`,
+      text: detailsText(rows),
+    })
+
+    // Lead emails to matched centres. NOTE: sendLeadEmails currently only logs —
+    // it does not email centres. Leave disabled until the owner approves.
     if (members && members.length > 0 && lead) {
       sendLeadEmails(members, { firstName, phone, email, location, addiction, urgency, budget, leadId: lead.id })
         .catch(err => console.error('[matching/submit] email error:', err))

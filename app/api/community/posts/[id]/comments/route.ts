@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
 import { createAdminClient } from '@/utils/supabase/admin'
 import { Resend } from 'resend'
+import { COMMUNITY_FROM_EMAIL } from '@/lib/email'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -71,9 +72,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const email = postOwner?.user?.email
     if (email) {
       const categorySlug = (post.categories as unknown as { slug: string })?.slug
-      const postUrl = `https://sobernation.com/community/${categorySlug}/${post.slug}`
+      const postUrl = `https://www.sobernation.co.uk/community/${categorySlug}/${post.slug}`
       await resend.emails.send({
-        from: 'SoberNation Community <community@sobernation.com>',
+        from: COMMUNITY_FROM_EMAIL,
         to: email,
         subject: `${profile.username} replied to your post`,
         html: `
