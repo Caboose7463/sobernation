@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
+import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import StoriesCTA from '../components/StoriesCTA'
 import CommunityCard from '../components/CommunityCard'
@@ -134,6 +135,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           strategy="afterInteractive"
           crossOrigin="anonymous"
         />
+        <Analytics />
       </body>
     </html>
   )
