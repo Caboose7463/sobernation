@@ -9,6 +9,7 @@ import CookieConsent from '../components/CookieConsent'
 import SiteFooter from '../components/SiteFooter'
 import { headers } from 'next/headers'
 import { siteLinksSearchBoxSchema } from '../lib/seo'
+import { NOT_COUNTED } from '@/lib/not-counted';
 
 export const metadata: Metadata = {
   title: {
@@ -78,6 +79,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <head>
+        {/* First, before any analytics: keeps bots, James's devices and testing out of Google Analytics */}
+        <script dangerouslySetInnerHTML={{ __html: NOT_COUNTED }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://clvhzvuhwjtyvrddoorm.supabase.co" />
