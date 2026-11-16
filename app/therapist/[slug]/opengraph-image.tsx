@@ -14,24 +14,39 @@ interface Props {
   params: Promise<{ slug: string }>
 }
 
-function slugToNameAndLocation(slug: string): { name: string; location: string } {
-  const parts = slug.split('-')
-  // Heuristic: locations are typically 1-2 words at the end
-  // Try to find the location by looking for known location patterns
-  // Simple approach: last word is location, rest is name
-  // e.g. 'sarah-mitchell-manchester' → name='Sarah Mitchell', location='Manchester'
-  // e.g. 'dr-john-smith-phd-newcastle-upon-tyne' → trickier
-  const locationSlug = parts[parts.length - 1]
-  const nameParts = parts.slice(0, -1)
-  const name = nameParts.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
-  const location = locationSlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
-  return { name, location }
+function titleCase(words: string[]): string {
+  return words
+    .filter(Boolean)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ')
+}
+
+function slugToNameAndLocation(rawSlug: string): { name: string; location: string } {
+  // Decode safely (malformed %-sequences throw) and keep only characters the
+  // default OG font can render, so Satori never fails on odd bot-requested slugs.
+  let slug = rawSlug
+  try { slug = decodeURIComponent(rawSlug) } catch { /* keep raw */ }
+  slug = slug.replace(/[^a-zA-Z0-9-]/g, '').slice(0, 120)
+
+  const parts = slug.split('-').filter(Boolean)
+  if (parts.length === 0) return { name: 'Addiction Counsellor', location: 'the UK' }
+  if (parts.length === 1) return { name: titleCase(parts), location: 'the UK' }
+  // Heuristic: last word = location, rest = name
+  return { name: titleCase(parts.slice(0, -1)), location: titleCase(parts.slice(-1)) }
 }
 
 export default async function TherapistOGImage({ params }: Props) {
-  const { slug } = await params
-  const { name, location } = slugToNameAndLocation(slug)
+  try {
+    const { slug } = await params
+    const { name, location } = slugToNameAndLocation(slug)
+    return render(name, location)
+  } catch (err) {
+    console.error('[therapist og-image] render failed, serving fallback', err)
+    return render('Addiction Counsellor', 'the UK')
+  }
+}
 
+function render(name: string, location: string) {
   return new ImageResponse(
     (
       <div
@@ -50,7 +65,7 @@ export default async function TherapistOGImage({ params }: Props) {
         <div
           style={{ display: 'flex',
             position: 'absolute',
-            inset: 0,
+            top: 0, left: 0, right: 0, bottom: 0,
             backgroundImage: 'radial-gradient(circle at 80% 20%, rgba(255,255,255,0.06) 0%, transparent 60%), radial-gradient(circle at 20% 80%, rgba(255,255,255,0.04) 0%, transparent 50%)',
           }}
         />
