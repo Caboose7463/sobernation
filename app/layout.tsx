@@ -139,6 +139,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           crossOrigin="anonymous"
         />
         <Analytics />
+        <script async src="https://stats-wall-smoky.vercel.app/api/live.js" data-site="sober-nation" />
       </body>
     </html>
   )
