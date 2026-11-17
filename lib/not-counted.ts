@@ -7,9 +7,9 @@
 // The "not me" link: https://hireasauna.uk/?notme=1&chain=all marks this device on every site in turn, then
 // shows a short note. ?notme=off undoes it on the site it's opened on.
 export const NOT_COUNTED = `(function(){try{
-var HOSTS=['hireasauna.uk','visitinghospitals.com','visitingcourts.com','www.dogparknearme.uk','www.visitsalisbury.uk','www.sobernation.co.uk','sharedshuttles.co.uk','www.curatorcontacts.com','visitingcarehomes.com'];
+var HOSTS=['hireasauna.uk','visitinghospitals.com','visitingcourts.com','www.dogparknearme.uk','www.visitsalisbury.uk','www.sobernation.co.uk','sharedshuttles.co.uk','www.curatorcontacts.com','visitingcarehomes.com','www.nearestbeach.uk'];
 var SITES=HOSTS.map(function(h){return h.replace(/^www\\./,'')});
-var IDS=['G-0XZLB2VFRP','G-1C34331S56','G-MM4P18JHVF','G-HQW00MXW88','G-RGCKFQLVLJ','G-QE8MH8W9YT','G-TG1ECW51LR','G-VVPM7KX8C7'];
+var IDS=['G-0XZLB2VFRP','G-1C34331S56','G-MM4P18JHVF','G-HQW00MXW88','G-RGCKFQLVLJ','G-QE8MH8W9YT','G-TG1ECW51LR','G-VVPM7KX8C7','G-LKH4XNFBD7'];
 var K='notme',ls=null;try{ls=window.localStorage}catch(e){}
 var host=location.hostname.replace(/^www\\./,''),q=new URLSearchParams(location.search),mark=q.get(K);
 var live=SITES.indexOf(host)>-1;
