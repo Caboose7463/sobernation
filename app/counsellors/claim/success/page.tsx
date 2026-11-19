@@ -51,7 +51,7 @@ function SuccessInner() {
           {listing ? `Welcome, ${listing.name.split(' ')[0]}!` : "You're verified!"}
         </h1>
         <p style={{ fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 32, maxWidth: 380, margin: '0 auto 28px' }}>
-          Your listing is now live with a <strong style={{ color: 'var(--accent)' }}>verified badge</strong>.
+          Your listing is now live as a <strong style={{ color: 'var(--accent)' }}>featured listing</strong>, shown first and labelled Sponsored.
           People searching for addiction help in your area can now find and contact you directly.
         </p>
 

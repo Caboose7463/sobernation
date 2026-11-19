@@ -196,7 +196,7 @@ export default async function CentresLocationPage({ params }: Props) {
               Do you operate a treatment centre in {loc.name}?
             </div>
             <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
-              Claim your verified listing and manage your information — from £30/month.
+              Claim your free listing, or pay for a featured one labelled Sponsored — from £30/month.
             </div>
           </div>
           <Link

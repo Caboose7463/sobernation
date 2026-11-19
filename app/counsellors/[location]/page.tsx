@@ -130,23 +130,23 @@ export default async function CounsellorsLocationPage({ params }: Props) {
               Are you a counsellor in {locationName}?
             </div>
             <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
-              Get a verified badge, appear at the top of search results and receive direct enquiries — from £25/month.
+              Get a featured listing at the top of search results, labelled Sponsored, and receive direct enquiries — from £25/month.
             </div>
           </div>
           <Link
             href={`/onboard?type=counsellor&location=${location}`}
             style={{ fontSize: 13, fontWeight: 600, background: 'var(--accent)', color: '#fff', padding: '8px 16px', borderRadius: 'var(--radius-sm)', textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}
           >
-            Get verified →
+            Get featured →
           </Link>
         </div>
 
-        {/* Verified counsellors */}
+        {/* Paid listings, labelled Sponsored */}
         {verified.length > 0 && (
           <div style={{ marginBottom: 40 }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ width: 8, height: 8, background: '#1d9bf0', borderRadius: '50%', display: 'inline-block' }} />
-              Verified — {verified.length}
+              Sponsored — {verified.length}
             </div>
             <div className="cl-grid">
               {verified.map(c => <CounsellorCard key={c.id} counsellor={c} />)}

@@ -1,6 +1,5 @@
 /**
- * CounsellorsSection — verified listings first, unverified collapsed.
- * First counsellor is hardcoded as verified for demo purposes.
+ * CounsellorsSection — paid listings first, each labelled Sponsored, then free listings by name.
  */
 'use client'
 
@@ -123,9 +122,11 @@ export default function CounsellorsSection({ locationSlug, locationName }: Props
 
   const displayName = nearbyCity ? `near ${locationName}` : `in ${locationName}`
 
-  // First counsellor shown as verified (demo), rest unverified
-  const verifiedList = counsellors.slice(0, 1)
-  const unverifiedList = counsellors.slice(1)
+  // Paid listings (verified = paid in this table) are shown first and labelled Sponsored
+  const sponsoredList = counsellors.filter(c => c.verified)
+  const free = counsellors.filter(c => !c.verified)
+  const freeShown = free.slice(0, sponsoredList.length ? 2 : 3)
+  const unverifiedList = free.slice(freeShown.length)
   const unverifiedCount = unverifiedList.length
 
   return (
@@ -159,10 +160,13 @@ export default function CounsellorsSection({ locationSlug, locationName }: Props
           </p>
         )}
 
-        {/* Verified counsellors */}
+        {/* Sponsored (paid) listings first, then free listings */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 8 }}>
-          {verifiedList.map(c => (
-            <CounsellorCard key={c.id} counsellor={{ ...c, verified: true }} />
+          {sponsoredList.map(c => (
+            <CounsellorCard key={c.id} counsellor={c} />
+          ))}
+          {freeShown.map(c => (
+            <CounsellorCard key={c.id} counsellor={c} />
           ))}
         </div>
 
@@ -177,7 +181,7 @@ export default function CounsellorsSection({ locationSlug, locationName }: Props
                 style={{ transition: 'transform 0.2s', transform: showUnverified ? 'rotate(90deg)' : 'rotate(0deg)' }}>
                 <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
               </svg>
-              View {unverifiedCount} other counsellor{unverifiedCount !== 1 ? 's' : ''} (unverified)
+              View {unverifiedCount} more counsellor{unverifiedCount !== 1 ? 's' : ''}
             </button>
 
             {showUnverified && (
@@ -213,9 +217,9 @@ export default function CounsellorsSection({ locationSlug, locationName }: Props
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', marginBottom: 1 }}>Add your listing</div>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Missing from our directory? Get verified and receive direct enquiries — £25/month</div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Missing from our directory? Add a free listing, or pay for a featured one, and receive direct enquiries — £25/month</div>
           </div>
-          <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', background: 'var(--accent)', padding: '5px 12px', borderRadius: 6, flexShrink: 0, whiteSpace: 'nowrap' }}>Get verified →</span>
+          <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', background: 'var(--accent)', padding: '5px 12px', borderRadius: 6, flexShrink: 0, whiteSpace: 'nowrap' }}>Get featured →</span>
         </a>
 
         {/* Bottom CTA */}
@@ -234,11 +238,11 @@ export default function CounsellorsSection({ locationSlug, locationName }: Props
             </div>
             <div>
               <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)', marginBottom: 2 }}>Are you a counsellor in {locationName}?</div>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Get verified · appear first in search · £25/month · cancel anytime</div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Featured listing · shown first, labelled Sponsored · £25/month · cancel anytime</div>
             </div>
           </div>
           <Link href="/verify?type=counsellor" className="cs-cta-btn">
-            Get verified →
+            Get featured →
           </Link>
         </div>
       </div>

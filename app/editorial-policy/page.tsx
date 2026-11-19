@@ -58,7 +58,7 @@ const SECTIONS = [
   },
   {
     title: 'Facility data and our CQC commitment',
-    body: 'Rehabilitation centre and treatment facility information displayed on SoberNation is sourced exclusively from the Care Quality Commission (CQC) public register of regulated health and care services. We display only CQC-registered facilities. CQC registration status and inspection ratings are sourced directly from cqc.org.uk and refreshed regularly. We do not accept payment to list, promote, rank, or feature any facility. No facility can pay to improve its position.',
+    body: 'Rehabilitation centre and treatment facility information displayed on SoberNation is sourced exclusively from the Care Quality Commission (CQC) public register of regulated health and care services. We display only CQC-registered facilities. CQC registration status and inspection ratings are sourced directly from cqc.org.uk and refreshed regularly. Every facility is listed for free. Some providers pay for a featured listing or a place at the top of search results, and every paid placement is clearly labelled Sponsored. Free listings are ranked by relevance.',
   },
   {
     title: 'Safe messaging guidelines',
@@ -70,7 +70,7 @@ const SECTIONS = [
   },
   {
     title: 'Independence and commercial relationships',
-    body: 'SoberNation does not accept payment to promote, feature, or rank specific treatment providers, products, or services. All facility listings are based solely on CQC registration data and geographic relevance. Editorial content is entirely independent of any commercial relationships. Where SoberNation displays advertising, this is clearly labelled as advertising and kept entirely separate from editorial content.',
+    body: 'Some providers pay for a featured listing or a place at the top of search results. Every paid placement is clearly labelled Sponsored, in plain text, next to the listing. Free listings are ranked by relevance, such as CQC registration data and distance. Editorial content is entirely independent of any commercial relationships. Where SoberNation displays advertising, this is clearly labelled as advertising and kept entirely separate from editorial content.',
   },
   {
     title: 'Medical disclaimer',

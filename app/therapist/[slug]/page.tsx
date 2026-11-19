@@ -458,19 +458,9 @@ export default async function TherapistPage({ params }: Props) {
             <div>
               <h1 className="tp-h1">
                 {c.name}
-                <span
-                  style={{
-                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                    width: 22, height: 22, borderRadius: '50%', verticalAlign: 'middle',
-                    background: c.verified ? '#1d9bf0' : '#d1d5db',
-                    marginLeft: 8, flexShrink: 0,
-                  }}
-                  title={c.verified ? 'Verified by SoberNation' : 'Listing not yet verified'}
-                >
-                  <svg width="12" height="12" viewBox="0 0 10 10" fill="none">
-                    <polyline points="2,5 4.2,7.5 8,3" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </span>
+                {c.verified && (
+                  <span style={{ marginLeft: 10, fontSize: 13, fontWeight: 600, color: '#6b7280', verticalAlign: 'middle' }}>Sponsored</span>
+                )}
               </h1>
               <p className="tp-subtitle">{sanitiseTitle(c.title) ?? 'Addiction Counsellor'} · {locationName}</p>
               <div className="tp-badges">
@@ -714,7 +704,7 @@ export default async function TherapistPage({ params }: Props) {
                         : <div className="tp-related-avatar">{ri}</div>}
                       <div className="tp-related-name">{r.name}</div>
                       <div className="tp-related-spec">{sanitiseTitle(r.title) ?? 'Counsellor'}</div>
-                      {r.verified && <div style={{ fontSize: 10, fontWeight: 700, color: '#166534', marginTop: 4 }}>✓ Verified</div>}
+                      {r.verified && <div style={{ fontSize: 10, fontWeight: 600, color: '#6b7280', marginTop: 4 }}>Sponsored</div>}
                     </Link>
                   )
                 })}
@@ -780,7 +770,7 @@ export default async function TherapistPage({ params }: Props) {
               {/* Trust */}
               <div className="tp-trust">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                Verified against BACP register
+                Check this counsellor&apos;s registration with BACP or UKCP before you book
               </div>
             </div>
           </div>

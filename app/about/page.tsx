@@ -53,8 +53,8 @@ const VALUES = [
   },
   {
     icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>,
-    title: 'Truly independent',
-    body: 'SoberNation does not accept payment to promote, rank, or feature specific providers. Facility listings are based solely on CQC registration and location — never commercial relationships.',
+    title: 'Clear about paid listings',
+    body: 'Some providers pay for a featured listing or a place at the top of search results. Every paid placement is clearly labelled Sponsored. Free listings are ranked by relevance, such as distance and the type of help you are looking for. Paying never changes what our guides say.',
   },
   {
     icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>,

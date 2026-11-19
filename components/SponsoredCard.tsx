@@ -36,14 +36,8 @@ export default function SponsoredCard({ winner }: Props) {
 
   return (
     <div style={{ position: 'relative' }}>
-      {/* Sponsored pill — sits on top border */}
-      <div style={{
-        position: 'absolute', top: -11, left: 14,
-        background: '#fef3c7', border: '1px solid #fde68a',
-        borderRadius: 4, padding: '1px 8px',
-        fontSize: 10, fontWeight: 700, color: '#92400e',
-        letterSpacing: '0.08em', textTransform: 'uppercase',
-      }}>
+      {/* Plain text label */}
+      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>
         Sponsored
       </div>
 
@@ -59,7 +53,7 @@ export default function SponsoredCard({ winner }: Props) {
           boxShadow: '0 1px 4px rgba(245,158,11,0.12)',
         }}
       >
-        {/* Avatar + blue tick */}
+        {/* Avatar */}
         <div style={{ position: 'relative', flexShrink: 0 }}>
           <div style={{
             width: 44, height: 44, borderRadius: 10,
@@ -68,17 +62,6 @@ export default function SponsoredCard({ winner }: Props) {
             fontSize: 14, fontWeight: 700, color: '#78350f',
           }}>
             {initials}
-          </div>
-          {/* Blue verified tick */}
-          <div style={{
-            position: 'absolute', bottom: -4, right: -4,
-            width: 18, height: 18, borderRadius: '50%',
-            background: '#2563eb', border: '2px solid #fff',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <svg width="9" height="9" viewBox="0 0 20 20" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="4,10 8,14 16,6"/>
-            </svg>
           </div>
         </div>
 

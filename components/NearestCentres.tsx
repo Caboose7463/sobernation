@@ -1,6 +1,6 @@
 /**
- * NearestCentres — verified listings shown first, unverified collapsed.
- * First centre is hardcoded as verified for demo purposes.
+ * NearestCentres — CQC-registered centres near a place, in relevance order.
+ * Free listings carry no badge. Paid placements are shown separately by SponsoredSlots, labelled Sponsored.
  */
 'use client'
 
@@ -91,7 +91,7 @@ function CentreRow({ centre, sourceTownSlug, verified }: { centre: RehabCentre; 
 
       {verified ? (
         <span style={{ fontSize: 12, fontWeight: 600, color: '#1d9bf0', whiteSpace: 'nowrap', flexShrink: 0 }}>
-          Verified
+          Sponsored
         </span>
       ) : (
         <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="var(--text-muted)" strokeWidth="1.5">
@@ -103,13 +103,12 @@ function CentreRow({ centre, sourceTownSlug, verified }: { centre: RehabCentre; 
 }
 
 export default function NearestCentres({ result, locationName, locationSlug, limit = 5 }: Props) {
-  const [showUnverified, setShowUnverified] = useState(false)
+  const [showMore, setShowMore] = useState(false)
   const total = result.centres.length
 
-  // First centre is treated as verified (demo); the rest are unverified
-  const verified = result.centres.slice(0, 1)
-  const unverified = result.centres.slice(1, limit)
-  const unverifiedCount = result.centres.slice(1).length
+  const shown = result.centres.slice(0, limit)
+  const more = result.centres.slice(limit)
+  const moreCount = more.length
 
   return (
     <div style={{ marginTop: 40 }}>
@@ -127,18 +126,18 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
         </p>
       </div>
 
-      {/* Verified listings */}
+      {/* Free listings, in relevance order */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {verified.map((centre, i) => (
-          <CentreRow key={centre.cqcUrl || i} centre={centre} sourceTownSlug={result.sourceTownSlug} verified={true} />
+        {shown.map((centre, i) => (
+          <CentreRow key={centre.cqcUrl || i} centre={centre} sourceTownSlug={result.sourceTownSlug} />
         ))}
       </div>
 
-      {/* Collapsible unverified */}
-      {unverifiedCount > 0 && (
+      {/* Collapsible rest */}
+      {moreCount > 0 && (
         <div style={{ marginTop: 8 }}>
           <button
-            onClick={() => setShowUnverified(v => !v)}
+            onClick={() => setShowMore(v => !v)}
             style={{
               display: 'flex', alignItems: 'center', gap: 6, width: '100%',
               padding: '10px 14px', background: 'var(--bg)', borderRadius: 8,
@@ -147,15 +146,15 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
             }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-              style={{ transition: 'transform 0.2s', transform: showUnverified ? 'rotate(90deg)' : 'rotate(0deg)' }}>
+              style={{ transition: 'transform 0.2s', transform: showMore ? 'rotate(90deg)' : 'rotate(0deg)' }}>
               <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
             </svg>
-            View {unverifiedCount} other centre{unverifiedCount !== 1 ? 's' : ''} (unverified)
+            View {moreCount} more centre{moreCount !== 1 ? 's' : ''}
           </button>
 
-          {showUnverified && (
+          {showMore && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>
-              {unverified.map((centre, i) => (
+              {more.map((centre, i) => (
                 <CentreRow key={centre.cqcUrl || i} centre={centre} sourceTownSlug={result.sourceTownSlug} />
               ))}
             </div>
@@ -185,9 +184,9 @@ export default function NearestCentres({ result, locationName, locationSlug, lim
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--accent)', marginBottom: 1 }}>Add your centre</div>
-          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Missing from our directory? Get verified and receive direct enquiries — £25/month</div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Missing from our directory? Get a featured listing, labelled Sponsored, and receive direct enquiries — £25/month</div>
         </div>
-        <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', background: 'var(--accent)', padding: '5px 12px', borderRadius: 6, flexShrink: 0, whiteSpace: 'nowrap' }}>Get verified →</span>
+        <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', background: 'var(--accent)', padding: '5px 12px', borderRadius: 6, flexShrink: 0, whiteSpace: 'nowrap' }}>Get featured →</span>
       </Link>
 
       {/* View all link */}

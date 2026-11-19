@@ -112,21 +112,9 @@ export default function CounsellorCard({ counsellor }: Props) {
         color: 'inherit',
       }}
     >
-      {/* Avatar with blue tick overlay for verified */}
+      {/* Avatar */}
       <div style={{ position: 'relative', flexShrink: 0 }}>
         <AvatarWithFallback name={counsellor.name} photoUrl={counsellor.photo_url ?? null} />
-        {counsellor.verified && (
-          <span style={{
-            position: 'absolute', bottom: 0, right: 0,
-            width: 16, height: 16, borderRadius: '50%',
-            background: '#1d9bf0', border: '2px solid #fff',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
-              <polyline points="2,5 4.2,7.5 8,3" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </span>
-        )}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', lineHeight: 1.3, marginBottom: 3 }}>
@@ -137,8 +125,8 @@ export default function CounsellorCard({ counsellor }: Props) {
         )}
       </div>
       {counsellor.verified ? (
-        <span style={{ fontSize: 12, fontWeight: 600, color: '#1d9bf0', whiteSpace: 'nowrap', flexShrink: 0 }}>
-          Verified
+        <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+          Sponsored
         </span>
       ) : (
         <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="var(--text-muted)" strokeWidth="1.5">
