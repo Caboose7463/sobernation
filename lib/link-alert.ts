@@ -7,7 +7,7 @@
 import { Resend } from 'resend'
 import type { LinkIssue, ScanReport } from './link-validator'
 
-const ALERT_TO = 'james@hettiebells.com'
+const ALERT_TO = process.env.ALERT_EMAIL || process.env.ENQUIRY_NOTIFY_EMAIL || ''
 const ALERT_FROM = 'SoberNation Alerts <alerts@sobernation.co.uk>'
 
 function getResend() {

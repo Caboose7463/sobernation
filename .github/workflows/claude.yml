@@ -1,5 +1,5 @@
 # Lets Claude answer "@claude" in issues and pull requests, including the issues the
-# Stats Wall Command Centre opens from its Fix links. Only James's own account can start it.
+# Stats Wall Command Centre opens from its Fix links. Only the owner's own account can start it.
 name: Claude
 
 on:

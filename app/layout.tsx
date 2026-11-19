@@ -79,7 +79,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <head>
-        {/* First, before any analytics: keeps bots, James's devices and testing out of Google Analytics */}
+        {/* First, before any analytics: keeps bots, the owner's devices and testing out of Google Analytics */}
         <script dangerouslySetInnerHTML={{ __html: NOT_COUNTED }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

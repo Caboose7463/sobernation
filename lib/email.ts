@@ -14,7 +14,7 @@ export const FROM_EMAIL =
 export const COMMUNITY_FROM_EMAIL =
   process.env.RESEND_COMMUNITY_FROM_EMAIL || 'Sober Nation Community <community@sobernation.co.uk>'
 export const ENQUIRY_NOTIFY_EMAIL =
-  process.env.ENQUIRY_NOTIFY_EMAIL || 'james@hettiebells.com'
+  process.env.ENQUIRY_NOTIFY_EMAIL || ''
 
 let client: Resend | null = null
 function getResend(): Resend | null {

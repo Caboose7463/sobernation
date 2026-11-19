@@ -2,7 +2,7 @@
 // The same file is in every site on the wall. It runs first in <head>, before any analytics code.
 //
 // Not counted: bots and crawlers (by user agent, plus headless and automated browsers, including Lighthouse),
-// James's own devices (marked with the "not me" link), and testing (localhost, previews and any other host).
+// The owner's own devices (marked with the "not me" link), and testing (localhost, previews and any other host).
 //
 // The "not me" link: https://hireasauna.uk/?notme=1&chain=all marks this device on every site in turn, then
 // shows a short note. ?notme=off undoes it on the site it's opened on.
