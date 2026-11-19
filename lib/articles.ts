@@ -41,18 +41,11 @@ export function getSupabase() {
   )
 }
 
-/** The 3 rotating author profiles */
-export const AUTHORS = [
-  { name: 'James Whitfield', slug: 'james-whitfield' },
-  { name: 'Emily Clarke', slug: 'emily-clarke' },
-  { name: 'Dr. Sarah Dawson', slug: 'dr-sarah-dawson' },
-]
+/** Every article is credited to the editorial team. */
+export const EDITORIAL_AUTHOR = { name: 'Sober Nation editorial team', slug: 'editorial-team' }
 
-export function pickAuthor(seed?: string) {
-  const idx = seed
-    ? seed.split('').reduce((a, c) => a + c.charCodeAt(0), 0) % AUTHORS.length
-    : Math.floor(Math.random() * AUTHORS.length)
-  return AUTHORS[idx]
+export function pickAuthor(_seed?: string) {
+  return EDITORIAL_AUTHOR
 }
 
 /** Build a URL-safe slug from a title */

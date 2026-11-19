@@ -48,7 +48,7 @@ async function writeIndex(stories: Story[]): Promise<void> {
 export async function getApprovedStories(): Promise<Story[]> {
   const all = await readIndex()
   return all
-    .filter(s => s.status === 'approved')
+    .filter(s => s.status === 'approved' && !s.id.startsWith('seed-'))
     .sort((a, b) =>
       new Date(b.approvedAt ?? b.submittedAt).getTime() -
       new Date(a.approvedAt ?? a.submittedAt).getTime()
@@ -103,22 +103,6 @@ export async function updateStoryStatus(
   await writeIndex(updated)
 }
 
-export async function seedStories(stories: Omit<Story, 'id' | 'slug' | 'submittedAt'>[]): Promise<void> {
-  const seeded: Story[] = stories.map((s, i) => {
-    const id = `seed-${i.toString().padStart(3, '0')}`
-    const baseSlug = `${s.name}-${s.location}`
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '')
-    return {
-      ...s,
-      id,
-      slug: `${baseSlug}-${id}`,
-      submittedAt: new Date(Date.now() - (10 - i) * 7 * 24 * 60 * 60 * 1000).toISOString(),
-    }
-  })
-  await writeIndex(seeded)
-}
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 

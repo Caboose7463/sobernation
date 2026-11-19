@@ -73,7 +73,7 @@ export default function DrugAddictionTreatmentPage() {
             From NHS community services to private residential rehab — everything you need to know about getting drug addiction treatment in the UK.
           </p>
           <div style={{ display: 'inline-flex', gap: 6, padding: '8px 14px', background: 'rgba(255,255,255,0.1)', borderRadius: 20, fontSize: 12, color: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(4px)' }}>
-            ✚ Medically reviewed by Dr. Sarah Dawson · April 2025
+            Written by the Sober Nation editorial team · Updated April 2025
           </div>
         </div>
       </section>

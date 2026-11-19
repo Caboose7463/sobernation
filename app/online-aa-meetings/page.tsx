@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { faqSchema, breadcrumbSchema } from '../../lib/seo'
-import MedicalReview from '../../components/MedicalReview'
 import AuthorBio from '../../components/AuthorBio'
 import NewsletterSignup from '../../components/NewsletterSignup'
 
@@ -47,12 +46,11 @@ export default function OnlineAAMeetingsPage() {
           <p style={{ fontSize: 16, color: 'var(--text-muted)', lineHeight: 1.8, maxWidth: 620, marginBottom: 20 }}>
             How to join Zoom AA meetings in the UK, what to expect, finding a meeting that works for you, and why virtual AA has become a permanent part of the recovery community.
           </p>
-          <MedicalReview reviewer="Emily Clarke" date="2025-04-01" />
         </div>
       </section>
 
       <div className="og-body">
-        <div style={{ marginBottom: 32 }}><AuthorBio author="Emily Clarke" date="2025-04-01" compact /></div>
+        <div style={{ marginBottom: 32 }}><AuthorBio date="2025-04-01" compact /></div>
 
         <h2>How to Join an Online AA Meeting</h2>
         <p>Most UK online AA meetings use <strong>Zoom</strong>. Visit <a href="https://alcoholics-anonymous.org.uk/aa-meetings/find-a-meeting" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>AA Great Britain&apos;s meeting finder</a> and filter by &ldquo;Online&rdquo; to find video meetings. Note the Zoom Meeting ID and Password, download Zoom (free), and join a few minutes before the start time.</p>
@@ -95,7 +93,7 @@ export default function OnlineAAMeetingsPage() {
         </div>
 
         <div style={{ marginTop: 32 }}><NewsletterSignup variant="inline" source="online-aa" /></div>
-        <div style={{ marginTop: 24 }}><AuthorBio author="Emily Clarke" date="2025-04-01" /></div>
+        <div style={{ marginTop: 24 }}><AuthorBio date="2025-04-01" /></div>
       </div>
     </div>
   )

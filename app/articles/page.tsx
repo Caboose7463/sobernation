@@ -12,7 +12,7 @@ export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Recovery News & Guides | SoberNation',
-  description: 'Expert articles on addiction, recovery, UK rehab options, sobriety milestones and mental health — written by addiction specialists at SoberNation.',
+  description: 'Articles on addiction, recovery, UK rehab options, sobriety milestones and mental health from the Sober Nation editorial team.',
 }
 
 const TAGS = ['All', 'Alcohol', 'Drugs', 'Recovery', 'Rehab', 'Location', 'Milestones', 'Guides']
@@ -67,7 +67,7 @@ export default async function ArticlesPage({
       <div className="ar-hero">
         <h1 className="ar-title">Recovery News & Guides</h1>
         <p className="ar-sub">
-          Expert articles on addiction, sobriety, UK rehab options and mental health — written by our specialist team.
+          Articles on addiction, sobriety, UK rehab options and mental health from the Sober Nation editorial team.
         </p>
         <div className="ar-tags">
           {TAGS.map(t => (

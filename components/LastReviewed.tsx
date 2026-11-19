@@ -1,5 +1,5 @@
 /**
- * LastReviewed — "Medically reviewed & updated [Month YYYY]" badge.
+ * LastReviewed — "Updated [Month YYYY]" badge.
  *
  * Shown on all location pages. Updates automatically on every Vercel deploy
  * (weekly via cron). This is a strong E-E-A-T signal for medical/health content:
@@ -39,7 +39,7 @@ export default function LastReviewed({ dataDate, compact }: Props) {
         }}
       >
         <span style={{ color: 'var(--accent)', fontSize: 12 }}>✓</span>
-        Medically reviewed · Updated {displayDate}
+        Updated {displayDate}
       </div>
     )
   }
@@ -63,7 +63,7 @@ export default function LastReviewed({ dataDate, compact }: Props) {
       </svg>
       <div>
         <span style={{ fontSize: 12, fontWeight: 700, color: '#0f766e' }}>
-          Medically reviewed and updated {displayDate}
+          Updated {displayDate}
         </span>
         <span style={{ fontSize: 11, color: 'var(--text-muted)', marginLeft: 8 }}>
           · CQC data: {CQC_DATA_DATE}

@@ -10,7 +10,6 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import ArticleCard from '../../../components/ArticleCard'
 import AuthorBio from '../../../components/AuthorBio'
-import MedicalReview from '../../../components/MedicalReview'
 import NewsletterSignup from '../../../components/NewsletterSignup'
 
 export const revalidate = 3600
@@ -82,7 +81,6 @@ export default async function ArticlePage({ params }: Props) {
   const hasFaq = !!faqMatch
 
   // JSON-LD schema
-  const authorSlug = a.author_name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^dr-/, 'dr-')
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -90,9 +88,9 @@ export default async function ArticlePage({ params }: Props) {
     description: a.excerpt,
     image: a.hero_image_url ?? undefined,
     author: {
-      '@type': 'Person',
-      name: a.author_name,
-      url: `https://www.sobernation.co.uk/author/${authorSlug}`,
+      '@type': 'Organization',
+      name: 'Sober Nation editorial team',
+      url: 'https://www.sobernation.co.uk/about',
     },
     publisher: {
       '@type': 'Organization',
@@ -104,7 +102,7 @@ export default async function ArticlePage({ params }: Props) {
     mainEntityOfPage: `https://www.sobernation.co.uk/articles/${a.slug}`,
   }
 
-  const authorInitials = a.author_name.split(' ').map((w: string) => w[0]).slice(0, 2).join('').toUpperCase()
+  const authorInitials = 'SN'
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
@@ -180,11 +178,8 @@ export default async function ArticlePage({ params }: Props) {
         <div className="ap-meta">
           <div className="ap-avatar">{authorInitials}</div>
           <div className="ap-meta-text">
-            <div className="ap-meta-name">{a.author_name} · SoberNation</div>
+            <div className="ap-meta-name">Sober Nation editorial team</div>
             <div>{formatDate(a.published_at)} · {a.read_time_mins} min read</div>
-          </div>
-          <div style={{ marginLeft: 'auto' }}>
-            <MedicalReview reviewer="Dr. Sarah Dawson" date={a.published_at} />
           </div>
         </div>
 
@@ -219,7 +214,7 @@ export default async function ArticlePage({ params }: Props) {
 
         {/* Author bio */}
         <div style={{ marginTop: 32 }}>
-          <AuthorBio author={a.author_name} date={a.published_at} />
+          <AuthorBio date={a.published_at} />
         </div>
 
         {/* Related articles */}

@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { faqSchema, breadcrumbSchema } from '../../lib/seo'
-import MedicalReview from '../../components/MedicalReview'
 import AuthorBio from '../../components/AuthorBio'
 import NewsletterSignup from '../../components/NewsletterSignup'
 
@@ -53,12 +52,11 @@ export default function SuboxoneVsMethadonePage() {
           <p style={{ fontSize: 16, color: 'var(--text-muted)', lineHeight: 1.8, maxWidth: 620, marginBottom: 20 }}>
             A clinical comparison of the two main opioid substitution treatments available on the NHS — how each works, who they suit, the pros and cons, and how to access them in the UK.
           </p>
-          <MedicalReview reviewer="Dr. Sarah Dawson" date="2025-04-01" />
         </div>
       </section>
 
       <div className="sv-body">
-        <div style={{ marginBottom: 32 }}><AuthorBio author="Dr. Sarah Dawson" date="2025-04-01" compact /></div>
+        <div style={{ marginBottom: 32 }}><AuthorBio date="2025-04-01" compact /></div>
 
         <h2>Opioid Substitution Therapy: The Basics</h2>
         <p>Opioid substitution therapy (OST) — also called opioid replacement therapy (ORT) — is the use of a prescribed, longer-acting opioid to stabilise someone dependent on a shorter-acting opioid like heroin, fentanyl, or prescription opioids. It is the most evidence-based treatment for opioid use disorder, reducing illicit drug use, drug-related deaths, and criminal activity, and improving physical and mental health outcomes.</p>
@@ -143,7 +141,7 @@ export default function SuboxoneVsMethadonePage() {
         </div>
 
         <div style={{ marginTop: 32 }}><NewsletterSignup variant="inline" source="suboxone-methadone" /></div>
-        <div style={{ marginTop: 24 }}><AuthorBio author="Dr. Sarah Dawson" date="2025-04-01" /></div>
+        <div style={{ marginTop: 24 }}><AuthorBio date="2025-04-01" /></div>
       </div>
     </div>
   )

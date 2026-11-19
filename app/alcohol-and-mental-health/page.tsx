@@ -54,7 +54,7 @@ export default function AlcoholMentalHealthPage() {
             How alcohol affects depression, anxiety, and mental health — and how to get help when they occur together.
           </p>
           <div style={{ display: 'inline-flex', gap: 6, padding: '8px 14px', background: 'rgba(255,255,255,0.1)', borderRadius: 20, fontSize: 12, color: 'rgba(255,255,255,0.8)' }}>
-            ✚ Medically reviewed by Dr. Sarah Dawson · April 2025
+            Written by the Sober Nation editorial team · Updated April 2025
           </div>
         </div>
       </section>

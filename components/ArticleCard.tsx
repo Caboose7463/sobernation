@@ -77,7 +77,7 @@ export default function ArticleCard({ article, compact = false }: Props) {
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           fontSize: 11, color: 'var(--text-light)', marginTop: compact ? 0 : 4, gap: 8,
         }}>
-          <span>{article.author_name} · {formatDate(article.published_at)}</span>
+          <span>Sober Nation editorial team · {formatDate(article.published_at)}</span>
           <span style={{ whiteSpace: 'nowrap' }}>{article.read_time_mins} min read</span>
         </div>
       </div>

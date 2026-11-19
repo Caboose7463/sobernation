@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { faqSchema, breadcrumbSchema } from '../../lib/seo'
-import MedicalReview from '../../components/MedicalReview'
 import AuthorBio from '../../components/AuthorBio'
 import NewsletterSignup from '../../components/NewsletterSignup'
 
@@ -68,7 +67,6 @@ export default function AlcoholAddictionTreatmentPage() {
             A comprehensive guide to treating alcohol use disorder in the UK — covering NHS services, private rehab, medically-managed detox, evidence-based medications, therapy approaches, and what to expect at every stage.
           </p>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-            <MedicalReview reviewer="Dr. Sarah Dawson" date="2025-04-01" />
             <span style={{ fontSize: 12, color: 'var(--text-light)' }}>Last updated April 2025 · 10 min read</span>
           </div>
         </div>
@@ -77,7 +75,7 @@ export default function AlcoholAddictionTreatmentPage() {
       {/* Body */}
       <div className="guide-body">
         <div style={{ marginBottom: 32 }}>
-          <AuthorBio author="James Whitfield" date="2025-04-01" compact />
+          <AuthorBio date="2025-04-01" compact />
         </div>
 
         <h2>Understanding Alcohol Use Disorder (AUD)</h2>
@@ -199,7 +197,7 @@ export default function AlcoholAddictionTreatmentPage() {
 
         {/* Author */}
         <div style={{ marginTop: 32 }}>
-          <AuthorBio author="James Whitfield" date="2025-04-01" />
+          <AuthorBio date="2025-04-01" />
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Editorial Policy | How SoberNation Creates & Reviews Content',
-  description: 'SoberNation editorial policy: how we research, write, medically review, and update addiction information. Our standards for accuracy, clinical evidence, and safe messaging compliance.',
+  description: 'SoberNation editorial policy: how we research, write, check and update addiction information. Our standards for accuracy, clinical evidence, and safe messaging compliance.',
 }
 
 const reviewSchema = {
@@ -11,41 +11,21 @@ const reviewSchema = {
   '@type': 'WebPage',
   name: 'SoberNation Editorial Policy',
   url: 'https://www.sobernation.co.uk/editorial-policy',
-  description: 'How SoberNation research, creates, medically reviews, and updates addiction and recovery information.',
+  description: 'How SoberNation researches, writes, checks and updates addiction and recovery information.',
   publisher: {
     '@type': 'Organization',
     name: 'SoberNation',
     url: 'https://www.sobernation.co.uk',
-  },
-  reviewedBy: {
-    '@type': 'Person',
-    name: 'Dr. Sarah Dawson',
-    jobTitle: 'Clinical Psychologist & Addiction Researcher',
   },
   dateModified: '2025-04-01',
 }
 
 const TEAM = [
   {
-    initials: 'JW',
-    name: 'James Whitfield',
-    role: 'Senior Content Editor',
-    bg: '#1a6b5a',
-    bio: 'James has been writing about addiction and recovery for over eight years, previously contributing to NHS Digital mental health resources. He specialises in alcohol use disorder and harm reduction. James oversees all addiction treatment content on SoberNation.',
-  },
-  {
-    initials: 'EC',
-    name: 'Emily Clarke',
-    role: 'Health & Recovery Writer',
-    bg: '#2563eb',
-    bio: 'Emily is a health journalist with a background in psychology. She covers drug addiction, family impact, and recovery news. Her work has appeared in UK health publications and NHS patient information campaigns.',
-  },
-  {
-    initials: 'SD',
-    name: 'Dr. Sarah Dawson',
-    role: 'Clinical Reviewer — Clinical Psychologist & Addiction Researcher',
-    bg: '#7c3aed',
-    bio: 'Dr. Dawson holds a doctorate in clinical psychology and has worked in NHS addiction services for over a decade. She reviews all clinical content on SoberNation to ensure it aligns with current NICE guidelines, NHS frameworks, and evidence-based practice in addiction medicine.',
+    initials: 'SN', bg: '#1a6b5a',
+    name: 'The Sober Nation editorial team',
+    role: 'Research and writing',
+    bio: 'Our guides are researched and written by the Sober Nation editorial team from public sources such as the NHS, NICE, FRANK and UK recovery charities, and we link to those sources. We are not doctors or counsellors, our pages are not medically reviewed, and nothing on this site is medical advice. If you need help, speak to your GP or call FRANK free on 0300 123 6600.',
   },
 ]
 
@@ -66,11 +46,11 @@ const SECTIONS = [
   },
   {
     title: 'Content creation process',
-    body: 'SoberNation content is researched by James Whitfield and Emily Clarke, both experienced health writers with expertise in addiction information. All treatment-related content is cross-referenced against current NHS and NICE guidelines before publication. Factual claims about specific treatments, medications, or medical procedures are verified against prescribing information and clinical evidence as part of our pre-publication checklist.',
+    body: 'SoberNation content is researched and written by the Sober Nation editorial team. All treatment-related content is cross-referenced against current NHS and NICE guidelines before publication. Factual claims about specific treatments, medications, or medical procedures are verified against prescribing information and clinical evidence as part of our pre-publication checklist.',
   },
   {
-    title: 'Clinical review process',
-    body: 'All treatment guides, withdrawal information, medication guides, and clinical advice pages on SoberNation are reviewed by Dr. Sarah Dawson, a Doctorate-qualified Clinical Psychologist who has worked in NHS addiction services for over ten years. Clinical review covers factual accuracy against NICE guidelines, clinical safety of advice provided, compliance with safe messaging guidelines, and appropriate referral to professional services. Content displaying the "Medically reviewed" badge has been through this full clinical review process.',
+    title: 'No medical review',
+    body: 'Our pages are not reviewed by a doctor, psychologist or other clinician. We check them against the NHS, NICE and charity sources we cite, and we correct mistakes as soon as they are reported. Always speak to your GP or a treatment service before making decisions about your health.',
   },
   {
     title: 'Content update schedule',
@@ -113,10 +93,10 @@ export default function EditorialPolicyPage() {
             Editorial Policy
           </h1>
           <p style={{ fontSize: 17, lineHeight: 1.7, color: 'rgba(255,255,255,0.8)', margin: '0 0 20px', maxWidth: 600 }}>
-            How SoberNation researches, writes, medically reviews, and keeps our addiction information accurate, safe, and evidence-based.
+            How SoberNation researches, writes, checks and keeps our addiction information accurate, safe, and evidence-based.
           </p>
           <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>
-            Last reviewed: 1 April 2025 · Reviewed by Dr. Sarah Dawson, Clinical Psychologist
+            Last updated: 19 November 2026
           </div>
         </div>
       </section>
@@ -127,7 +107,7 @@ export default function EditorialPolicyPage() {
         <div style={{ marginBottom: 52 }}>
           <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginBottom: 8, letterSpacing: '-0.01em' }}>Our editorial team</h2>
           <p style={{ fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 24 }}>
-            SoberNation content is created and reviewed by people with direct expertise in addiction, health writing, and clinical psychology.
+            SoberNation content is researched and written by our editorial team. It is not reviewed by a clinician.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {TEAM.map(member => (
@@ -145,20 +125,6 @@ export default function EditorialPolicyPage() {
           </div>
         </div>
 
-        {/* Badge explainer */}
-        <div style={{ marginBottom: 52, padding: '20px 24px', background: '#f0fdf4', border: '2px solid #86efac', borderRadius: 'var(--radius-md)', display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-          <div style={{ flexShrink: 0, marginTop: 2 }}>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#166534" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-              </svg>
-            </div>
-          <div>
-            <div style={{ fontWeight: 700, fontSize: 15, color: '#166534', marginBottom: 6 }}>What the "Medically reviewed" badge means</div>
-            <p style={{ fontSize: 14, color: '#15803d', lineHeight: 1.7, margin: 0 }}>
-              Pages marked <strong>Medically reviewed by Dr. Sarah Dawson</strong> have been reviewed against current NICE guidelines, NHS frameworks, and addiction medicine evidence. This review covers clinical accuracy, safe messaging compliance, and the appropriateness of any treatment recommendations.
-            </p>
-          </div>
-        </div>
 
         {/* Policy sections */}
         {SECTIONS.map((section, i) => (

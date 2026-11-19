@@ -46,8 +46,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const name = loc?.name
   if (!name) return {}
   return {
-    title: `Addiction Counsellors in ${name} | Verified Therapists`,
-    description: `Find BACP-registered addiction counsellors and therapists in ${name}. Verified specialists in alcohol and drug misuse recovery. No waiting list — browse and contact directly.`,
+    title: `Addiction Counsellors in ${name} | SoberNation`,
+    description: `Find addiction counsellors and therapists in ${name}. Check a counsellor's BACP or UKCP registration before you book. No waiting list — browse and contact directly.`,
   }
 }
 
@@ -116,7 +116,7 @@ export default async function CounsellorsLocationPage({ params }: Props) {
             Addiction counsellors in {locationName}
           </h1>
           <p style={{ fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.6, maxWidth: 560 }}>
-            BACP-registered specialists in alcohol, drug and substance misuse recovery.
+            Counsellors who list alcohol, drug or other addiction among their specialisms. Check a counsellor's professional registration before you book.
             {list.length > 0 ? ` ${list.length} counsellors listed.` : ''}
           </p>
         </div>

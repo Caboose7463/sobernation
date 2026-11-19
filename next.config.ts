@@ -43,6 +43,9 @@ const nextConfig: NextConfig = {
       },
       // /salisbury (and other bare city slugs) → /rehab/[city]
       // These can appear from old links or direct navigation
+      // Author pages were removed: every guide is written by the editorial team
+      { source: '/author', destination: '/about', permanent: true },
+      { source: '/author/:slug*', destination: '/about', permanent: true },
       { source: '/salisbury', destination: '/rehab/salisbury', permanent: true },
       { source: '/london', destination: '/rehab/london', permanent: true },
       { source: '/manchester', destination: '/rehab/manchester', permanent: true },

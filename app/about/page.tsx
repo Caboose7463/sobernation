@@ -19,23 +19,6 @@ const aboutSchema = {
     url: 'https://www.sobernation.co.uk',
     foundingDate: '2024',
     description: "The UK's addiction recovery hub — free information about alcohol and drug addiction treatment, rehab centres, NHS services, and recovery support across the UK.",
-    employee: [
-      {
-        '@type': 'Person',
-        name: 'James Whitfield',
-        jobTitle: 'Senior Content Editor',
-      },
-      {
-        '@type': 'Person',
-        name: 'Emily Clarke',
-        jobTitle: 'Health & Recovery Writer',
-      },
-      {
-        '@type': 'Person',
-        name: 'Dr. Sarah Dawson',
-        jobTitle: 'Clinical Reviewer',
-      },
-    ],
     contactPoint: {
       '@type': 'ContactPoint',
       email: 'editorial@sobernation.co.uk',
@@ -56,12 +39,12 @@ const VALUES = [
   {
     icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v3M6.3 6.3l-2.1 2.1M3 12H0M6.3 17.7l-2.1 2.1M12 18v3M17.7 17.7l2.1 2.1M21 12h3M17.7 6.3l2.1-2.1"/><line x1="17" y1="12" x2="7" y2="12"/><path d="M17 12l-5-9-5 9"/><path d="M7 12l5 9 5-9"/></svg>,
     title: 'Evidence-based',
-    body: 'Every clinical claim on SoberNation is aligned with current NICE guidelines (CG115, NG58, NG11) and NHS clinical frameworks. We do not publish speculative information about addiction treatment.',
+    body: 'We base treatment information on current NICE guidelines (CG115, NG58, NG11) and NHS guidance, and we link to our sources. We do not publish speculative information about addiction treatment.',
   },
   {
     icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
     title: 'Regularly reviewed',
-    body: 'Our content is reviewed at regular intervals and updated when NHS guidance, NICE guidelines, or drug regulations change. All clinical content is reviewed by Dr. Sarah Dawson, Clinical Psychologist.',
+    body: 'Our content is reviewed at regular intervals and updated when NHS guidance, NICE guidelines, or drug regulations change. We correct mistakes as soon as they are reported.',
   },
   {
     icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>,
@@ -87,25 +70,11 @@ const VALUES = [
 
 const TEAM = [
   {
-    initials: 'JW', bg: '#1a6b5a',
-    name: 'James Whitfield',
-    role: 'Senior Content Editor',
-    expertise: 'Alcohol use disorder · Harm reduction · NHS services',
-    bio: 'James has been writing about addiction and recovery for over eight years, previously contributing to NHS Digital mental health resources. He oversees all treatment guide content on SoberNation.',
-  },
-  {
-    initials: 'EC', bg: '#2563eb',
-    name: 'Emily Clarke',
-    role: 'Health & Recovery Writer',
-    expertise: 'Drug addiction · Family support · Recovery news',
-    bio: 'Emily is a health journalist with a background in psychology. She covers drug addiction, recovery stories, and UK addiction policy. Her work has appeared in UK health publications and NHS patient information campaigns.',
-  },
-  {
-    initials: 'SD', bg: '#7c3aed',
-    name: 'Dr. Sarah Dawson',
-    role: 'Clinical Reviewer',
-    expertise: 'NICE guidelines · Addiction medicine · NHS clinical frameworks',
-    bio: 'Dr. Dawson holds a Doctorate in Clinical Psychology and has worked in NHS addiction services for over a decade. She reviews all clinical content on SoberNation for accuracy, safety, and compliance with current treatment evidence.',
+    initials: 'SN', bg: '#1a6b5a',
+    name: 'The Sober Nation editorial team',
+    role: 'Research and writing',
+    expertise: 'Addiction information · NHS and charity services · Recovery support',
+    bio: 'Our guides are researched and written by the Sober Nation editorial team from public sources such as the NHS, NICE, FRANK and UK recovery charities, and we link to those sources. We are not doctors or counsellors, our pages are not medically reviewed, and nothing on this site is medical advice. If you need help, speak to your GP or call FRANK free on 0300 123 6600.',
   },
 ]
 
@@ -191,7 +160,7 @@ export default function AboutPage() {
         <div style={{ marginBottom: 52 }}>
           <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text)', marginBottom: 8, letterSpacing: '-0.01em' }}>Our team</h2>
           <p style={{ fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 24 }}>
-            SoberNation content is created by experienced health writers and reviewed by a clinical specialist in addiction.
+            SoberNation content is researched and written by our editorial team. It is not reviewed by a clinician.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {TEAM.map(member => (

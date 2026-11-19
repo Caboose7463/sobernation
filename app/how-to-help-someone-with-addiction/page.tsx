@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { faqSchema, breadcrumbSchema } from '../../lib/seo'
-import MedicalReview from '../../components/MedicalReview'
 import AuthorBio from '../../components/AuthorBio'
 import NewsletterSignup from '../../components/NewsletterSignup'
 
@@ -66,7 +65,6 @@ export default function HowToHelpPage() {
             A practical, honest guide for families and loved ones. What to say, what not to do, how to set limits, and — crucially — how to look after yourself while supporting someone through addiction.
           </p>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-            <MedicalReview reviewer="Emily Clarke" date="2025-04-01" />
             <span style={{ fontSize: 12, color: 'var(--text-light)' }}>Last updated April 2025 · 8 min read</span>
           </div>
         </div>
@@ -74,7 +72,7 @@ export default function HowToHelpPage() {
 
       <div className="guide-body">
         <div style={{ marginBottom: 32 }}>
-          <AuthorBio author="Emily Clarke" date="2025-04-01" compact />
+          <AuthorBio date="2025-04-01" compact />
         </div>
 
         <h2>First: You Are Not Alone</h2>
@@ -159,7 +157,7 @@ export default function HowToHelpPage() {
           <NewsletterSignup variant="inline" source="family-guide" />
         </div>
         <div style={{ marginTop: 32 }}>
-          <AuthorBio author="Emily Clarke" date="2025-04-01" />
+          <AuthorBio date="2025-04-01" />
         </div>
       </div>
     </div>
