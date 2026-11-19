@@ -11,6 +11,7 @@ import { getLocationStats, formatStat } from '../../../lib/location-stats'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
+import AdUnit, { SidebarAd } from '../../../components/AdUnit'
 
 export const revalidate = 3600
 
@@ -244,7 +245,7 @@ export default async function CentreProfilePage({ params }: Props) {
         .cp-stars { font-size: 28px; letter-spacing: 4px; color: #d1d5db; margin-bottom: 10px; }
 
         /* Sidebar */
-        .cp-sidebar { position: sticky; top: 24px; }
+        .cp-sidebar { position: static; }
         .cp-sidebar-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 14px; }
         .cp-sidebar-head { background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%); padding: 18px 20px; text-align: center; }
         .cp-sidebar-logo { width: 56px; height: 56px; border-radius: 12px; background: rgba(255,255,255,0.25); margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; color: #fff; }
@@ -358,6 +359,8 @@ export default async function CentreProfilePage({ params }: Props) {
             )}
           </section>
 
+          <AdUnit slot="intro" />
+
           {/* Treatment */}
           <section id="treatment" className="cp-section">
             <h2 className="cp-section-title">Treatment Services at {centre.name}</h2>
@@ -413,6 +416,8 @@ export default async function CentreProfilePage({ params }: Props) {
               ))}
             </div>
           </section>
+
+          <AdUnit slot="mid" />
 
           {/* CQC */}
           <section className="cp-section">
@@ -502,6 +507,7 @@ export default async function CentreProfilePage({ params }: Props) {
             </div>
           </section>
 
+          <AdUnit slot="end" />
         </main>
 
         {/* ── Sidebar ── */}
@@ -601,6 +607,8 @@ export default async function CentreProfilePage({ params }: Props) {
               ))}
             </div>
           </div>
+
+          <SidebarAd />
         </aside>
       </div>
     </div>

@@ -9,6 +9,7 @@ import { getRehabsForLocation, getCorrectCentreSlug } from '../../../lib/rehabs'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import type { RehabCentre } from '../../../lib/rehabs'
+import AdUnit from '../../../components/AdUnit'
 
 export const revalidate = 3600
 // Only pre-built slugs are valid — unknown bot URLs get a clean 404, not a 500
@@ -129,6 +130,8 @@ export default async function CentresLocationPage({ params }: Props) {
 
   const result = getRehabsForLocation(location, loc.name)
   const centres = result.centres
+  // Mid ad sits between the two halves of the list
+  const half = Math.ceil(centres.length / 2)
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--white)' }}>
@@ -184,6 +187,8 @@ export default async function CentresLocationPage({ params }: Props) {
 
       <div style={{ maxWidth: 1080, margin: '0 auto', padding: '40px 20px' }}>
 
+        <AdUnit slot="intro" />
+
         {/* Claim CTA */}
         <div className="ct-claim">
           <div>
@@ -212,11 +217,23 @@ export default async function CentresLocationPage({ params }: Props) {
 
         {/* Grid */}
         {centres.length > 0 ? (
-          <div className="ct-grid">
-            {centres.map((centre, i) => (
-              <CentreCard key={centre.cqcUrl || i} centre={centre} townSlug={result.sourceTownSlug} />
-            ))}
-          </div>
+          <>
+            <div className="ct-grid">
+              {centres.slice(0, half).map((centre, i) => (
+                <CentreCard key={centre.cqcUrl || i} centre={centre} townSlug={result.sourceTownSlug} />
+              ))}
+            </div>
+            {centres.length > half && (
+              <>
+                <AdUnit slot="mid" />
+                <div className="ct-grid">
+                  {centres.slice(half).map((centre, i) => (
+                    <CentreCard key={centre.cqcUrl || half + i} centre={centre} townSlug={result.sourceTownSlug} />
+                  ))}
+                </div>
+              </>
+            )}
+          </>
         ) : (
           <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
             <div style={{ marginBottom: 8 }}>No centres listed for {loc.name} yet.</div>
@@ -225,6 +242,8 @@ export default async function CentresLocationPage({ params }: Props) {
             </a>
           </div>
         )}
+
+        <AdUnit slot="end" />
 
         {/* Footer links */}
         <div style={{ marginTop: 40, paddingTop: 24, borderTop: '1px solid var(--border)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>

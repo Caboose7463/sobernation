@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: 'SoberNation privacy policy — how we handle your data, cookies, and personal information in compliance with UK GDPR.',
 }
 
-const LAST_UPDATED = '5 April 2026'
+const LAST_UPDATED = '19 November 2026'
 
 export default function PrivacyPolicyPage() {
   return (
@@ -27,11 +27,18 @@ export default function PrivacyPolicyPage() {
           },
           {
             title: '3. Cookies',
-            body: 'We use the following types of cookies: (a) Strictly necessary cookies, required for the website to function; (b) Analytics cookies (Google Analytics) to understand how our content is used — these are set with your consent; (c) Advertising cookies — we display ads through Google AdSense. Google uses cookies (including the DoubleClick cookie) to serve ads based on your prior visits to this and other websites. You can opt out of personalised advertising at any time by visiting Google\'s Ads Settings (myaccount.google.com/data-and-privacy) or by clicking "Essential only" on our cookie banner. When you decline personalised advertising, Google may still serve non-personalised ads.',
+            body: 'We use the following types of cookies: (a) Strictly necessary cookies, required for the website to function; (b) Analytics cookies (Google Analytics) to understand how our content is used. These are set with your consent; (c) Advertising cookies. SoberNation shows adverts from Google AdSense. Google uses cookies to serve and measure these ads, and the ads you see may be based on your previous visits to this site and other websites. You can opt out of personalised advertising at any time in Google\'s Ads Settings (myaccount.google.com/data-and-privacy) or by clicking "Essential only" on our cookie banner. If you decline personalised advertising, Google may still show non-personalised ads.',
           },
           {
             title: '4. How we use data and advertising',
-            body: 'Analytics data is used solely to improve the quality and relevance of our content. We display advertisements through Google AdSense to help fund the free resources we provide. Google AdSense may use your data to show relevant ads. We do not sell your data to third parties. You can manage cookie preferences at any time using our cookie banner or through your browser settings. For more information on how Google uses data, see: policies.google.com/technologies/ads',
+            body: (
+              <>
+                Analytics data is used only to improve the quality and relevance of our content. SoberNation shows adverts from Google AdSense to help fund the free resources we provide. Google and its partners use cookies to serve ads, to measure how they perform and to limit how often you see the same one. These ads may be based on your previous visits to this site and other websites. We do not sell your data to third parties. You can manage cookie preferences at any time using our cookie banner or your browser settings. To find out how Google uses data from sites that show its ads, see{' '}
+                <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>
+                  How Google uses cookies in advertising
+                </a>.
+              </>
+            ),
           },
           {
             title: '5. Your rights under UK GDPR',

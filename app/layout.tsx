@@ -86,6 +86,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="preconnect" href="https://clvhzvuhwjtyvrddoorm.supabase.co" />
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        {/* Google AdSense (no Auto ads; units are placed by components/AdUnit) */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8511236039964647"
+          crossOrigin="anonymous"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
@@ -132,12 +138,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           `}
         </Script>
 
-        {/* Google AdSense */}
-        <Script
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8511236039964647"
-          strategy="afterInteractive"
-          crossOrigin="anonymous"
-        />
         <Analytics />
         <script async src="https://stats-wall-smoky.vercel.app/api/live.js" data-site="sober-nation" />
       </body>

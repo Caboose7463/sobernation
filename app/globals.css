@@ -178,6 +178,7 @@ button, input, select, textarea {
   position: sticky;
   top: 72px;
 }
+.helplines-sidebar--static { position: static; }
 
 .helpline-card {
   display: flex;

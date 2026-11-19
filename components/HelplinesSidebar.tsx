@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { SidebarAd } from './AdUnit'
 
 const HELPLINES = [
   { name: 'Frank (drugs & alcohol)', number: '0300 123 6600', tel: '03001236600', hours: '24/7', desc: 'Free, confidential drugs helpline' },
@@ -7,9 +8,11 @@ const HELPLINES = [
   { name: 'Narcotics Anonymous', number: '0300 999 1212', tel: '03009991212', hours: '10am–midnight', desc: 'Drug recovery support' },
 ]
 
-export default function HelplinesSidebar() {
+// withAd: adds the desktop only sidebar ad. The column then scrolls normally
+// (not sticky) so the ad is never pinned on screen.
+export default function HelplinesSidebar({ withAd = false }: { withAd?: boolean }) {
   return (
-    <aside className="helplines-sidebar">
+    <aside className={withAd ? 'helplines-sidebar helplines-sidebar--static' : 'helplines-sidebar'}>
       <div className="label" style={{ marginBottom: 14 }}>Free helplines — 24/7</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {HELPLINES.map(h => (
@@ -51,6 +54,7 @@ export default function HelplinesSidebar() {
           ))}
         </div>
       </div>
+      {withAd && <SidebarAd />}
     </aside>
   )
 }

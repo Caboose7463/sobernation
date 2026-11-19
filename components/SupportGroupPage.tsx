@@ -7,6 +7,7 @@ import { faqSchema, breadcrumbSchema } from '../lib/seo'
 import HelplinesSidebar from './HelplinesSidebar'
 import FaqBlock from './FaqBlock'
 import Breadcrumb from './Breadcrumb'
+import AdUnit from './AdUnit'
 
 export interface SupportGroupConfig {
   slug: string                         // 'al-anon'
@@ -77,6 +78,8 @@ export default function SupportGroupPage({
       <div className="container-wide" style={{ padding: '48px 20px' }}>
         <div className="page-grid">
           <div>
+            <AdUnit slot="intro" />
+
             {/* Key facts */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 12, marginBottom: 32 }}>
               {[
@@ -99,6 +102,8 @@ export default function SupportGroupPage({
               <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.75, margin: 0 }}>{config.whatHappens}</p>
             </div>
 
+            <AdUnit slot="mid" />
+
             <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 16 }}>
               Frequently asked questions about {config.name} in {location}
             </h2>
@@ -115,8 +120,10 @@ export default function SupportGroupPage({
                 ))}
               </div>
             </div>
+
+            <AdUnit slot="end" />
           </div>
-          <HelplinesSidebar />
+          <HelplinesSidebar withAd />
         </div>
       </div>
 

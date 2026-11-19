@@ -15,6 +15,7 @@ import Breadcrumb from './Breadcrumb'
 import MedicalReviewBox from './MedicalReviewBox'
 import NearestCentres from './NearestCentres'
 import LastReviewed from './LastReviewed'
+import AdUnit from './AdUnit'
 
 export interface RehabTypeConfig {
   slug: string
@@ -99,6 +100,8 @@ export default function RehabTypePage({
             {/* Freshness badge */}
             <LastReviewed dataDate={BUILD_MONTH} />
 
+            <AdUnit slot="intro" />
+
             {/* CQC-registered centres — direct for this location or nearest fallback */}
             <NearestCentres result={rehabsResult} locationName={location} locationSlug={locationSlug} limit={6} />
 
@@ -118,6 +121,8 @@ export default function RehabTypePage({
                 </div>
               ))}
             </div>
+
+            <AdUnit slot="mid" />
 
             {/* Body paragraphs */}
             {config.bodyParagraphs.map((para, i) => (
@@ -185,8 +190,10 @@ export default function RehabTypePage({
                 ))}
               </div>
             </div>
+
+            <AdUnit slot="end" />
           </div>
-          <HelplinesSidebar />
+          <HelplinesSidebar withAd />
         </div>
       </div>
 

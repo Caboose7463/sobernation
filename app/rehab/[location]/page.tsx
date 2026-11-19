@@ -18,6 +18,7 @@ import ArticleCard from '../../../components/ArticleCard'
 import RelatedLinksBlock from '../../../components/RelatedLinksBlock'
 import { getSupabase } from '../../../lib/articles'
 import type { Article } from '../../../lib/articles'
+import AdUnit from '../../../components/AdUnit'
 
 export const dynamicParams = true
 export const revalidate = 604800 // ISR: regenerate after 7 days
@@ -171,6 +172,8 @@ export default async function RehabLocationPage(
             {/* Freshness badge — updates every deploy */}
             <LastReviewed dataDate={BUILD_MONTH} />
 
+            <AdUnit slot="intro" />
+
             {/* Counsellors — shown below centres, comment updated */}
 
             {/* CQC centres — direct, borough-aggregated, or nearest-city fallback */}
@@ -209,6 +212,8 @@ export default async function RehabLocationPage(
                 </table>
               </div>
             </div>
+
+            <AdUnit slot="mid" />
 
             {/* How to get referred — HowTo schema target */}
             <div style={{ marginBottom: 40, padding: 24, background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
@@ -274,8 +279,9 @@ export default async function RehabLocationPage(
             </h2>
             <FaqBlock faqs={faqs} />
 
+            <AdUnit slot="end" />
           </div>
-          <HelplinesSidebar />
+          <HelplinesSidebar withAd />
         </div>
       </div>
 

@@ -12,6 +12,7 @@ import FaqBlock from './FaqBlock'
 import Breadcrumb from './Breadcrumb'
 import NearestCentres from './NearestCentres'
 import MedicalReviewBox from './MedicalReviewBox'
+import AdUnit from './AdUnit'
 
 export interface SubstanceConfig {
   slug: string               // e.g. 'cocaine-addiction'
@@ -136,6 +137,8 @@ export default function SubstanceLocationPage({
         <div className="page-grid">
           <div>
 
+            <AdUnit slot="intro" />
+
             {/* CQC centres — direct or nearest-city fallback */}
             <NearestCentres result={rehabsResult} locationName={loc.name} locationSlug={locationSlug} limit={6} />
 
@@ -155,6 +158,8 @@ export default function SubstanceLocationPage({
                 ))}
               </ul>
             </div>
+
+            <AdUnit slot="mid" />
 
             {/* Withdrawal */}
             <div style={{ marginBottom: 36 }}>
@@ -241,8 +246,10 @@ export default function SubstanceLocationPage({
               Frequently asked questions about {substance.nameAdjective} addiction in {loc.name}
             </h2>
             <FaqBlock faqs={faqs} />
+
+            <AdUnit slot="end" />
           </div>
-          <HelplinesSidebar />
+          <HelplinesSidebar withAd />
         </div>
       </div>
 
