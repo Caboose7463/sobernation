@@ -89,7 +89,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* Google AdSense (no Auto ads; units are placed by components/AdUnit) */}
         <script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8511236039964647"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1914833169264702"
           crossOrigin="anonymous"
         />
         <script

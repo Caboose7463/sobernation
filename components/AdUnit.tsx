@@ -3,13 +3,13 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react'
 
 // Google AdSense: four fixed units, each used at most once per page.
 // The loader script is in the root layout <head>. No Auto ads.
-export const ADSENSE_CLIENT = 'ca-pub-8511236039964647'
+export const ADSENSE_CLIENT = 'ca-pub-1914833169264702'
 
 export const AD_SLOTS = {
-  intro: '7824756254',
-  mid: '7907023447',
-  end: '3698196025',
-  sidebar: '8103957854',
+  intro: '1748472497',
+  mid: '4897380011',
+  end: '8323995847',
+  sidebar: '2271216672',
 } as const
 
 export type AdKey = keyof typeof AD_SLOTS
