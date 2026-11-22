@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { faqSchema, breadcrumbSchema } from '../../lib/seo'
+import SourcesSection from '../../components/SourcesSection'
 
 export const metadata: Metadata = {
   title: 'NHS Rehab vs Private Rehab: Which is Right for You? | SoberNation',
@@ -146,6 +147,7 @@ export default function PrivateVsNHSRehabPage() {
           </div>
 
         </div>
+        <SourcesSection pageKey="private-vs-nhs-rehab" path="/private-vs-nhs-rehab" />
       </div>
     </div>
   )

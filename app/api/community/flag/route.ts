@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
 import { createAdminClient } from '@/utils/supabase/admin'
+import { checkForm } from '@/lib/form-guard'
 
 const FLAG_THRESHOLD = 3
 
@@ -10,7 +11,15 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
-  const { post_id, comment_id, reason } = await request.json()
+  const payload = await request.json().catch(() => null)
+  if (!payload || typeof payload !== 'object') return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
+  const { post_id, comment_id, reason } = payload
+
+  // Honeypot (if sent), timing and per IP rate limit (lib/form-guard.ts)
+  const guard = checkForm(request, payload, { bucket: 'community-flag' })
+  if (guard.status === 'bot') return NextResponse.json({ flagged: true, hidden: false })
+  if (guard.status === 'limited') return guard.response
+
   if (!reason) return NextResponse.json({ error: 'Reason required' }, { status: 400 })
   if (!post_id && !comment_id) return NextResponse.json({ error: 'post_id or comment_id required' }, { status: 400 })
 

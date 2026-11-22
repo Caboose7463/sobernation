@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/utils/supabase/client'
+import SpamGuardFields, { spamGuardValues } from '@/components/SpamGuardFields'
 import { User } from '@supabase/supabase-js'
 import { IconArrowUp, IconMessageCircle, IconFlag, IconAlertTriangle, CATEGORY_ICONS } from '@/components/icons'
 
@@ -62,10 +63,11 @@ export default function ThreadPage({ post, categorySlug }: { post: Post; categor
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!newComment.trim() || submitting) return
+    const guard = spamGuardValues(e.currentTarget as HTMLFormElement)
     setSubmitting(true)
     const res = await fetch(`/api/community/posts/${post.id}/comments`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ body: newComment }),
+      body: JSON.stringify({ body: newComment, ...guard }),
     })
     if (res.ok) { setNewComment('') }
     else {
@@ -174,6 +176,7 @@ export default function ThreadPage({ post, categorySlug }: { post: Post; categor
           <div style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '16px' }}>
             <h3 style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 10 }}>Add a reply</h3>
             <form onSubmit={handleSubmit}>
+              <SpamGuardFields />
               <textarea
                 value={newComment}
                 onChange={e => setNewComment(e.target.value)}

@@ -8,6 +8,9 @@ import HelplinesSidebar from './HelplinesSidebar'
 import FaqBlock from './FaqBlock'
 import Breadcrumb from './Breadcrumb'
 import AdUnit from './AdUnit'
+import SourcesSection from './SourcesSection'
+import { FirstMeeting, ListingCheck, MeetingSources } from './MeetingTrust'
+import { FELLOWSHIPS, type Fellowship } from '../lib/trust'
 
 export interface SupportGroupConfig {
   slug: string                         // 'al-anon'
@@ -20,6 +23,8 @@ export interface SupportGroupConfig {
   cost: string                         // 'Free'
   website: string
   phone?: string
+  /** Set for AA, NA, CA and Al-Anon: adds first meeting guidance, listing check and official sources. */
+  fellowship?: Fellowship['key']
   faqs: (location: string) => Array<{ question: string; answer: string }>
   relatedLinks: Array<{ label: string; href: string }>
 }
@@ -42,6 +47,10 @@ export default function SupportGroupPage({
   const faqs = config.faqs(location)
   const schemas = [faqSchema(faqs), breadcrumbSchema(breadcrumbs)]
 
+  const fellowship = config.fellowship ? FELLOWSHIPS[config.fellowship] : null
+  const finderUrl = fellowship?.finderUrl ?? config.website
+  const path = `/${config.slug}/${locationSlug}`
+
   const typeColour = config.type === 'family' ? '#6366f1' : config.type === 'recovery' ? 'var(--accent)' : '#0284c7'
 
   return (
@@ -63,12 +72,12 @@ export default function SupportGroupPage({
             {config.intro.replace(/\[location\]/g, location)}
           </p>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <a href={config.website} target="_blank" rel="noopener noreferrer" style={{ padding: '11px 18px', background: typeColour, color: '#fff', borderRadius: 'var(--radius-md)', fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>
-              Find meetings at {config.website.replace('https://', '')} →
+            <a href={finderUrl} target="_blank" rel="noopener noreferrer" style={{ padding: '11px 18px', background: typeColour, color: '#fff', borderRadius: 'var(--radius-md)', fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>
+              {fellowship ? `Official ${fellowship.name} meeting finder` : `Find meetings at ${config.website.replace('https://', '')}`} ↗
             </a>
             {config.phone && (
               <a href={`tel:${config.phone.replace(/\s/g, '')}`} style={{ padding: '11px 18px', background: 'var(--white)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: 'var(--radius-md)', fontWeight: 600, fontSize: 14, textDecoration: 'none' }}>
-                Call: {config.phone}
+                Call: {config.phone}{fellowship ? ` (${fellowship.helpline.hours})` : ''}
               </a>
             )}
           </div>
@@ -83,13 +92,12 @@ export default function SupportGroupPage({
             {/* Key facts */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 12, marginBottom: 32 }}>
               {[
-                { label: 'Cost', value: config.cost, icon: '💷' },
-                { label: 'Who attends', value: config.whoFor, icon: '👥' },
-                { label: 'Meetings', value: `Available in ${location}`, icon: '📍' },
-                { label: 'Website', value: config.website.replace('https://', ''), icon: '🌐' },
+                { label: 'Cost', value: config.cost },
+                { label: 'Who attends', value: config.whoFor },
+                { label: 'Meetings', value: fellowship ? `Check the official finder for ${location}` : `Available in ${location}` },
+                { label: 'Website', value: config.website.replace('https://', '') },
               ].map((f, i) => (
                 <div key={i} style={{ padding: 16, background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)' }}>
-                  <div style={{ fontSize: 18, marginBottom: 6 }}>{f.icon}</div>
                   <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-light)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>{f.label}</div>
                   <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>{f.value}</div>
                 </div>
@@ -101,6 +109,13 @@ export default function SupportGroupPage({
               <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', marginBottom: 10 }}>What happens at a {config.name} meeting?</h2>
               <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.75, margin: 0 }}>{config.whatHappens}</p>
             </div>
+
+            {config.fellowship && (
+              <>
+                <FirstMeeting fellowship={config.fellowship} location={location} />
+                <ListingCheck fellowship={config.fellowship} location={location} path={path} />
+              </>
+            )}
 
             <AdUnit slot="mid" />
 
@@ -121,22 +136,17 @@ export default function SupportGroupPage({
               </div>
             </div>
 
+            {config.fellowship
+              ? <MeetingSources fellowship={config.fellowship} path={path} />
+              : <SourcesSection pageKey={config.slug} path={path} />}
+
             <AdUnit slot="end" />
           </div>
           <HelplinesSidebar withAd />
         </div>
       </div>
 
-      <footer style={{ borderTop: '1px solid var(--border)', padding: '28px 20px', background: 'var(--white)', marginTop: 48 }}>
-        <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-          <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation</div>
-          <div style={{ display: 'flex', gap: 20 }}>
-            {[['Find rehab', '/rehab/london'], ['AA meetings', '/aa-meetings/london'], ['Get help', '/help/london']].map(([l, h]) => (
-              <Link key={h} href={h} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{l}</Link>
-            ))}
-          </div>
-        </div>
-      </footer>
+      {/* Global crisis band and SiteFooter are rendered by layout.tsx */}
     </div>
   )
 }

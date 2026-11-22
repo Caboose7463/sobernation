@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getApprovedStories, submitStory } from '../../../lib/stories'
+import { checkForm } from '../../../lib/form-guard'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,6 +20,11 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
     const { name, location, substance, daysSober, story, imageUrl } = body
+
+    // Honeypot, timing and per IP rate limit (lib/form-guard.ts)
+    const guard = checkForm(req, body, { bucket: 'stories' })
+    if (guard.status === 'bot') return NextResponse.json({ success: true, slug: '' }, { status: 201 })
+    if (guard.status === 'limited') return guard.response
 
     if (!name || !location || !substance || !daysSober || !story) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })

@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import SourcesSection from '../../components/SourcesSection'
 
 interface TimelineStage {
   timeLabel: string
@@ -431,6 +432,9 @@ export default function WithdrawalTimeline() {
         </div>
       </div>
 
+      <div className="container-wide" style={{ maxWidth: 760, padding: '0 20px 40px' }}>
+        <SourcesSection pageKey="withdrawal-timeline" path="/withdrawal-timeline" />
+      </div>
       <footer style={{ borderTop: '1px solid var(--border)', padding: '28px 20px', background: 'var(--white)', marginTop: 48 }}>
         <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
           <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation · Medical content reviewed against NHS and NICE guidelines</div>

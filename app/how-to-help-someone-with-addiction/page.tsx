@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { faqSchema, breadcrumbSchema } from '../../lib/seo'
 import AuthorBio from '../../components/AuthorBio'
 import NewsletterSignup from '../../components/NewsletterSignup'
+import SourcesSection from '../../components/SourcesSection'
 
 export const metadata: Metadata = {
   title: 'How to Help Someone with Addiction: A Family Guide | SoberNation',
@@ -159,6 +160,7 @@ export default function HowToHelpPage() {
         <div style={{ marginTop: 32 }}>
           <AuthorBio date="2025-04-01" />
         </div>
+        <SourcesSection pageKey="how-to-help-someone-with-addiction" path="/how-to-help-someone-with-addiction" />
       </div>
     </div>
   )

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { faqSchema, breadcrumbSchema } from '../../lib/seo'
+import SourcesSection from '../../components/SourcesSection'
 
 export const metadata: Metadata = {
   title: 'Drug Addiction Treatment UK | NHS & Private Options | SoberNation',
@@ -205,6 +206,7 @@ export default function DrugAddictionTreatmentPage() {
           </div>
 
         </div>
+        <SourcesSection pageKey="drug-addiction-treatment" path="/drug-addiction-treatment" />
       </div>
     </div>
   )

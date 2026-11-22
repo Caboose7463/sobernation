@@ -592,7 +592,7 @@ export default function Nav() {
 
           <div className="sn-nav__mobile-cta">
             <a href="tel:03001236600">
-              Get help now — 0300 123 6600 (free, 24/7)
+              Get help now: FRANK 0300 123 6600 (24 hours)
             </a>
           </div>
         </div>

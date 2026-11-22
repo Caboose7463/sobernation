@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { faqSchema, breadcrumbSchema } from '../../lib/seo'
 import AuthorBio from '../../components/AuthorBio'
 import NewsletterSignup from '../../components/NewsletterSignup'
+import SourcesSection from '../../components/SourcesSection'
 
 export const metadata: Metadata = {
   title: 'Suboxone vs Methadone: Which is Right for You? | SoberNation',
@@ -142,6 +143,7 @@ export default function SuboxoneVsMethadonePage() {
 
         <div style={{ marginTop: 32 }}><NewsletterSignup variant="inline" source="suboxone-methadone" /></div>
         <div style={{ marginTop: 24 }}><AuthorBio date="2025-04-01" /></div>
+        <SourcesSection pageKey="suboxone-vs-methadone" path="/suboxone-vs-methadone" />
       </div>
     </div>
   )

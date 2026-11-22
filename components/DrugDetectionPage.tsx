@@ -4,6 +4,7 @@
 import Link from 'next/link'
 import { faqSchema, breadcrumbSchema } from '../lib/seo'
 import HelplinesSidebar from './HelplinesSidebar'
+import SourcesSection from './SourcesSection'
 import FaqBlock from './FaqBlock'
 import Breadcrumb from './Breadcrumb'
 
@@ -118,6 +119,8 @@ export default function DrugDetectionPage({ config }: { config: DetectionConfig 
                 {config.drug} withdrawal timeline →
               </Link>
             </div>
+
+            <SourcesSection pageKey={`detect-${config.slug}`} path={`/how-long-does-${config.slug}-stay-in-your-system`} />
           </div>
           <HelplinesSidebar />
         </div>

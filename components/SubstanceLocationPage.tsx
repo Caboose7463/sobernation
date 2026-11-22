@@ -13,6 +13,8 @@ import Breadcrumb from './Breadcrumb'
 import NearestCentres from './NearestCentres'
 import MedicalReviewBox from './MedicalReviewBox'
 import AdUnit from './AdUnit'
+import SourcesSection from './SourcesSection'
+import { reviewedSchemaProps } from '../lib/trust'
 
 export interface SubstanceConfig {
   slug: string               // e.g. 'cocaine-addiction'
@@ -61,6 +63,7 @@ export default function SubstanceLocationPage({
         `${substance.nameAdjective} rehab ${loc.name}`,
         `${substance.nameAdjective} help ${loc.name}`,
       ],
+      extra: reviewedSchemaProps(substance.slug),
     }),
     {
       '@context': 'https://schema.org',
@@ -246,6 +249,8 @@ export default function SubstanceLocationPage({
               Frequently asked questions about {substance.nameAdjective} addiction in {loc.name}
             </h2>
             <FaqBlock faqs={faqs} />
+
+            <SourcesSection pageKey={substance.slug} />
 
             <AdUnit slot="end" />
           </div>

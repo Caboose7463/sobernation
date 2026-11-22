@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { faqSchema } from '../../lib/seo'
+import SourcesSection from '../../components/SourcesSection'
 
 export const metadata: Metadata = {
   title: 'How to Stop Drinking Alcohol | Free UK Guide | SoberNation',
@@ -110,6 +111,9 @@ export default function HowToQuitAlcoholPage() {
             Start counting →
           </Link>
         </div>
+      </div>
+      <div className="container-wide" style={{ maxWidth: 760, padding: '0 20px 40px' }}>
+        <SourcesSection pageKey="how-to-stop-drinking" path="/how-to-stop-drinking" />
       </div>
       <footer style={{ borderTop: '1px solid var(--border)', padding: '24px 20px', background: 'var(--white)', marginTop: 24 }}>
         <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>

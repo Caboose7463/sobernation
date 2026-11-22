@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6
@@ -41,6 +41,9 @@ export default function FindMyRehabPage() {
   })
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+  // Render time for the spam timing check in lib/form-guard.ts
+  const renderedAt = useRef(0)
+  useEffect(() => { renderedAt.current = Date.now() }, [])
 
   function update(fields: Partial<typeof answers>) {
     setAnswers(a => ({ ...a, ...fields }))
@@ -52,7 +55,7 @@ export default function FindMyRehabPage() {
       await fetch('/api/matching/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...answers, sourcePage: document.referrer || 'direct visit to /find-my-rehab' }),
+        body: JSON.stringify({ ...answers, t: renderedAt.current || '', sourcePage: document.referrer || 'direct visit to /find-my-rehab' }),
       })
       setSubmitted(true)
     } catch {

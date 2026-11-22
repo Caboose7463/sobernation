@@ -4,6 +4,7 @@ import { faqSchema, breadcrumbSchema } from '../../lib/seo'
 import HelplinesSidebar from '../../components/HelplinesSidebar'
 import FaqBlock from '../../components/FaqBlock'
 import Breadcrumb from '../../components/Breadcrumb'
+import SourcesSection from '../../components/SourcesSection'
 
 export const metadata: Metadata = {
   title: 'How Long Does Cocaine Stay in Your System? | Detection Times UK',
@@ -132,6 +133,9 @@ export default function CocaineDetectionPage() {
           </div>
           <HelplinesSidebar />
         </div>
+      </div>
+      <div className="container-wide" style={{ maxWidth: 760, padding: '0 20px 40px' }}>
+        <SourcesSection pageKey="detect-cocaine" path="/how-long-does-cocaine-stay-in-your-system" />
       </div>
       <footer style={{ borderTop: '1px solid var(--border)', padding: '28px 20px', background: 'var(--white)', marginTop: 48 }}>
         <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>

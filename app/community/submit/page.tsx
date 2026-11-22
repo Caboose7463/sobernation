@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { IconSun, IconTrophy, IconHeart, IconPill, IconBuilding, IconUsers, IconMessageCircle } from '@/components/icons'
 import { createClient } from '@/utils/supabase/client'
+import SpamGuardFields, { spamGuardValues } from '@/components/SpamGuardFields'
 
 const CATEGORIES = [
   { slug: 'daily',      name: 'Daily Check-in',        Icon: IconSun          },
@@ -48,6 +49,7 @@ export default function SubmitPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    const guard = spamGuardValues(e.currentTarget as HTMLFormElement)
     if (!title.trim() || !body.trim() || !category) {
       setError('Please fill in all fields')
       return
@@ -57,7 +59,7 @@ export default function SubmitPage() {
     const res = await fetch('/api/community/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, body, category_slug: category }),
+      body: JSON.stringify({ title, body, category_slug: category, ...guard }),
     })
     const data = await res.json()
     if (!res.ok) {
@@ -82,6 +84,7 @@ export default function SubmitPage() {
         <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--text)', marginBottom: 24 }}>Create a post</h1>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <SpamGuardFields />
           {/* Category */}
           <div>
             <label style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', display: 'block', marginBottom: 8 }}>Category</label>

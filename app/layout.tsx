@@ -7,6 +7,7 @@ import CommunityCard from '../components/CommunityCard'
 import Nav from '../components/Nav'
 import CookieConsent from '../components/CookieConsent'
 import SiteFooter from '../components/SiteFooter'
+import CrisisBand from '../components/CrisisBand'
 import { headers } from 'next/headers'
 import { siteLinksSearchBoxSchema } from '../lib/seo'
 import { NOT_COUNTED } from '@/lib/not-counted';
@@ -43,7 +44,7 @@ const orgSchema = {
   contactPoint: {
     '@type': 'ContactPoint',
     telephone: '+44-20-4634-4476',
-    email: 'editorial@sobernation.co.uk',
+    email: 'info@sobernation.co.uk',
     contactType: 'customer support',
     areaServed: 'GB',
     availableLanguage: 'English',
@@ -106,6 +107,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {children}
         {!hideCommunityCard && <CommunityCard />}
         <StoriesCTA />
+        <CrisisBand />
         <SiteFooter />
         <CookieConsent />
 

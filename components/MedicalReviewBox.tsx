@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { REVIEWED_LABEL } from '../lib/trust'
 
 interface Props {
   lastReviewed?: string
@@ -6,7 +7,7 @@ interface Props {
 }
 
 /** Byline box for guide pages. Pages are written by the editorial team and are not medically reviewed. */
-export default function MedicalReviewBox({ lastReviewed = 'April 2026', compact = false }: Props) {
+export default function MedicalReviewBox({ lastReviewed = REVIEWED_LABEL, compact = false }: Props) {
   if (compact) {
     return (
       <div style={{
@@ -17,7 +18,7 @@ export default function MedicalReviewBox({ lastReviewed = 'April 2026', compact 
         fontSize: 12,
         color: 'var(--text-muted)',
       }}>
-        Written by the Sober Nation editorial team · Updated {lastReviewed} · Not medical advice ·{' '}
+        Written by the Sober Nation editorial team. Last reviewed {lastReviewed}. Not medical advice.{' '}
         <Link href="/editorial-policy" style={{ textDecoration: 'underline' }}>Editorial policy</Link>
       </div>
     )
@@ -34,7 +35,7 @@ export default function MedicalReviewBox({ lastReviewed = 'April 2026', compact 
       lineHeight: 1.6,
     }}>
       <div style={{ fontWeight: 700, marginBottom: 4, color: 'var(--text)' }}>
-        Written by the Sober Nation editorial team · Updated {lastReviewed}
+        Written by the Sober Nation editorial team. Last reviewed {lastReviewed}
       </div>
       We research our guides from public sources such as the{' '}
       <a href="https://www.nhs.uk" target="_blank" rel="noopener noreferrer">NHS</a>,{' '}

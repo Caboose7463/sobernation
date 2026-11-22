@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { faqSchema, breadcrumbSchema } from '../../lib/seo'
 import AuthorBio from '../../components/AuthorBio'
 import NewsletterSignup from '../../components/NewsletterSignup'
+import SourcesSection from '../../components/SourcesSection'
 
 export const metadata: Metadata = {
   title: 'Online AA Meetings in the UK: How to Join | SoberNation',
@@ -94,6 +95,7 @@ export default function OnlineAAMeetingsPage() {
 
         <div style={{ marginTop: 32 }}><NewsletterSignup variant="inline" source="online-aa" /></div>
         <div style={{ marginTop: 24 }}><AuthorBio date="2025-04-01" /></div>
+        <SourcesSection pageKey="online-aa-meetings" path="/online-aa-meetings" />
       </div>
     </div>
   )

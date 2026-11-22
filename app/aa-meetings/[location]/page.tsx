@@ -7,6 +7,8 @@ import LocationHero from '../../../components/LocationHero'
 import HelplinesSidebar from '../../../components/HelplinesSidebar'
 import FaqBlock from '../../../components/FaqBlock'
 import Breadcrumb from '../../../components/Breadcrumb'
+import { FirstMeeting, ListingCheck, MeetingSources } from '../../../components/MeetingTrust'
+import { reviewedSchemaProps, FELLOWSHIPS } from '../../../lib/trust'
 
 export const dynamicParams = true
 
@@ -24,47 +26,41 @@ export async function generateMetadata(
 }
 
 const MEETING_TYPES = [
-  { type: 'Open meetings', desc: 'Anyone can attend — you do not need to identify as an alcoholic. Good for people who are unsure or exploring AA.' },
-  { type: 'Closed meetings', desc: 'For people who identify as alcoholics or believe they have a problem with alcohol. More personal and confidential.' },
-  { type: 'Speaker meetings', desc: 'A member shares their story of addiction and recovery. Inspiring and accessible, especially for newcomers.' },
-  { type: 'Step meetings', desc: 'Work through the 12 Steps of AA together. Usually closed meetings for members actively working a recovery programme.' },
-  { type: 'Big Book meetings', desc: 'Discussion based on Alcoholics Anonymous (the \"Big Book\"). Great for understanding AA philosophy and recovery principles.' },
-  { type: 'Online meetings', desc: 'AA meetings available via Zoom and phone. Accessible 24/7 from anywhere in the UK.' },
+  { type: 'Open meetings', desc: 'Open to anyone, including family and friends supporting someone. A good place to start if you are unsure about your drinking.' },
+  { type: 'Closed meetings', desc: 'For alcoholics and people who think or know they have a problem with drinking.' },
+  { type: 'In person and online', desc: 'The official meeting finder lets you search in person meetings by town or postcode, or choose online only meetings, and filter by day and time of day.' },
+  { type: 'Access needs', desc: 'The finder can filter for wheelchair access, sign language and hearing aid loops.' },
 ]
 
 function buildFaqs(name: string) {
   return [
     {
       question: `How do I find an AA meeting in ${name}?`,
-      answer: `You can find AA meetings in ${name} at aa.org.uk or by calling the AA national helpline on 0800 9177 650 (free, 24/7). Meetings are listed by day, time, location and type. You can also search on the AA app or ask at a local GP surgery or drug and alcohol service.`,
+      answer: `Search for ${name} on the official Alcoholics Anonymous Great Britain meeting finder at alcoholics-anonymous.org.uk/find-a-meeting. You can filter by day, time of day, in person or online, and access needs. You can also call the free AA helpline on 0800 917 7650 or email help@aamail.org.`,
     },
     {
       question: `What happens at my first AA meeting in ${name}?`,
-      answer: `At your first AA meeting in ${name}, you simply attend and listen — there is no pressure to share or speak. Most meetings start with a reading and then open for shares. You can introduce yourself as a newcomer if you choose. Members will give you a warm welcome and may offer contact numbers for support.`,
+      answer: `AA says you can just come and listen, or you can talk and share: it is up to you. Anyone with a desire to stop drinking is welcome, whatever your gender, sexual orientation, income, religion or race.`,
     },
     {
-      question: `Do I have to be alcoholic to attend AA meetings?`,
-      answer: `Open AA meetings are open to anyone with a desire to stop drinking or who is concerned about their drinking — you do not need to identify as an alcoholic. Closed meetings are for people who identify as alcoholics. If you are unsure, start with an open meeting.`,
+      question: `Do I have to be an alcoholic to attend AA meetings?`,
+      answer: `The only requirement for AA membership is a desire to stop drinking. Open meetings are also open to non alcoholics, such as family and friends. Closed meetings are for alcoholics and people who think or know they have a problem with drinking.`,
     },
     {
       question: `Is AA free?`,
-      answer: `Yes. AA meetings are completely free to attend. There is usually a voluntary collection passed around — typically 50p–£1 — but this is optional and never obligatory. AA is self-supporting and accepts no outside funding.`,
-    },
-    {
-      question: `How often should I attend AA meetings?`,
-      answer: `AA often recommends "90 meetings in 90 days" for people new to recovery. Once established, many people attend 1–3 meetings per week. Some people attend daily during difficult periods. There is no set requirement — attend as often as feels helpful for your recovery.`,
+      answer: `Yes. AA says it is free to attend and there are no dues or fees for membership. Groups are self supporting through their own members' contributions.`,
     },
     {
       question: `What is the difference between AA and NA?`,
-      answer: `AA (Alcoholics Anonymous) specifically focuses on alcohol addiction. NA (Narcotics Anonymous) covers all drug addictions and is open to anyone struggling with any substance. Both use the 12-step programme and many people attend both groups, particularly those with both alcohol and drug issues.`,
+      answer: `Alcoholics Anonymous is for people who want to stop drinking. Narcotics Anonymous is for people with a problem with drugs. Both are free 12 step fellowships, and some people go to both.`,
     },
     {
-      question: `Is AA confidential?`,
-      answer: `Yes. AA operates on a principle of anonymity — "what is shared here, stays here." Members do not share each other's names or stories outside the meeting. This confidentiality is central to how AA works and is taken very seriously by members.`,
+      question: `Are there online AA meetings I can join from ${name}?`,
+      answer: `Yes. The official AA meeting finder has an online only option that lists online meetings by day and time, so you can join from ${name} or anywhere else.`,
     },
     {
-      question: `Are there online AA meetings I can attend from ${name}?`,
-      answer: `Yes. AA Intergroup UK offers online meetings via Zoom available 24/7 from anywhere including ${name}. Visit aa.org.uk/online-meetings or the Intergroup website to find UK-based online meetings at all hours of the day and night.`,
+      question: `What if a meeting listed for ${name} has changed or stopped?`,
+      answer: `Local groups update their own details with AA, so the official finder is the most up to date source. If you spot a mistake on this page, please use our report a mistake link and we will check it.`,
     },
   ]
 }
@@ -83,15 +79,17 @@ export default async function AAMeetingsPage(
     { name: loc.name, href: `/aa-meetings/${location}` },
   ]
 
-  const snippet = `AA (Alcoholics Anonymous) meetings in ${loc.name} are free, confidential, and open to anyone with a desire to stop drinking. Find open and closed meetings, speaker nights, and step meetings in ${loc.name} at aa.org.uk or call the AA helpline free on 0800 9177 650.`
+  const aa = FELLOWSHIPS['aa-meetings']
+  const snippet = `AA (Alcoholics Anonymous) meetings in ${loc.name} are free and open to anyone with a desire to stop drinking. Find open and closed meetings, in person or online, on the official AA meeting finder at alcoholics-anonymous.org.uk, or call the free AA helpline on ${aa.helpline.number}.`
 
   const schemas = [
     faqSchema(faqs),
     breadcrumbSchema(breadcrumbs),
     medicalWebPageSchema({
       name: `AA Meetings in ${loc.name}`,
-      description: `Find Alcoholics Anonymous meetings in ${loc.name}. Free alcohol recovery support groups, open and closed meetings.`,
+      description: `How to find Alcoholics Anonymous meetings in ${loc.name}, with the official meeting finder, AA helpline and what to expect at a first meeting.`,
       url: `https://www.sobernation.co.uk/aa-meetings/${location}`,
+      extra: reviewedSchemaProps('aa-meetings'),
     }),
   ]
 
@@ -124,14 +122,14 @@ export default async function AAMeetingsPage(
                 How to find AA meetings in {loc.name}
               </h2>
               <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 16 }}>
-                The official AA UK meeting finder lists all meetings in {loc.name} with times, venues, and meeting types. You can also search by day of the week or find online meetings available 24/7.
+                The official Alcoholics Anonymous Great Britain meeting finder lists meetings run by local AA groups. Type {loc.name} or your postcode, then filter by day, time of day, in person or online.
               </p>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                <a href="https://www.aa.org.uk/find-a-meeting/" target="_blank" rel="noopener noreferrer" style={{ padding: '10px 18px', background: 'var(--accent)', color: '#fff', borderRadius: 'var(--radius-sm)', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
+                <a href={aa.finderUrl} target="_blank" rel="noopener noreferrer" style={{ padding: '10px 18px', background: 'var(--accent)', color: '#fff', borderRadius: 'var(--radius-sm)', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}>
                   Find AA meetings near {loc.name} ↗
                 </a>
-                <a href="tel:08009177650" style={{ padding: '10px 18px', background: 'var(--white)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: 'var(--radius-sm)', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
-                  Call AA: 0800 9177 650 (free)
+                <a href={`tel:${aa.helpline.tel}`} style={{ padding: '10px 18px', background: 'var(--white)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: 'var(--radius-sm)', fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
+                  Call AA free: {aa.helpline.number}
                 </a>
               </div>
             </div>
@@ -142,7 +140,7 @@ export default async function AAMeetingsPage(
                 Types of AA meetings in {loc.name}
               </h2>
               <p style={{ fontSize: 14, color: 'var(--text-muted)', marginBottom: 16, lineHeight: 1.7 }}>
-                AA meetings come in several formats. As a newcomer, an open or speaker meeting is the best place to start.
+                The official finder marks each meeting as open or closed. If you are not sure which to choose, an open meeting is a good place to start.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                 {MEETING_TYPES.map((mt, i) => (
@@ -154,13 +152,11 @@ export default async function AAMeetingsPage(
               </div>
             </div>
 
-            {/* What to expect */}
-            <div style={{ marginBottom: 40, padding: 24, background: 'var(--accent-pale)', border: '1px solid #c8e6df', borderRadius: 'var(--radius-md)' }}>
-              <h2 style={{ fontSize: 15, fontWeight: 700, color: 'var(--accent)', marginBottom: 10 }}>Going to your first meeting in {loc.name}?</h2>
-              <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.7 }}>
-                You don't need to prepare anything. Just turn up — arrive a couple of minutes early and introduce yourself to anyone near the door. You don't have to share. Just listen. Many people find their first meeting is a turning point.
-              </p>
-            </div>
+            {/* What to expect: from AA's own newcomer pages */}
+            <FirstMeeting fellowship="aa-meetings" location={loc.name} />
+
+            {/* When the listing was checked, and how to report a mistake */}
+            <ListingCheck fellowship="aa-meetings" location={loc.name} path={`/aa-meetings/${location}`} />
 
             {/* Related links */}
             <div style={{ marginBottom: 40 }}>
@@ -169,7 +165,8 @@ export default async function AAMeetingsPage(
                 {[
                   { label: `NA Meetings in ${loc.name}`, href: `/na-meetings/${location}` },
                   { label: `Rehab in ${loc.name}`, href: `/rehab/${location}` },
-                  { label: 'AA vs SMART Recovery', href: '/aa-vs-smart-recovery' },
+                  { label: `SMART Recovery in ${loc.name}`, href: `/smart-recovery/${location}` },
+                  { label: `Al-Anon for families in ${loc.name}`, href: `/al-anon/${location}` },
                   { label: 'Alcohol addiction help', href: `/alcohol-addiction/${location}` },
                 ].map(l => (
                   <Link key={l.href} href={l.href} style={{ fontSize: 13, padding: '7px 14px', borderRadius: 20, border: '1px solid var(--border)', color: 'var(--text-muted)', textDecoration: 'none', background: 'var(--white)' }}>
@@ -183,21 +180,14 @@ export default async function AAMeetingsPage(
               Frequently asked questions about AA in {loc.name}
             </h2>
             <FaqBlock faqs={faqs} />
+
+            <MeetingSources fellowship="aa-meetings" />
           </div>
           <HelplinesSidebar />
         </div>
       </div>
 
-      <footer style={{ borderTop: '1px solid var(--border)', padding: '28px 20px', background: 'var(--white)', marginTop: 48 }}>
-        <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-          <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation</div>
-          <div style={{ display: 'flex', gap: 20 }}>
-            {[['Privacy', '/privacy'], ['Contact', '/contact'], ['About', '/about']].map(([label, href]) => (
-              <Link key={href} href={href} style={{ fontSize: 12, color: 'var(--text-light)', textDecoration: 'none' }}>{label}</Link>
-            ))}
-          </div>
-        </div>
-      </footer>
+      {/* Global crisis band and SiteFooter are rendered by layout.tsx */}
     </div>
   )
 }

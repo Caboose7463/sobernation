@@ -17,8 +17,8 @@ export async function generateMetadata(
   const loc = getLocation(location)
   if (!loc) return {}
   return {
-    title: `Cocaine Anonymous Meetings in ${loc.name} | CA Meetings UK | SoberNation`,
-    description: `Free Cocaine Anonymous (CA) meetings in ${loc.name} for cocaine, crack, and stimulant addiction. 12-step fellowship. Find meeting times near ${loc.name}. Call 0800 612 0225.`,
+    title: `Cocaine Anonymous Meetings in ${loc.name} | CA Meetings UK`,
+    description: `How to find Cocaine Anonymous (CA) meetings in ${loc.name}: the official CA UK meeting finder, the free CA helpline 0800 612 0225 (10am to 10pm, 7 days) and what to expect at your first meeting.`,
   }
 }
 

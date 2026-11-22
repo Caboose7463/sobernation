@@ -3,6 +3,7 @@ import { createClient } from '@/utils/supabase/server'
 import { createAdminClient } from '@/utils/supabase/admin'
 import { Resend } from 'resend'
 import { COMMUNITY_FROM_EMAIL } from '@/lib/email'
+import { checkForm } from '@/lib/form-guard'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -30,7 +31,17 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
-  const { body, parent_id } = await request.json()
+  const payload = await request.json().catch(() => null)
+  if (!payload || typeof payload !== 'object') return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
+  const { body, parent_id } = payload
+
+  // Honeypot, timing and per IP rate limit (lib/form-guard.ts)
+  const guard = checkForm(request, payload, { bucket: 'community-comment' })
+  if (guard.status === 'bot') {
+    return NextResponse.json({ id: crypto.randomUUID(), post_id: postId, body: String(body ?? ''), created_at: new Date().toISOString() }, { status: 201 })
+  }
+  if (guard.status === 'limited') return guard.response
+
   if (!body?.trim()) return NextResponse.json({ error: 'Comment cannot be empty' }, { status: 400 })
 
   const { data: profile } = await supabase.from('profiles').select('username').eq('id', user.id).single()

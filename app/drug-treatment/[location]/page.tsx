@@ -9,6 +9,8 @@ import NearestCentres from '../../../components/NearestCentres'
 import HelplinesSidebar from '../../../components/HelplinesSidebar'
 import FaqBlock from '../../../components/FaqBlock'
 import Breadcrumb from '../../../components/Breadcrumb'
+import SourcesSection from '../../../components/SourcesSection'
+import { reviewedSchemaProps } from '../../../lib/trust'
 
 export const dynamicParams = true
 export const revalidate = 604800
@@ -127,6 +129,7 @@ export default async function DrugTreatmentPage(
       description: `Find NHS and private drug treatment services in ${loc.name}. Community services, detox, rehab, and medication-assisted treatment.`,
       url: `https://www.sobernation.co.uk/drug-treatment/${location}`,
       keywords: [`drug treatment ${loc.name}`, `drug rehabilitation ${loc.name}`, `heroin treatment ${loc.name}`, `cocaine addiction ${loc.name}`],
+      extra: reviewedSchemaProps('drug-treatment'),
     }),
   ]
 
@@ -222,6 +225,8 @@ export default async function DrugTreatmentPage(
               Frequently asked questions about drug treatment in {loc.name}
             </h2>
             <FaqBlock faqs={faqs} />
+
+            <SourcesSection pageKey="drug-treatment" />
           </div>
           <HelplinesSidebar />
         </div>

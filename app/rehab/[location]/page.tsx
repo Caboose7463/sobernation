@@ -5,7 +5,7 @@ import { getLocationSlugs, getLocation, getTopLocationSlugs } from '../../../lib
 import { getNearbyLocations } from '../../../lib/nearby-locations'
 import { getRehabsForLocation } from '../../../lib/rehabs'
 import { locationMetadata, faqSchema, breadcrumbSchema, medicalWebPageSchema, howToSchema } from '../../../lib/seo'
-import { BUILD_MONTH, CQC_ATTRIBUTION } from '../../../lib/build-info'
+import { CQC_ATTRIBUTION } from '../../../lib/build-info'
 import { getLocationContent } from '../../../data/location-content'
 import LocationHero from '../../../components/LocationHero'
 import NearestCentres from '../../../components/NearestCentres'
@@ -170,7 +170,7 @@ export default async function RehabLocationPage(
           <div>
 
             {/* Freshness badge — updates every deploy */}
-            <LastReviewed dataDate={BUILD_MONTH} />
+            <LastReviewed />
 
             <AdUnit slot="intro" />
 

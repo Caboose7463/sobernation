@@ -73,7 +73,7 @@ export default function LocationHero({
           {/* Crisis bar for hub pages */}
           <div style={{ marginTop: 20, padding: '12px 16px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 'var(--radius-sm)', fontSize: 13, color: '#991b1b' }}>
             <strong>Need help now?</strong>{' '}
-            <a href="tel:03001236600" style={{ color: '#991b1b', fontWeight: 700 }}>Call Frank free on 0300 123 6600</a> — available 24/7
+            <a href="tel:03001236600" style={{ color: '#991b1b', fontWeight: 700 }}>Call FRANK on 0300 123 6600</a>, open 24 hours
           </div>
         </div>
       </div>

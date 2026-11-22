@@ -4,7 +4,8 @@ import type { Metadata } from 'next'
 import {  getLocationSlugs, getLocation , getTopLocationSlugs } from '../../../lib/locations'
 import { getRehabsForLocation } from '../../../lib/rehabs'
 import { locationMetadata, faqSchema, breadcrumbSchema, medicalWebPageSchema } from '../../../lib/seo'
-import { BUILD_MONTH } from '../../../lib/build-info'
+import { REVIEWED_LABEL, reviewedSchemaProps } from '../../../lib/trust'
+import SourcesSection from '../../../components/SourcesSection'
 import LocationHero from '../../../components/LocationHero'
 import HelplinesSidebar from '../../../components/HelplinesSidebar'
 import FaqBlock from '../../../components/FaqBlock'
@@ -199,6 +200,7 @@ export default async function HelpLocationPage(
       description: `Find drug and alcohol addiction help in ${loc.name}. Local rehab centres, AA meetings, NA meetings, and NHS services.`,
       url: `https://www.sobernation.co.uk/help/${location}`,
       keywords: [`addiction help ${loc.name}`, `rehab ${loc.name}`, `drug treatment ${loc.name}`, `alcohol help ${loc.name}`],
+      extra: reviewedSchemaProps('help'),
     }),
   ]
 
@@ -235,7 +237,7 @@ export default async function HelpLocationPage(
           <div>
 
             {/* Freshness badge */}
-            <LastReviewed dataDate={BUILD_MONTH} />
+            <LastReviewed dataDate={REVIEWED_LABEL} />
 
             {/* CQC centres — direct, borough-aggregated, or nearest fallback */}
             <NearestCentres result={rehabsResult} locationName={loc.name} locationSlug={location} limit={8} />
@@ -265,6 +267,7 @@ export default async function HelpLocationPage(
                 Frequently asked questions about addiction help in {loc.name}
               </h2>
               <FaqBlock faqs={faqs} />
+              <SourcesSection pageKey="help" />
             </div>
 
           </div>

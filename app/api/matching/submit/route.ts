@@ -1,12 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase-server'
 import { sendEmail, ENQUIRY_NOTIFY_EMAIL, detailsTable, detailsText } from '@/lib/email'
+import { checkForm } from '@/lib/form-guard'
 
 export const runtime = 'nodejs'
 
 export async function POST(request: NextRequest) {
   try {
-    const { location, addiction, fundingType, budget, urgency, firstName, email, phone, sourcePage } = await request.json()
+    const payload = await request.json()
+    const { location, addiction, fundingType, budget, urgency, firstName, email, phone, sourcePage } = payload
+
+    // Honeypot (if sent), timing and per IP rate limit (lib/form-guard.ts)
+    const guard = checkForm(request, payload, { bucket: 'matching' })
+    if (guard.status === 'bot') return NextResponse.json({ success: true, matched: 0 })
+    if (guard.status === 'limited') return guard.response
 
     if (!location || !firstName || !phone) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })

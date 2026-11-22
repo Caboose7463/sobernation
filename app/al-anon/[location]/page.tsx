@@ -17,8 +17,8 @@ export async function generateMetadata(
   const loc = getLocation(location)
   if (!loc) return {}
   return {
-    title: `Al-Anon Meetings in ${loc.name} | Support for Families | SoberNation`,
-    description: `Free Al-Anon meetings in ${loc.name} for families and friends of people with alcohol problems. Find local meeting times, what to expect, and how Al-Anon can help. Call 0800 0086 811.`,
+    title: `Al-Anon Meetings in ${loc.name} | Support for Families`,
+    description: `How to find Al-Anon meetings in ${loc.name} for families and friends of people who drink: the official Al-Anon UK meeting finder, the free helpline 0800 0086 811 (10am to 10pm) and what to expect at a first meeting.`,
   }
 }
 

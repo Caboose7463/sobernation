@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { faqSchema, breadcrumbSchema } from '../../lib/seo'
 import AuthorBio from '../../components/AuthorBio'
 import NewsletterSignup from '../../components/NewsletterSignup'
+import SourcesSection from '../../components/SourcesSection'
 
 export const metadata: Metadata = {
   title: 'Alcohol Addiction Treatment in the UK: The Complete Guide | SoberNation',
@@ -199,6 +200,7 @@ export default function AlcoholAddictionTreatmentPage() {
         <div style={{ marginTop: 32 }}>
           <AuthorBio date="2025-04-01" />
         </div>
+        <SourcesSection pageKey="alcohol-addiction-treatment" path="/alcohol-addiction-treatment" />
       </div>
     </div>
   )

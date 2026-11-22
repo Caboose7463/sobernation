@@ -29,11 +29,11 @@ export function locationMetadata(
     },
     'aa-meetings': {
       title: `AA Meetings in ${locationName} | Alcoholics Anonymous`,
-      desc: `Find Alcoholics Anonymous (AA) meetings in ${locationName}. Open and closed meetings, times, and locations for alcohol recovery support in ${locationName}.`,
+      desc: `How to find AA meetings in ${locationName}: the official Alcoholics Anonymous meeting finder, the free AA helpline 0800 917 7650, open and closed meetings explained, and what to expect at your first meeting.`,
     },
     'na-meetings': {
       title: `NA Meetings in ${locationName} | Narcotics Anonymous`,
-      desc: `Find Narcotics Anonymous (NA) meetings in ${locationName}. Free peer support groups for drug recovery — open to all addictions. Meeting times, formats and step-based and secular options listed.`,
+      desc: `How to find NA meetings in ${locationName}: the official UKNA meeting finder, the NA helpline 0300 999 1212 (10am to midnight), meeting types explained, and what to expect at your first meeting.`,
     },
     'drug-treatment': {
       title: `Drug Treatment in ${locationName} | NHS & Private Services`,
@@ -118,6 +118,8 @@ export function medicalWebPageSchema(opts: {
   description: string
   url: string
   keywords?: string[]
+  /** Extra properties such as lastReviewed, dateModified and citation (see reviewedSchemaProps in lib/trust.ts). */
+  extra?: Record<string, unknown>
 }): object {
   return {
     '@context': 'https://schema.org',
@@ -139,6 +141,7 @@ export function medicalWebPageSchema(opts: {
       name: 'SoberNation',
       url: 'https://www.sobernation.co.uk',
     },
+    ...(opts.extra ?? {}),
   }
 }
 

@@ -5,6 +5,7 @@
  * Supabase and emails the site owner.
  */
 import { useState } from 'react'
+import SpamGuardFields from './SpamGuardFields'
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
@@ -36,6 +37,7 @@ export default function ContactForm() {
           subject: fd.get('subject'),
           message: fd.get('message'),
           website: fd.get('website'),
+          t: fd.get('t'),
           sourcePage: window.location.pathname + (document.referrer ? ` (arrived from ${document.referrer})` : ''),
         }),
       })
@@ -105,8 +107,8 @@ export default function ContactForm() {
         </span>
       </div>
 
-      {/* Honeypot for bots — hidden from people */}
-      <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }} />
+      {/* Honeypot and render time for bots, hidden from people */}
+      <SpamGuardFields />
 
       {status === 'error' && (
         <div role="alert" style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#991b1b', borderRadius: 8, padding: '10px 14px', fontSize: 14 }}>

@@ -7,7 +7,7 @@ import { faqSchema, breadcrumbSchema } from '../lib/seo'
 import { getNHSAuthority } from '../lib/nhs-authorities'
 import { getONSStats } from '../lib/ons-stats'
 import { getRehabsForLocation } from '../lib/rehabs'
-import { BUILD_MONTH } from '../lib/build-info'
+import { REVIEWED_LABEL } from '../lib/trust'
 import type { UKLocation } from '../lib/locations'
 import HelplinesSidebar from './HelplinesSidebar'
 import FaqBlock from './FaqBlock'
@@ -16,6 +16,7 @@ import MedicalReviewBox from './MedicalReviewBox'
 import NearestCentres from './NearestCentres'
 import LastReviewed from './LastReviewed'
 import AdUnit from './AdUnit'
+import SourcesSection from './SourcesSection'
 
 export interface RehabTypeConfig {
   slug: string
@@ -98,7 +99,7 @@ export default function RehabTypePage({
         <div className="page-grid">
           <div>
             {/* Freshness badge */}
-            <LastReviewed dataDate={BUILD_MONTH} />
+            <LastReviewed dataDate={REVIEWED_LABEL} />
 
             <AdUnit slot="intro" />
 
@@ -190,6 +191,8 @@ export default function RehabTypePage({
                 ))}
               </div>
             </div>
+
+            <SourcesSection pageKey={config.slug} path={`/${config.slug}/${locationSlug}`} />
 
             <AdUnit slot="end" />
           </div>

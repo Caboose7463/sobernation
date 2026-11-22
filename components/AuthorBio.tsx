@@ -37,7 +37,7 @@ export default function AuthorBio({ date, compact = false }: Props) {
       </div>
       <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 6 }}>The Sober Nation editorial team</div>
       <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.65 }}>
-        We research our guides from public sources such as the NHS, NICE, FRANK and UK recovery charities. We are not doctors or counsellors, and this page is not medical advice. If you need help, speak to your GP or call FRANK free on 0300 123 6600. <Link href="/editorial-policy">How we write our guides</Link>.
+        We research our guides from public sources such as the NHS, NICE, FRANK and UK recovery charities. We are not doctors or counsellors, and this page is not medical advice. If you need help, speak to your GP or call FRANK on 0300 123 6600 (24 hours). <Link href="/editorial-policy">How we write our guides</Link>.
       </div>
       {date && (
         <div style={{ marginTop: 8, fontSize: 12, color: 'var(--text-light)' }}>

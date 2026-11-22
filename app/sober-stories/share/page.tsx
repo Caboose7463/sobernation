@@ -1,6 +1,7 @@
 'use client'
 import { useState, useRef } from 'react'
 import Link from 'next/link'
+import SpamGuardFields, { spamGuardValues } from '@/components/SpamGuardFields'
 
 const SUBSTANCES = [
   'Alcohol', 'Cocaine', 'Heroin', 'Cannabis', 'MDMA / Ecstasy',
@@ -71,6 +72,7 @@ export default function ShareStoryPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
+    const guard = spamGuardValues(e.currentTarget as HTMLFormElement)
 
     if (!form.name.trim()) return setError('Please enter your first name')
     if (!form.location.trim()) return setError('Please enter your location')
@@ -90,6 +92,7 @@ export default function ShareStoryPage() {
           daysSober: parseInt(form.daysSober),
           story: form.story.trim(),
           imageUrl: uploadedUrl,
+          ...guard,
         }),
       })
       const data = await res.json()
@@ -140,6 +143,7 @@ export default function ShareStoryPage() {
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <SpamGuardFields />
 
           {/* Photo upload */}
           <div>

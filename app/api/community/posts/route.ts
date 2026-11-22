@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
 import { createAdminClient } from '@/utils/supabase/admin'
 import { Resend } from 'resend'
+import { checkForm } from '@/lib/form-guard'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -54,7 +55,18 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
-  const { title, body, category_slug } = await request.json()
+  const payload = await request.json().catch(() => null)
+  if (!payload || typeof payload !== 'object') return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
+  const { title, body, category_slug } = payload
+
+  // Honeypot, timing and per IP rate limit (lib/form-guard.ts)
+  const guard = checkForm(request, payload, { bucket: 'community-post' })
+  if (guard.status === 'bot') {
+    const fakeSlug = `${String(title ?? 'post').toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, '-').slice(0, 60)}-${Date.now().toString(36)}`
+    return NextResponse.json({ id: crypto.randomUUID(), slug: fakeSlug }, { status: 201 })
+  }
+  if (guard.status === 'limited') return guard.response
+
   if (!title?.trim() || !body?.trim() || !category_slug) {
     return NextResponse.json({ error: 'Title, body and category are required' }, { status: 400 })
   }

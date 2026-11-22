@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { faqSchema } from '../../lib/seo'
+import SourcesSection from '../../components/SourcesSection'
 
 export const metadata: Metadata = {
   title: 'What is Methadone? | Treatment, Side Effects & FAQs | SoberNation',
@@ -87,6 +88,9 @@ export default function WhatIsMethadonePage() {
             <Link key={h} href={h} style={{ padding: '9px 16px', background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 20, fontSize: 13, color: 'var(--text)', textDecoration: 'none' }}>{l} →</Link>
           ))}
         </div>
+      </div>
+      <div className="container-wide" style={{ maxWidth: 760, padding: '0 20px 40px' }}>
+        <SourcesSection pageKey="what-is-methadone" path="/what-is-methadone" />
       </div>
       <footer style={{ borderTop: '1px solid var(--border)', padding: '24px 20px', background: 'var(--white)', marginTop: 24 }}>
         <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>

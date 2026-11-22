@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { faqSchema, breadcrumbSchema } from '../../lib/seo'
+import SourcesSection from '../../components/SourcesSection'
 
 export const metadata: Metadata = {
   title: 'Alcohol & Mental Health | Depression, Anxiety & Addiction | SoberNation',
@@ -155,6 +156,7 @@ export default function AlcoholMentalHealthPage() {
           </div>
 
         </div>
+        <SourcesSection pageKey="alcohol-and-mental-health" path="/alcohol-and-mental-health" />
       </div>
     </div>
   )

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { faqSchema } from '../../lib/seo'
+import SourcesSection from '../../components/SourcesSection'
 
 export const metadata: Metadata = {
   title: 'Signs of Alcoholism | 15 Warning Signs of Alcohol Addiction | SoberNation',
@@ -97,6 +98,9 @@ export default function SignsOfAlcoholismPage() {
         </div>
       </div>
 
+      <div className="container-wide" style={{ maxWidth: 760, padding: '0 20px 40px' }}>
+        <SourcesSection pageKey="signs-of-alcoholism" path="/signs-of-alcoholism" />
+      </div>
       <footer style={{ borderTop: '1px solid var(--border)', padding: '28px 20px', background: 'var(--white)' }}>
         <div className="container-wide" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
           <div style={{ fontSize: 12, color: 'var(--text-light)' }}>© {new Date().getFullYear()} SoberNation</div>

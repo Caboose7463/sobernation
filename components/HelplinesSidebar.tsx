@@ -1,11 +1,13 @@
 import Link from 'next/link'
 import { SidebarAd } from './AdUnit'
+import { HELPLINES as H } from '../lib/trust'
 
+// Numbers and hours come from lib/trust.ts, checked on each service's own website.
 const HELPLINES = [
-  { name: 'Frank (drugs & alcohol)', number: '0300 123 6600', tel: '03001236600', hours: '24/7', desc: 'Free, confidential drugs helpline' },
-  { name: 'Drinkline', number: '0300 123 1110', tel: '03001231110', hours: '24/7', desc: 'National alcohol helpline' },
-  { name: 'Samaritans', number: '116 123', tel: '116123', hours: '24/7', desc: 'Emotional support, always available' },
-  { name: 'Narcotics Anonymous', number: '0300 999 1212', tel: '03009991212', hours: '10am–midnight', desc: 'Drug recovery support' },
+  { ...H.frank, desc: 'Confidential drugs advice' },
+  { ...H.drinkline, desc: 'National alcohol helpline' },
+  { ...H.samaritans, desc: 'Free emotional support' },
+  { ...H.na, desc: 'Drug recovery support' },
 ]
 
 // withAd: adds the desktop only sidebar ad. The column then scrolls normally
@@ -13,7 +15,7 @@ const HELPLINES = [
 export default function HelplinesSidebar({ withAd = false }: { withAd?: boolean }) {
   return (
     <aside className={withAd ? 'helplines-sidebar helplines-sidebar--static' : 'helplines-sidebar'}>
-      <div className="label" style={{ marginBottom: 14 }}>Free helplines — 24/7</div>
+      <div className="label" style={{ marginBottom: 14 }}>Helplines</div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {HELPLINES.map(h => (
           <a
@@ -23,7 +25,7 @@ export default function HelplinesSidebar({ withAd = false }: { withAd?: boolean 
           >
             <div>
               <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>{h.name}</div>
-              <div style={{ fontSize: 11, color: 'var(--text-light)', marginTop: 1 }}>{h.desc} · {h.hours}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-light)', marginTop: 1 }}>{h.desc}. {h.hours}</div>
             </div>
             <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--accent)', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
               {h.number}

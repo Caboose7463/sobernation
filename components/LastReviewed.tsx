@@ -1,29 +1,31 @@
 /**
- * LastReviewed — "Updated [Month YYYY]" badge.
+ * LastReviewed: "Last reviewed [date]" badge plus the CQC data date.
  *
- * Shown on all location pages. Updates automatically on every Vercel deploy
- * (weekly via cron). This is a strong E-E-A-T signal for medical/health content:
- * Google's quality raters specifically look for review dates on YMYL pages.
+ * Only pass `dataDate` when a person has actually reviewed the page on that date
+ * (see REVIEWED_LABEL in lib/trust.ts). Never pass the build date: a date that
+ * changes on every deploy is not a review date. Without `dataDate` the badge
+ * shows only the CQC data date.
  *
  * Usage:
- *   <LastReviewed />                   // Default: shows build month
- *   <LastReviewed dataDate="April 2026" />  // Override with CQC data date
- *   <LastReviewed compact />            // Small inline badge for hero section
+ *   <LastReviewed />                              // CQC data date only
+ *   <LastReviewed dataDate={REVIEWED_LABEL} />    // real review date
+ *   <LastReviewed compact dataDate={...} />       // small inline badge
  */
 
-import { BUILD_MONTH, CQC_DATA_DATE } from '../lib/build-info'
+import { CQC_DATA_DATE } from '../lib/build-info'
 
 interface Props {
-  /** Override the displayed date (defaults to build month) */
+  /** The real date this page was last reviewed, e.g. "22 November 2026" */
   dataDate?: string
   /** Compact single-line version for hero sections */
   compact?: boolean
 }
 
 export default function LastReviewed({ dataDate, compact }: Props) {
-  const displayDate = dataDate ?? BUILD_MONTH
+  const displayDate = dataDate
 
   if (compact) {
+    if (!displayDate) return null
     return (
       <div
         style={{
@@ -38,8 +40,7 @@ export default function LastReviewed({ dataDate, compact }: Props) {
           background: 'var(--white)',
         }}
       >
-        <span style={{ color: 'var(--accent)', fontSize: 12 }}>✓</span>
-        Updated {displayDate}
+        Last reviewed {displayDate}
       </div>
     )
   }
@@ -62,11 +63,13 @@ export default function LastReviewed({ dataDate, compact }: Props) {
         <circle cx="12" cy="12" r="10" stroke="#0f766e" strokeWidth="2" />
       </svg>
       <div>
-        <span style={{ fontSize: 12, fontWeight: 700, color: '#0f766e' }}>
-          Updated {displayDate}
-        </span>
-        <span style={{ fontSize: 11, color: 'var(--text-muted)', marginLeft: 8 }}>
-          · CQC data: {CQC_DATA_DATE}
+        {displayDate && (
+          <span style={{ fontSize: 12, fontWeight: 700, color: '#0f766e', marginRight: 8 }}>
+            Last reviewed {displayDate}
+          </span>
+        )}
+        <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+          CQC register data: {CQC_DATA_DATE}
         </span>
       </div>
     </div>

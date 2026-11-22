@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase-server'
 import { sendEmail, ENQUIRY_NOTIFY_EMAIL, detailsTable, detailsText } from '@/lib/email'
+import { checkForm } from '@/lib/form-guard'
 
 export const runtime = 'nodejs'
 
@@ -24,10 +25,10 @@ export async function POST(request: NextRequest) {
   const message = String(body.message ?? '').trim().slice(0, 5000)
   const sourcePage = String(body.sourcePage ?? '').trim().slice(0, 500)
 
-  // Honeypot: real users never fill this hidden field
-  if (String(body.website ?? '').trim()) {
-    return NextResponse.json({ success: true })
-  }
+  // Honeypot, timing and per IP rate limit (lib/form-guard.ts)
+  const guard = checkForm(request, body, { bucket: 'contact' })
+  if (guard.status === 'bot') return NextResponse.json({ success: true })
+  if (guard.status === 'limited') return guard.response
   if (!name || !email || !message || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json({ error: 'Please fill in your name, a valid email and a message.' }, { status: 400 })
   }

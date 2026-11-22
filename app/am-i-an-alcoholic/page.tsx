@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import AlcoholicQuiz from '../../components/AlcoholicQuiz'
 import { faqSchema } from '../../lib/seo'
+import SourcesSection from '../../components/SourcesSection'
 
 export const metadata: Metadata = {
   title: 'Am I an Alcoholic? | Free Online Alcohol Test (WHO AUDIT) | SoberNation',
@@ -131,6 +132,7 @@ export default function AmIAnAlcoholicPage() {
             <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.75, paddingBottom: 16, margin: 0 }}>{faq.answer}</p>
           </details>
         ))}
+        <SourcesSection pageKey="am-i-an-alcoholic" path="/am-i-an-alcoholic" />
       </div>
     </div>
   )
