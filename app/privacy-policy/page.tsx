@@ -19,7 +19,7 @@ export default function PrivacyPolicyPage() {
         {[
           {
             title: '1. Who we are',
-            body: 'SoberNation ("we", "us", or "our") is a UK addiction information resource. Our registered office is: Office 1, 1 Coldbath Square, London, EC1R 5HL. Our website is sobernation.co.uk. You can contact us by telephone on 020 4634 4476 or by email at info@sobernation.co.uk. For privacy-related enquiries, please email info@sobernation.co.uk or write to us at the address above.',
+            body: 'SoberNation ("we", "us", or "our") is a UK addiction information resource. Our website is sobernation.co.uk. You can contact us by email at info@sobernation.co.uk or through the contact form at sobernation.co.uk/contact. For privacy related enquiries, please email info@sobernation.co.uk.',
           },
           {
             title: '2. What data we collect',
@@ -54,7 +54,7 @@ export default function PrivacyPolicyPage() {
           },
           {
             title: '8. Contact',
-            body: 'For privacy enquiries, contact us at info@sobernation.co.uk or write to: Office 1, 1 Coldbath Square, London, EC1R 5HL. You can also call 020 4634 4476 (Monday–Friday, 9am–5pm). If you are not satisfied with our response, you have the right to lodge a complaint with the Information Commissioner\'s Office (ICO): ico.org.uk | 0303 123 1113.',
+            body: 'For privacy enquiries, email us at info@sobernation.co.uk or use the contact form at sobernation.co.uk/contact. If you are not satisfied with our response, you have the right to lodge a complaint with the Information Commissioner\'s Office (ICO): ico.org.uk | 0303 123 1113.',
           },
         ].map(section => (
           <div key={section.title} style={{ marginBottom: 28 }}>

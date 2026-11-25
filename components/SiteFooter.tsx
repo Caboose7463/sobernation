@@ -32,13 +32,6 @@ export default function SiteFooter() {
           {/* Contact details */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 18 }}>
             <div style={{ fontSize: 12, color: '#6b7280' }}>
-              <strong style={{ color: '#9ca3af' }}>Address:</strong> Office 1, 1 Coldbath Square, London, EC1R 5HL
-            </div>
-            <div style={{ fontSize: 12, color: '#6b7280' }}>
-              <strong style={{ color: '#9ca3af' }}>Tel:</strong>{' '}
-              <a href="tel:02046344476" style={{ color: '#9ca3af', textDecoration: 'none' }}>020 4634 4476</a>
-            </div>
-            <div style={{ fontSize: 12, color: '#6b7280' }}>
               <strong style={{ color: '#9ca3af' }}>Email:</strong>{' '}
               <a href="mailto:info@sobernation.co.uk" style={{ color: '#9ca3af', textDecoration: 'none' }}>info@sobernation.co.uk</a>
             </div>
@@ -47,21 +40,6 @@ export default function SiteFooter() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
             <a href="tel:03001236600" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#c0392b', color: '#fff', fontSize: 13, fontWeight: 700, padding: '9px 16px', borderRadius: 8, textDecoration: 'none' }}>
               Help: 0300 123 6600
-            </a>
-            <a
-              href="https://www.instagram.com/sobernationuk"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="instagram-link"
-              aria-label="Follow us on Instagram @sobernationuk"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 7, color: '#9ca3af', fontSize: 13, textDecoration: 'none', padding: '9px 14px', borderRadius: 8, border: '1px solid #374151', transition: 'all 0.2s' }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                <circle cx="12" cy="12" r="5" />
-                <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
-              </svg>
-              @sobernationuk
             </a>
           </div>
         </div>
@@ -155,7 +133,7 @@ export default function SiteFooter() {
       <div style={{ borderTop: '1px solid #1f2937', padding: '20px 24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 10, fontSize: 12 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <span>© {year} SoberNation · Registered office: Office 1, 1 Coldbath Square, London, EC1R 5HL</span>
+            <span>© {year} SoberNation</span>
             <span style={{ color: '#4b5563' }}>CQC data: Open Government Licence · <a href="/privacy-policy" style={{ color: '#4b5563', textDecoration: 'none' }}>Privacy</a> · <a href="/contact" style={{ color: '#4b5563', textDecoration: 'none' }}>Contact</a></span>
           </div>
           <span>Information on this site is for educational purposes only. Always seek professional medical advice in a crisis. Call <strong style={{ color: '#fff' }}>999</strong> or go to A&amp;E.</span>
@@ -164,7 +142,6 @@ export default function SiteFooter() {
 
       <style>{`
         .footer-link:hover { color: #fff !important; }
-        .instagram-link:hover { color: #fff !important; border-color: #e1306c !important; background: rgba(225,48,108,0.08) !important; }
       `}</style>
     </footer>
   )

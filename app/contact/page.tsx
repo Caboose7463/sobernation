@@ -4,16 +4,9 @@ import Link from 'next/link'
 import ContactForm from '../../components/ContactForm'
 import { CONTACT_EMAIL, HELPLINES, SITE_URL } from '../../lib/trust'
 
-// Contact details already published by the site (footer, privacy policy and organisation schema).
-// The owner must confirm the phone number and postal address are current; see the editorial notes.
-const PHONE_DISPLAY = '020 4634 4476'
-const PHONE_TEL = '02046344476'
-const PHONE_HOURS = 'Monday to Friday, 9am to 5pm'
-const POSTAL_LINES = ['Office 1, 1 Coldbath Square', 'London', 'EC1R 5HL']
-
 export const metadata: Metadata = {
-  title: 'Contact Sober Nation | Email, Phone and Corrections',
-  description: `Contact the Sober Nation editorial team by email at ${CONTACT_EMAIL}, by phone or by post, report a mistake on a page, or ask about listings and advertising.`,
+  title: 'Contact Sober Nation | Email and Corrections',
+  description: `Contact the Sober Nation editorial team by email at ${CONTACT_EMAIL} or through the contact form, report a mistake on a page, or ask about listings and advertising.`,
   alternates: { canonical: '/contact' },
 }
 
@@ -27,18 +20,9 @@ const contactSchema = {
     name: 'SoberNation',
     url: SITE_URL,
     email: CONTACT_EMAIL,
-    telephone: '+44-20-4634-4476',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: 'Office 1, 1 Coldbath Square',
-      addressLocality: 'London',
-      postalCode: 'EC1R 5HL',
-      addressCountry: 'GB',
-    },
     contactPoint: {
       '@type': 'ContactPoint',
       email: CONTACT_EMAIL,
-      telephone: '+44-20-4634-4476',
       contactType: 'customer support',
       areaServed: 'GB',
       availableLanguage: 'English',
@@ -108,19 +92,11 @@ export default function ContactPage() {
           </div>
 
           <div style={card}>
-            <div style={cardLabel}>Phone</div>
-            <a href={`tel:${PHONE_TEL}`} style={{ fontSize: 20, fontWeight: 800, color: 'var(--text)', textDecoration: 'none', display: 'block', marginBottom: 4 }}>
-              {PHONE_DISPLAY}
+            <div style={cardLabel}>Contact form</div>
+            <a href="#send-a-message" style={{ fontSize: 17, fontWeight: 700, color: '#2563eb', textDecoration: 'none', display: 'block', marginBottom: 4 }}>
+              Send us a message
             </a>
-            <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>{PHONE_HOURS}. This is not a helpline.</div>
-          </div>
-
-          <div style={card}>
-            <div style={cardLabel}>Post</div>
-            <address style={{ fontStyle: 'normal', fontSize: 14, fontWeight: 600, color: 'var(--text)', lineHeight: 1.7 }}>
-              {POSTAL_LINES.map(line => <div key={line}>{line}</div>)}
-            </address>
-            <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 4 }}>Postal address only</div>
+            <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>We reply by email. This is not a helpline.</div>
           </div>
         </div>
       </section>

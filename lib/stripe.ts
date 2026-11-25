@@ -56,19 +56,6 @@ export function getExclusivityTier(slug: string): 1 | 2 | 3 {
 export const MATCHING_PRICE_ID = process.env.STRIPE_MATCHING_PRICE_ID! // £99/mo
 export const MATCHING_PRICE_GBP = 99
 
-// ── Helpline Sponsorship ────────────────────────────────────────────────────
-export const HELPLINE_PRICE_IDS = {
-  national: process.env.STRIPE_HELPLINE_NATIONAL_PRICE_ID!, // £2,000/mo
-  regional: process.env.STRIPE_HELPLINE_REGIONAL_PRICE_ID!, // £500/mo
-  county:   process.env.STRIPE_HELPLINE_COUNTY_PRICE_ID!,   // £200/mo
-} as const
-
-export const HELPLINE_PRICES_GBP = {
-  national: 2000,
-  regional: 500,
-  county: 200,
-} as const
-
 // ── Legacy ──────────────────────────────────────────────────────────────────
 export const PRICES_GBP = {
   counsellor: 10,

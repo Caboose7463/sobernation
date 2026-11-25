@@ -349,22 +349,6 @@ export default function AdvertisePage() {
               </Link>
             </div>
 
-            {/* Helpline Sponsorship */}
-            <div style={{ background: 'var(--white)', border: '1px solid var(--border)', borderRadius: 14, padding: '24px', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ width: 36, height: 36, borderRadius: 8, background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.19 2 2 0 012 .01h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.16 6.16l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-              </div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text)', marginBottom: 6 }}>Helpline Sponsorship</div>
-              <div style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6, flex: 1, marginBottom: 16 }}>
-                Your brand next to the helpline number on every page. Seen by thousands seeking help every month.
-              </div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)', marginBottom: 10 }}>From £200/mo</div>
-              <Link href="/advertise/helpline"
-                style={{ display: 'block', textAlign: 'center', padding: '10px', borderRadius: 8, background: 'var(--accent-pale)', color: 'var(--accent)', fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>
-                View packages →
-              </Link>
-            </div>
-
           </div>
         </section>
 

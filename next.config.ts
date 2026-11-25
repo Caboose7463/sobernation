@@ -57,6 +57,9 @@ const nextConfig: NextConfig = {
       { source: '/edinburgh', destination: '/rehab/edinburgh', permanent: true },
       // find-rehab (old slug) → find-my-rehab (new page) — must be permanent (301) for Google to index destination
       { source: '/find-rehab', destination: '/find-my-rehab', permanent: true },
+      // Helpline sponsorship withdrawn 22 Nov 2026
+      { source: '/advertise/helpline', destination: '/advertise', permanent: true },
+      { source: '/advertise/helpline/:path*', destination: '/advertise', permanent: true },
       // Removed synthetic centres → their town's /centres page
       ...Object.entries(removedCentres as Record<string, string>).map(([slug, destination]) => ({
         source: `/centre/${slug}`,
